@@ -1,0 +1,9 @@
+[submodule "Libraries/libplist"]
+	path = Libraries/libplist
+	url = https://github.com/libimobiledevice/libplist.git
+[submodule "Libraries/libusbmuxd"]
+	path = Libraries/libusbmuxd
+	url = https://github.com/libimobiledevice/libusbmuxd.git
+[submodule "Libraries/libimobiledevice"]
+	path = Libraries/libimobiledevice
+	url = https://github.com/libimobiledevice/libimobiledevice.git
