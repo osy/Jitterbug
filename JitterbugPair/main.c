@@ -69,7 +69,7 @@ int print_help(void) {
     fprintf(stderr, "  -h       show this help message\n");
     fprintf(stderr, "  -l       list UDIDs of all connected devices\n");
     fprintf(stderr, "  -u UDID  dump connected device with UDID (first device if unspecified)\n");
-    fprintf(stderr, "  -o file  write output to file (stdout if unspecified)\n");
+    fprintf(stderr, "  -c       dump to stdout instead of file\n");
     fprintf(stderr, "\n");
     return EXIT_FAILURE;
 }
@@ -87,7 +87,7 @@ int write_output(const char *path, const char *xml, uint32_t xml_len) {
 
 int main(int argc, const char * argv[]) {
     int c = 0;
-    const char *path = "/dev/stdout";
+    char *path = NULL;
     char *udid = NULL;
     lockdownd_client_t client = NULL;
     idevice_t device = NULL;
@@ -99,7 +99,7 @@ int main(int argc, const char * argv[]) {
     char *xml = NULL;
     uint32_t xml_len = 0;
     
-    while ((c = getopt(argc, argv, "lu:o:")) != -1) {
+    while ((c = getopt(argc, argv, "lu:c")) != -1) {
         switch (c) {
             case 'l': {
                 return print_udids();
@@ -108,8 +108,8 @@ int main(int argc, const char * argv[]) {
                 udid = strdup(optarg);
                 break;
             }
-            case 'o': {
-                path = optarg;
+            case 'c': {
+                path = strdup("/dev/stdout");
                 break;
             }
             case '?':
@@ -136,6 +136,9 @@ int main(int argc, const char * argv[]) {
             result = EXIT_FAILURE;
             goto leave;
         }
+    }
+    if (!path) {
+        asprintf(&path, "%s.mobiledevicepairing", udid);
     }
     
     lerr = lockdownd_client_new(device, &client, TOOL_NAME);
@@ -167,16 +170,21 @@ int main(int argc, const char * argv[]) {
     }
     
     userpref_read_pair_record(udid, &pair_record);
+    plist_dict_set_item(pair_record, "UDID", plist_new_string(udid));
     plist_to_xml(pair_record, &xml, &xml_len);
     plist_free(pair_record);
     
     result = write_output(path, xml, xml_len);
+    if (result == EXIT_SUCCESS && strcmp(path, "/dev/stdout") != 0) {
+        fprintf(stderr, "SUCCESS: wrote to %s\n", path);
+    }
     
 leave:
     lockdownd_client_free(client);
     idevice_free(device);
     free(udid);
     free(xml);
+    free(path);
 
     return result;
 }
