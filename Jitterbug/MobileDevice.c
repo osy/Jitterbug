@@ -21,14 +21,9 @@
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/debugserver.h>
 #include "../Libraries/libimobiledevice/src/idevice.h"
+#include "Jitterbug.h"
 
 #define TOOL_NAME "jitterbug"
-
-#define DEBUG_PRINT(...) do { \
-        fprintf(stderr, "[%s:%d] ", __FUNCTION__, __LINE__); \
-        fprintf(stderr, __VA_ARGS__); \
-        fprintf(stderr, "\n"); \
-    } while (0)
 
 static CFDictionaryRef plist_to_cfdictionary(plist_t plist) {
     char *xml;

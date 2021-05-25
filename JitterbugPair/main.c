@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "common/userpref.h"
+#include "common/utils.h"
 
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/lockdown.h>
@@ -74,17 +75,6 @@ int print_help(void) {
     return EXIT_FAILURE;
 }
 
-int write_output(const char *path, const char *xml, uint32_t xml_len) {
-    FILE *fp = fopen(path, "w");
-    if (fp == NULL) {
-        fprintf(stderr, "ERROR: cannot open %s for writing.\n", path);
-        return EXIT_FAILURE;
-    }
-    fwrite(xml, xml_len, 1, fp);
-    fclose(fp);
-    return EXIT_SUCCESS;
-}
-
 int main(int argc, const char * argv[]) {
     int c = 0;
     char *path = NULL;
@@ -96,8 +86,6 @@ int main(int argc, const char * argv[]) {
     int result;
     char *type = NULL;
     plist_t pair_record = NULL;
-    char *xml = NULL;
-    uint32_t xml_len = 0;
     
     while ((c = getopt(argc, argv, "lu:c")) != -1) {
         switch (c) {
@@ -171,11 +159,13 @@ int main(int argc, const char * argv[]) {
     
     userpref_read_pair_record(udid, &pair_record);
     plist_dict_set_item(pair_record, "UDID", plist_new_string(udid));
-    plist_to_xml(pair_record, &xml, &xml_len);
-    plist_free(pair_record);
     
-    result = write_output(path, xml, xml_len);
-    if (result == EXIT_SUCCESS && strcmp(path, "/dev/stdout") != 0) {
+    if (!plist_write_to_filename(pair_record, path, PLIST_FORMAT_XML)) {
+        result = EXIT_FAILURE;
+        goto leave;
+    }
+    plist_free(pair_record);
+    if (strcmp(path, "/dev/stdout") != 0) {
         fprintf(stderr, "SUCCESS: wrote to %s\n", path);
     }
     
@@ -183,7 +173,6 @@ leave:
     lockdownd_client_free(client);
     idevice_free(device);
     free(udid);
-    free(xml);
     free(path);
 
     return result;

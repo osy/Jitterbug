@@ -33,10 +33,6 @@
 		CE9857AC265C655A00F9AAD4 /* xplist.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985791265C655A00F9AAD4 /* xplist.c */; };
 		CE9857BC265C671B00F9AAD4 /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857B9265C671B00F9AAD4 /* node.c */; };
 		CE9857BD265C671B00F9AAD4 /* node_list.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857BA265C671B00F9AAD4 /* node_list.c */; };
-		CE9857D4265C69D600F9AAD4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857CF265C69D600F9AAD4 /* socket.c */; };
-		CE9857D5265C69D600F9AAD4 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857D0265C69D600F9AAD4 /* thread.c */; };
-		CE9857D6265C69D600F9AAD4 /* collection.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857D2265C69D600F9AAD4 /* collection.c */; };
-		CE9857DB265C69E600F9AAD4 /* libusbmuxd.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857DA265C69E600F9AAD4 /* libusbmuxd.c */; };
 		CE9857EF265C6DF300F9AAD4 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857E9265C6DF300F9AAD4 /* utils.c */; };
 		CE9857F0265C6DF300F9AAD4 /* userpref.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857EA265C6DF300F9AAD4 /* userpref.c */; };
 		CE9857F1265C6DF300F9AAD4 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857EB265C6DF300F9AAD4 /* debug.c */; };
@@ -125,6 +121,11 @@
 		CE9858C5265C933000F9AAD4 /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98578E265C655A00F9AAD4 /* Key.cpp */; };
 		CE9858C6265C933000F9AAD4 /* service.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98581A265C6E1700F9AAD4 /* service.c */; };
 		CEE8B43F265C998A007728F4 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8B43E265C998A007728F4 /* OpenSSL */; };
+		CEE8B45A265CBF49007728F4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B456265CBF49007728F4 /* socket.c */; };
+		CEE8B45B265CBF49007728F4 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B458265CBF49007728F4 /* thread.c */; };
+		CEE8B461265CBFC2007728F4 /* libusbmuxd-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */; };
+		CEE8B468265CC57D007728F4 /* CacheStorage.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B467265CC57D007728F4 /* CacheStorage.c */; };
+		CEE8B46D265CC787007728F4 /* collection.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857D2265C69D600F9AAD4 /* collection.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -292,6 +293,14 @@
 		CE98586C265C76F700F9AAD4 /* MobileDevice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MobileDevice.c; sourceTree = "<group>"; };
 		CE985875265C8FD700F9AAD4 /* jitterbugpair */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jitterbugpair; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE985877265C8FD700F9AAD4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		CEE8B456265CBF49007728F4 /* socket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = socket.c; sourceTree = "<group>"; };
+		CEE8B457265CBF49007728F4 /* socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket.h; sourceTree = "<group>"; };
+		CEE8B458265CBF49007728F4 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
+		CEE8B459265CBF49007728F4 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
+		CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "libusbmuxd-stub.c"; sourceTree = "<group>"; };
+		CEE8B466265CC57D007728F4 /* CacheStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheStorage.h; sourceTree = "<group>"; };
+		CEE8B467265CC57D007728F4 /* CacheStorage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CacheStorage.c; sourceTree = "<group>"; };
+		CEE8B470265CC9BA007728F4 /* Jitterbug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Jitterbug.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -338,7 +347,11 @@
 			isa = PBXGroup;
 			children = (
 				CE985869265C75B300F9AAD4 /* Jitterbug-Bridging-Header.h */,
+				CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */,
+				CEE8B466265CC57D007728F4 /* CacheStorage.h */,
+				CEE8B467265CC57D007728F4 /* CacheStorage.c */,
 				CE98586C265C76F700F9AAD4 /* MobileDevice.c */,
+				CEE8B470265CC9BA007728F4 /* Jitterbug.h */,
 				CE98574A265C635000F9AAD4 /* JitterbugApp.swift */,
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
@@ -524,6 +537,10 @@
 			children = (
 				CE9857EB265C6DF300F9AAD4 /* debug.c */,
 				CE9857E5265C6DF200F9AAD4 /* debug.h */,
+				CEE8B456265CBF49007728F4 /* socket.c */,
+				CEE8B457265CBF49007728F4 /* socket.h */,
+				CEE8B458265CBF49007728F4 /* thread.c */,
+				CEE8B459265CBF49007728F4 /* thread.h */,
 				CE9857EA265C6DF300F9AAD4 /* userpref.c */,
 				CE9857EC265C6DF300F9AAD4 /* userpref.h */,
 				CE9857E9265C6DF300F9AAD4 /* utils.c */,
@@ -756,6 +773,7 @@
 				CE98584F265C6E1800F9AAD4 /* notification_proxy.c in Sources */,
 				CE98585A265C6E1800F9AAD4 /* mobilebackup.c in Sources */,
 				CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */,
+				CEE8B46D265CC787007728F4 /* collection.c in Sources */,
 				CE985849265C6E1800F9AAD4 /* service.c in Sources */,
 				CE9857A1265C655A00F9AAD4 /* Dictionary.cpp in Sources */,
 				CE9857AB265C655A00F9AAD4 /* Date.cpp in Sources */,
@@ -766,12 +784,13 @@
 				CE9857BC265C671B00F9AAD4 /* node.c in Sources */,
 				CE985857265C6E1800F9AAD4 /* property_list_service.c in Sources */,
 				CE98584E265C6E1800F9AAD4 /* syslog_relay.c in Sources */,
+				CEE8B45B265CBF49007728F4 /* thread.c in Sources */,
+				CEE8B461265CBFC2007728F4 /* libusbmuxd-stub.c in Sources */,
 				CE985853265C6E1800F9AAD4 /* mobilebackup2.c in Sources */,
 				CE985846265C6E1800F9AAD4 /* debugserver.c in Sources */,
 				CE9857F1265C6DF300F9AAD4 /* debug.c in Sources */,
 				CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */,
 				CE9857F0265C6DF300F9AAD4 /* userpref.c in Sources */,
-				CE9857D6265C69D600F9AAD4 /* collection.c in Sources */,
 				CE985852265C6E1800F9AAD4 /* preboard.c in Sources */,
 				CE98585B265C6E1800F9AAD4 /* restore.c in Sources */,
 				CE985856265C6E1800F9AAD4 /* device_link_service.c in Sources */,
@@ -783,7 +802,6 @@
 				CE985843265C6E1800F9AAD4 /* mobile_image_mounter.c in Sources */,
 				CE985844265C6E1800F9AAD4 /* screenshotr.c in Sources */,
 				CE98579A265C655A00F9AAD4 /* base64.c in Sources */,
-				CE9857DB265C69E600F9AAD4 /* libusbmuxd.c in Sources */,
 				CE985850265C6E1800F9AAD4 /* webinspector.c in Sources */,
 				CE9857AA265C655A00F9AAD4 /* Data.cpp in Sources */,
 				CE985859265C6E1800F9AAD4 /* mobilesync.c in Sources */,
@@ -793,13 +811,13 @@
 				CE98584B265C6E1800F9AAD4 /* misagent.c in Sources */,
 				CE98579E265C655A00F9AAD4 /* Structure.cpp in Sources */,
 				CE98584C265C6E1800F9AAD4 /* lockdown.c in Sources */,
+				CEE8B468265CC57D007728F4 /* CacheStorage.c in Sources */,
+				CEE8B45A265CBF49007728F4 /* socket.c in Sources */,
 				CE98584D265C6E1800F9AAD4 /* companion_proxy.c in Sources */,
 				CE985858265C6E1800F9AAD4 /* house_arrest.c in Sources */,
 				CE9857A8265C655A00F9AAD4 /* hashtable.c in Sources */,
 				CE9857BD265C671B00F9AAD4 /* node_list.c in Sources */,
 				CE985792265C655A00F9AAD4 /* Array.cpp in Sources */,
-				CE9857D5265C69D600F9AAD4 /* thread.c in Sources */,
-				CE9857D4265C69D600F9AAD4 /* socket.c in Sources */,
 				CE985799265C655A00F9AAD4 /* Node.cpp in Sources */,
 				CE9857A9265C655A00F9AAD4 /* Key.cpp in Sources */,
 				CE9857A7265C655A00F9AAD4 /* String.cpp in Sources */,
