@@ -17,8 +17,6 @@
 #ifndef Jitterbug_Bridging_Header_h
 #define Jitterbug_Bridging_Header_h
 
-#include <CoreFoundation/CoreFoundation.h>
-
-CFDictionaryRef deviceCreateAppList(const char *ipaddr);
+#import "JBHostDevice.h"
 
 #endif /* Jitterbug_Bridging_Header_h */

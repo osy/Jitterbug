@@ -14,14 +14,12 @@
 // limitations under the License.
 //
 
-#ifndef CacheStorage_h
-#define CacheStorage_h
+#import <Foundation/Foundation.h>
 
-#include <CoreFoundation/CoreFoundation.h>
+NS_ASSUME_NONNULL_BEGIN
 
-int cachePairingAdd(const char *udid, const char *ipaddr, CFDataRef data);
-int cachePairingRemove(const char *udid);
-int cachePairingGetIpaddr(const char *udid, char **ipaddr);
-int cachePairingGetData(const char *udid, void **data, size_t *len);
+@interface JBApp : NSObject
 
-#endif /* CacheStorage_h */
+@end
+
+NS_ASSUME_NONNULL_END

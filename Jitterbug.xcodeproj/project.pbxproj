@@ -63,7 +63,6 @@
 		CE98585B265C6E1800F9AAD4 /* restore.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98583E265C6E1700F9AAD4 /* restore.c */; };
 		CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985841265C6E1800F9AAD4 /* file_relay.c */; };
 		CE985862265C703A00F9AAD4 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = CE985861265C703A00F9AAD4 /* OpenSSL */; };
-		CE98586D265C76F700F9AAD4 /* MobileDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98586C265C76F700F9AAD4 /* MobileDevice.c */; };
 		CE985878265C8FD700F9AAD4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985877265C8FD700F9AAD4 /* main.c */; };
 		CE985890265C933000F9AAD4 /* bytearray.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985784265C655900F9AAD4 /* bytearray.c */; };
 		CE985891265C933000F9AAD4 /* lockdown.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985822265C6E1700F9AAD4 /* lockdown.c */; };
@@ -126,6 +125,9 @@
 		CEE8B461265CBFC2007728F4 /* libusbmuxd-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */; };
 		CEE8B468265CC57D007728F4 /* CacheStorage.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B467265CC57D007728F4 /* CacheStorage.c */; };
 		CEE8B46D265CC787007728F4 /* collection.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857D2265C69D600F9AAD4 /* collection.c */; };
+		CEE8B475265D59C0007728F4 /* JBHostDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B474265D59C0007728F4 /* JBHostDevice.m */; };
+		CEE8B47B265D5C4F007728F4 /* JBHostDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */; };
+		CEE8B484265D6A51007728F4 /* JBApp.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B483265D6A51007728F4 /* JBApp.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -290,7 +292,6 @@
 		CE985841265C6E1800F9AAD4 /* file_relay.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = file_relay.c; sourceTree = "<group>"; };
 		CE985842265C6E1800F9AAD4 /* service.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = service.h; sourceTree = "<group>"; };
 		CE985869265C75B300F9AAD4 /* Jitterbug-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Jitterbug-Bridging-Header.h"; sourceTree = "<group>"; };
-		CE98586C265C76F700F9AAD4 /* MobileDevice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = MobileDevice.c; sourceTree = "<group>"; };
 		CE985875265C8FD700F9AAD4 /* jitterbugpair */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jitterbugpair; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE985877265C8FD700F9AAD4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CEE8B456265CBF49007728F4 /* socket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = socket.c; sourceTree = "<group>"; };
@@ -301,6 +302,11 @@
 		CEE8B466265CC57D007728F4 /* CacheStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheStorage.h; sourceTree = "<group>"; };
 		CEE8B467265CC57D007728F4 /* CacheStorage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = CacheStorage.c; sourceTree = "<group>"; };
 		CEE8B470265CC9BA007728F4 /* Jitterbug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Jitterbug.h; sourceTree = "<group>"; };
+		CEE8B473265D59C0007728F4 /* JBHostDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JBHostDevice.h; sourceTree = "<group>"; };
+		CEE8B474265D59C0007728F4 /* JBHostDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JBHostDevice.m; sourceTree = "<group>"; };
+		CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JBHostDevice.swift; sourceTree = "<group>"; };
+		CEE8B482265D6A51007728F4 /* JBApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JBApp.h; sourceTree = "<group>"; };
+		CEE8B483265D6A51007728F4 /* JBApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JBApp.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,7 +356,11 @@
 				CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */,
 				CEE8B466265CC57D007728F4 /* CacheStorage.h */,
 				CEE8B467265CC57D007728F4 /* CacheStorage.c */,
-				CE98586C265C76F700F9AAD4 /* MobileDevice.c */,
+				CEE8B482265D6A51007728F4 /* JBApp.h */,
+				CEE8B483265D6A51007728F4 /* JBApp.m */,
+				CEE8B473265D59C0007728F4 /* JBHostDevice.h */,
+				CEE8B474265D59C0007728F4 /* JBHostDevice.m */,
+				CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */,
 				CEE8B470265CC9BA007728F4 /* Jitterbug.h */,
 				CE98574A265C635000F9AAD4 /* JitterbugApp.swift */,
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
@@ -766,6 +776,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEE8B47B265D5C4F007728F4 /* JBHostDevice.swift in Sources */,
 				CE985848265C6E1800F9AAD4 /* afc.c in Sources */,
 				CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */,
 				CE9857A6265C655A00F9AAD4 /* ptrarray.c in Sources */,
@@ -780,7 +791,6 @@
 				CE985795265C655A00F9AAD4 /* plist.c in Sources */,
 				CE985851265C6E1800F9AAD4 /* installation_proxy.c in Sources */,
 				CE98584A265C6E1800F9AAD4 /* mobileactivation.c in Sources */,
-				CE98586D265C76F700F9AAD4 /* MobileDevice.c in Sources */,
 				CE9857BC265C671B00F9AAD4 /* node.c in Sources */,
 				CE985857265C6E1800F9AAD4 /* property_list_service.c in Sources */,
 				CE98584E265C6E1800F9AAD4 /* syslog_relay.c in Sources */,
@@ -789,10 +799,12 @@
 				CE985853265C6E1800F9AAD4 /* mobilebackup2.c in Sources */,
 				CE985846265C6E1800F9AAD4 /* debugserver.c in Sources */,
 				CE9857F1265C6DF300F9AAD4 /* debug.c in Sources */,
+				CEE8B475265D59C0007728F4 /* JBHostDevice.m in Sources */,
 				CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */,
 				CE9857F0265C6DF300F9AAD4 /* userpref.c in Sources */,
 				CE985852265C6E1800F9AAD4 /* preboard.c in Sources */,
 				CE98585B265C6E1800F9AAD4 /* restore.c in Sources */,
+				CEE8B484265D6A51007728F4 /* JBApp.m in Sources */,
 				CE985856265C6E1800F9AAD4 /* device_link_service.c in Sources */,
 				CE985794265C655A00F9AAD4 /* Uid.cpp in Sources */,
 				CE9857A3265C655A00F9AAD4 /* bytearray.c in Sources */,

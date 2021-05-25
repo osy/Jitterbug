@@ -14,14 +14,10 @@
 // limitations under the License.
 //
 
-#ifndef CacheStorage_h
-#define CacheStorage_h
+import Combine
 
-#include <CoreFoundation/CoreFoundation.h>
-
-int cachePairingAdd(const char *udid, const char *ipaddr, CFDataRef data);
-int cachePairingRemove(const char *udid);
-int cachePairingGetIpaddr(const char *udid, char **ipaddr);
-int cachePairingGetData(const char *udid, void **data, size_t *len);
-
-#endif /* CacheStorage_h */
+@objc extension JBHostDevice: ObservableObject {
+    func propertyWillChange() -> Void {
+        DispatchQueue.main.async { self.objectWillChange.send() }
+    }
+}

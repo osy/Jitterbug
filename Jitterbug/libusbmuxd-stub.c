@@ -39,7 +39,7 @@
 
 USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info_t *device)
 {
-    const char *ipaddr = NULL;
+    char *ipaddr = NULL;
     struct sockaddr_in saddr = {0};
     
     if (!udid) {
@@ -50,8 +50,7 @@ USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info
         DEBUG_PRINT("device cannot be null!");
         return -EINVAL;
     }
-    ipaddr = cacheHostGetForUdid(udid);
-    if (!ipaddr) {
+    if (!cachePairingGetIpaddr(udid, &ipaddr)) {
         DEBUG_PRINT("no cache entry for %s", udid);
         return -ENOENT;
     }
@@ -61,6 +60,7 @@ USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info
     saddr.sin_family = AF_INET;
     saddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     inet_aton(ipaddr, &saddr.sin_addr);
+    free(ipaddr);
     memcpy(device->conn_data, &saddr, saddr.sin_len);
     return 1;
 }
@@ -94,18 +94,14 @@ USBMUXD_API int usbmuxd_read_buid(char **buid)
 
 USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t *record_size)
 {
-    plist_t record;
-    
-    record = cachePairingGetForUdid(record_id);
-    if (!record) {
+    void *data;
+    size_t len;
+    if (!cachePairingGetData(record_id, &data, &len)) {
         DEBUG_PRINT("no cache entry for %s", record_id);
         return -ENOENT;
     }
-    record = plist_copy(record);
-    plist_dict_remove_item(record, "UDID"); // custom addition
-    plist_get_string_val(plist_dict_get_item(record, USERPREF_SYSTEM_BUID_KEY), &last_seen_buid);
-    plist_to_bin(record, record_data, record_size);
-    plist_free(record);
+    *record_data = data;
+    *record_size = (uint32_t)len;
     return 1;
 }
 
