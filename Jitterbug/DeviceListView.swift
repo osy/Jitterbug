@@ -16,14 +16,14 @@
 
 import SwiftUI
 
-@main
-struct JitterbugApp: App {
-    @StateObject var settings = Settings()
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environmentObject(settings)
-        }
+struct DeviceListView: View {
+    var body: some View {
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    }
+}
+
+struct DeviceListView_Previews: PreviewProvider {
+    static var previews: some View {
+        DeviceListView()
     }
 }

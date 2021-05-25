@@ -128,6 +128,13 @@
 		CEE8B475265D59C0007728F4 /* JBHostDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B474265D59C0007728F4 /* JBHostDevice.m */; };
 		CEE8B47B265D5C4F007728F4 /* JBHostDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */; };
 		CEE8B484265D6A51007728F4 /* JBApp.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B483265D6A51007728F4 /* JBApp.m */; };
+		CEE8B48C265D797E007728F4 /* DeviceListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B48B265D797E007728F4 /* DeviceListView.swift */; };
+		CEE8B494265D7AE2007728F4 /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B493265D7AE2007728F4 /* LauncherView.swift */; };
+		CEE8B49A265D7B6F007728F4 /* PairingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B499265D7B6F007728F4 /* PairingsView.swift */; };
+		CEE8B4A0265D7BCA007728F4 /* SupportFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */; };
+		CEE8B4A6265D7DF4007728F4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4A5265D7DF3007728F4 /* Settings.swift */; };
+		CEE8B4AA265D8870007728F4 /* BusyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4A9265D8870007728F4 /* BusyView.swift */; };
+		CEE8B4B2265D9550007728F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B1265D954F007728F4 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -307,6 +314,13 @@
 		CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JBHostDevice.swift; sourceTree = "<group>"; };
 		CEE8B482265D6A51007728F4 /* JBApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JBApp.h; sourceTree = "<group>"; };
 		CEE8B483265D6A51007728F4 /* JBApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JBApp.m; sourceTree = "<group>"; };
+		CEE8B48B265D797E007728F4 /* DeviceListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListView.swift; sourceTree = "<group>"; };
+		CEE8B493265D7AE2007728F4 /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
+		CEE8B499265D7B6F007728F4 /* PairingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingsView.swift; sourceTree = "<group>"; };
+		CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportFilesView.swift; sourceTree = "<group>"; };
+		CEE8B4A5265D7DF3007728F4 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		CEE8B4A9265D8870007728F4 /* BusyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusyView.swift; sourceTree = "<group>"; };
+		CEE8B4B1265D954F007728F4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -363,7 +377,14 @@
 				CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */,
 				CEE8B470265CC9BA007728F4 /* Jitterbug.h */,
 				CE98574A265C635000F9AAD4 /* JitterbugApp.swift */,
+				CEE8B4B1265D954F007728F4 /* Extensions.swift */,
+				CEE8B4A5265D7DF3007728F4 /* Settings.swift */,
+				CEE8B4A9265D8870007728F4 /* BusyView.swift */,
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
+				CEE8B48B265D797E007728F4 /* DeviceListView.swift */,
+				CEE8B493265D7AE2007728F4 /* LauncherView.swift */,
+				CEE8B499265D7B6F007728F4 /* PairingsView.swift */,
+				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
 				CE985753265C635300F9AAD4 /* Info.plist */,
 				CE985750265C635300F9AAD4 /* Preview Content */,
@@ -781,6 +802,7 @@
 				CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */,
 				CE9857A6265C655A00F9AAD4 /* ptrarray.c in Sources */,
 				CE985854265C6E1800F9AAD4 /* sbservices.c in Sources */,
+				CEE8B49A265D7B6F007728F4 /* PairingsView.swift in Sources */,
 				CE98584F265C6E1800F9AAD4 /* notification_proxy.c in Sources */,
 				CE98585A265C6E1800F9AAD4 /* mobilebackup.c in Sources */,
 				CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */,
@@ -788,9 +810,11 @@
 				CE985849265C6E1800F9AAD4 /* service.c in Sources */,
 				CE9857A1265C655A00F9AAD4 /* Dictionary.cpp in Sources */,
 				CE9857AB265C655A00F9AAD4 /* Date.cpp in Sources */,
+				CEE8B4AA265D8870007728F4 /* BusyView.swift in Sources */,
 				CE985795265C655A00F9AAD4 /* plist.c in Sources */,
 				CE985851265C6E1800F9AAD4 /* installation_proxy.c in Sources */,
 				CE98584A265C6E1800F9AAD4 /* mobileactivation.c in Sources */,
+				CEE8B4A0265D7BCA007728F4 /* SupportFilesView.swift in Sources */,
 				CE9857BC265C671B00F9AAD4 /* node.c in Sources */,
 				CE985857265C6E1800F9AAD4 /* property_list_service.c in Sources */,
 				CE98584E265C6E1800F9AAD4 /* syslog_relay.c in Sources */,
@@ -804,6 +828,7 @@
 				CE9857F0265C6DF300F9AAD4 /* userpref.c in Sources */,
 				CE985852265C6E1800F9AAD4 /* preboard.c in Sources */,
 				CE98585B265C6E1800F9AAD4 /* restore.c in Sources */,
+				CEE8B4B2265D9550007728F4 /* Extensions.swift in Sources */,
 				CEE8B484265D6A51007728F4 /* JBApp.m in Sources */,
 				CE985856265C6E1800F9AAD4 /* device_link_service.c in Sources */,
 				CE985794265C655A00F9AAD4 /* Uid.cpp in Sources */,
@@ -816,10 +841,12 @@
 				CE98579A265C655A00F9AAD4 /* base64.c in Sources */,
 				CE985850265C6E1800F9AAD4 /* webinspector.c in Sources */,
 				CE9857AA265C655A00F9AAD4 /* Data.cpp in Sources */,
+				CEE8B4A6265D7DF4007728F4 /* Settings.swift in Sources */,
 				CE985859265C6E1800F9AAD4 /* mobilesync.c in Sources */,
 				CE9857A0265C655A00F9AAD4 /* bplist.c in Sources */,
 				CE985797265C655A00F9AAD4 /* time64.c in Sources */,
 				CE9857A4265C655A00F9AAD4 /* Integer.cpp in Sources */,
+				CEE8B48C265D797E007728F4 /* DeviceListView.swift in Sources */,
 				CE98584B265C6E1800F9AAD4 /* misagent.c in Sources */,
 				CE98579E265C655A00F9AAD4 /* Structure.cpp in Sources */,
 				CE98584C265C6E1800F9AAD4 /* lockdown.c in Sources */,
@@ -828,6 +855,7 @@
 				CE98584D265C6E1800F9AAD4 /* companion_proxy.c in Sources */,
 				CE985858265C6E1800F9AAD4 /* house_arrest.c in Sources */,
 				CE9857A8265C655A00F9AAD4 /* hashtable.c in Sources */,
+				CEE8B494265D7AE2007728F4 /* LauncherView.swift in Sources */,
 				CE9857BD265C671B00F9AAD4 /* node_list.c in Sources */,
 				CE985792265C655A00F9AAD4 /* Array.cpp in Sources */,
 				CE985799265C655A00F9AAD4 /* Node.cpp in Sources */,

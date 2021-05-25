@@ -14,16 +14,14 @@
 // limitations under the License.
 //
 
-import SwiftUI
+import UniformTypeIdentifiers
 
-@main
-struct JitterbugApp: App {
-    @StateObject var settings = Settings()
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environmentObject(settings)
-        }
+extension URL: Identifiable {
+    public var id: URL {
+        self
     }
+}
+
+extension UTType {
+    public static let mobileDevicePairing = UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!
 }

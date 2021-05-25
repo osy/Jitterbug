@@ -17,9 +17,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var settings: Settings
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        ZStack {
+            TabView {
+                LauncherView()
+                    .tabItem {
+                        Label("Launcher", systemImage: "ant")
+                    }
+                PairingsView()
+                    .tabItem {
+                        Label("Pairings", systemImage: "key")
+                    }
+                SupportFilesView()
+                    .tabItem {
+                        Label("Support Files", systemImage: "doc.zipper")
+                    }
+            }
+            if settings.busy {
+                BusyView(message: settings.busyMessage)
+            }
+        }.onOpenURL { url in
+            settings.importPairing(url)
+        }.disabled(settings.busy)
     }
 }
 
