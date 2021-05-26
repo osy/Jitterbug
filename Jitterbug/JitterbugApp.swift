@@ -18,12 +18,18 @@ import SwiftUI
 
 @main
 struct JitterbugApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject var main = Main()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(main)
+        }
+        .onChange(of: scenePhase) { newScenePhase in
+            if newScenePhase != .active {
+                main.archiveSavedHosts()
+            }
         }
     }
 }

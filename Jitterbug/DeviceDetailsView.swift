@@ -37,6 +37,24 @@ struct DeviceDetailsView: View {
     
     let host: JBHostDevice
     
+    private var favoriteApps: [JBApp] {
+        let favorites = main.getFavorites(forHostName: host.hostname)
+        return apps.filter { app in
+            favorites.contains { favorite in
+                app.bundleIdentifier == favorite
+            }
+        }
+    }
+    
+    private var notFavoriteApps: [JBApp] {
+        let favorites = main.getFavorites(forHostName: host.hostname)
+        return apps.filter { app in
+            !favorites.contains { favorite in
+                app.bundleIdentifier == favorite
+            }
+        }
+    }
+    
     var body: some View {
         Group {
             if host.udid == nil {
@@ -46,11 +64,24 @@ struct DeviceDetailsView: View {
                 Text("No apps found on device.")
             } else {
                 List {
-                    ForEach(apps) { app in
-                        Button {
-                            launchApplication(app)
-                        } label: {
-                            AppItem(app: app, saved: false)
+                    if !main.getFavorites(forHostName: host.hostname).isEmpty {
+                        Section(header: Text("Favorites")) {
+                            ForEach(favoriteApps) { app in
+                                Button {
+                                    launchApplication(app)
+                                } label: {
+                                    AppItem(app: app, saved: true, hostName: host.hostname)
+                                }
+                            }
+                        }
+                    }
+                    Section(header: Text("Installed")) {
+                        ForEach(notFavoriteApps) { app in
+                            Button {
+                                launchApplication(app)
+                            } label: {
+                                AppItem(app: app, saved: false, hostName: host.hostname)
+                            }
                         }
                     }
                 }
@@ -79,25 +110,26 @@ struct DeviceDetailsView: View {
                     Text("Mount")
                 }.disabled(host.udid == nil)
             }
+        }.onAppear {
+            selectedPairing = main.loadPairing(forHostName: host.hostname)
+            selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
+            selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
         }.onChange(of: selectedPairing) { url in
             guard let selected = url else {
                 return
             }
-            main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
-                try host.loadPairingData(for: selected)
-            } onComplete: {
-                selectedPairing = nil
-                refreshAppsList()
-            }
+            loadPairing(for: selected)
         }.onChange(of: selectedSupportImage) { url in
             guard let supportImage = url else {
                 return
             }
             let maybeSig = supportImage.appendingPathExtension("signature")
-            if FileManager.default.fileExists(atPath: maybeSig.path) {
-                selectedSupportImageSignature = maybeSig
-            } else {
-                fileSelectType = .supportImageSignature
+            if selectedSupportImageSignature == nil {
+                if FileManager.default.fileExists(atPath: maybeSig.path) {
+                    selectedSupportImageSignature = maybeSig
+                } else {
+                    fileSelectType = .supportImageSignature
+                }
             }
         }.onChange(of :selectedSupportImageSignature) { url in
             guard let supportImage = selectedSupportImage else {
@@ -110,16 +142,30 @@ struct DeviceDetailsView: View {
         }
     }
     
+    private func loadPairing(for selected: URL) {
+        main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
+            main.savePairing(nil, forHostName: host.hostname)
+            try host.loadPairingData(for: selected)
+            main.savePairing(selected, forHostName: host.hostname)
+        } onComplete: {
+            selectedPairing = nil
+            refreshAppsList()
+        }
+    }
+    
     private func refreshAppsList() {
         main.backgroundTask(message: NSLocalizedString("Querying device...", comment: "DeviceDetailsView")) {
             try host.updateInfo()
             apps = try host.installedApps()
+            main.archiveSavedHosts()
         }
     }
     
     private func mountImage(_ supportImage: URL, signature supportImageSignature: URL) {
         main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
+            main.saveDiskImage(nil, signature: nil, forHostName: host.hostname)
             try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
+            main.saveDiskImage(supportImage, signature: supportImageSignature, forHostName: host.hostname)
         } onComplete: {
             selectedSupportImage = nil
             selectedSupportImageSignature = nil
@@ -157,12 +203,20 @@ struct DeviceDetailsView: View {
 }
 
 struct AppItem: View {
+    @EnvironmentObject private var main: Main
+    
     let app: JBApp
     let saved: Bool
+    let hostName: String
     
     var body: some View {
         HStack {
             Button {
+                if saved {
+                    main.removeFavorite(appId: app.bundleIdentifier, forHostName: hostName)
+                } else {
+                    main.addFavorite(appId: app.bundleIdentifier, forHostName: hostName)
+                }
             } label: {
                 Label("Save", systemImage: saved ? "star.fill" : "star")
                     .foregroundColor(.accentColor)

@@ -30,6 +30,10 @@ class Main: ObservableObject {
     
     private let hostFinder = HostFinder()
     
+    private var storage: UserDefaults {
+        UserDefaults.standard
+    }
+    
     private var fileManager: FileManager {
         FileManager.default
     }
@@ -50,6 +54,7 @@ class Main: ObservableObject {
         hostFinder.delegate = self
         refreshPairings()
         refreshSupportImages()
+        unarchiveSavedHosts()
     }
     
     func backgroundTask(message: String?, task: @escaping () throws -> Void, onComplete: @escaping () -> Void = {}) {
@@ -135,6 +140,108 @@ class Main: ObservableObject {
     
     func deleteSupportImage(_ supportImage: URL) throws {
         try self.fileManager.removeItem(at: supportImage)
+    }
+    
+    // MARK: - Save and restore
+    func archiveSavedHosts() {
+        guard let data = try? NSKeyedArchiver.archivedData(withRootObject: savedHosts, requiringSecureCoding: false) else {
+            NSLog("Error archiving hosts")
+            return
+        }
+        storage.set(data, forKey: "SavedHosts")
+    }
+    
+    func unarchiveSavedHosts() {
+        guard let data = storage.data(forKey: "SavedHosts") else {
+            return
+        }
+        guard let hosts = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [JBHostDevice] else {
+            NSLog("Error unarchiving hosts")
+            return
+        }
+        savedHosts = hosts
+    }
+    
+    private func saveValue(_ value: Any, forKey key: String, forHostName hostName: String) {
+        var database = storage.dictionary(forKey: "Hosts") ?? [:]
+        var hostEntry: [String : Any] = database[hostName] as? [String : Any] ?? [:]
+        hostEntry[key] = value
+        database[hostName] = hostEntry
+        storage.set(database, forKey: "Hosts")
+    }
+    
+    private func loadValue(forKey key: String, forHostName hostName: String) -> Any? {
+        guard let database = storage.dictionary(forKey: "Hosts") else {
+            return nil
+        }
+        guard let hostEntry = database[hostName] as? [String : Any] else {
+            return nil
+        }
+        return hostEntry[key]
+    }
+    
+    func savePairing(_ pairing: URL?, forHostName hostName: String) {
+        let file = pairing?.lastPathComponent ?? ""
+        saveValue(file, forKey: "Pairing", forHostName: hostName)
+    }
+    
+    func loadPairing(forHostName hostName: String) -> URL? {
+        guard let file = loadValue(forKey: "Pairing", forHostName: hostName) as? String else {
+            return nil
+        }
+        guard file.count > 0 else {
+            return nil
+        }
+        return pairingsURL.appendingPathComponent(file)
+    }
+    
+    func saveDiskImage(_ diskImage: URL?, signature: URL?, forHostName hostName: String) {
+        let diskImageFile = diskImage?.lastPathComponent ?? ""
+        let diskImageSignatureFile = signature?.lastPathComponent ?? ""
+        saveValue(diskImageFile, forKey: "DiskImage", forHostName: hostName)
+        saveValue(diskImageSignatureFile, forKey: "DiskImageSignature", forHostName: hostName)
+    }
+    
+    func loadDiskImage(forHostName hostName: String) -> URL? {
+        guard let diskImageFile = loadValue(forKey: "DiskImage", forHostName: hostName) as? String else {
+            return nil
+        }
+        guard diskImageFile.count > 0 else {
+            return nil
+        }
+        return supportImagesURL.appendingPathComponent(diskImageFile)
+    }
+    
+    func loadDiskImageSignature(forHostName hostName: String) -> URL? {
+        guard let diskImageSignatureFile = loadValue(forKey: "DiskImageSignature", forHostName: hostName) as? String else {
+            return nil
+        }
+        guard diskImageSignatureFile.count > 0 else {
+            return nil
+        }
+        return supportImagesURL.appendingPathComponent(diskImageSignatureFile)
+    }
+    
+    func addFavorite(appId: String, forHostName hostName: String) {
+        var favorites = loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
+        if !favorites.contains(where: { favorite in
+            favorite == appId
+        }) {
+            favorites.append(appId)
+        }
+        saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+    }
+    
+    func removeFavorite(appId: String, forHostName hostName: String) {
+        var favorites = loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
+        favorites.removeAll { favorite in
+            favorite == appId
+        }
+        saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+    }
+    
+    func getFavorites(forHostName hostName: String) -> [String] {
+        return loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
     }
     
     // MARK: - Devices
