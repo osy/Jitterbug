@@ -440,7 +440,7 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
                 if (status) {
                     if (!strcmp(status, "Complete")) {
                         DEBUG_PRINT("Done.\n");
-                        res = 0;
+                        res = YES;
                     } else {
                         DEBUG_PRINT("unexpected status value:\n");
                         plist_print_to_stream(result, stderr);
@@ -458,7 +458,7 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
                 if (error) {
                     DEBUG_PRINT("Error: %s\n", errstr);
                     [self createError:error withString:[NSString stringWithUTF8String:errstr]];
-                    free(error);
+                    free(errstr);
                 } else {
                     DEBUG_PRINT("unexpected result:\n");
                     plist_print_to_stream(result, stderr);

@@ -51,7 +51,7 @@ struct PairingsView: View {
                 }
             }
             .fileImporter(isPresented: $isImporterPresented, allowedContentTypes: [.mobileDevicePairing], onCompletion: importFile)
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
     
     private func deleteAll(indicies: IndexSet) {
@@ -59,10 +59,12 @@ struct PairingsView: View {
         for i in indicies {
             toDelete.append(main.pairings[i])
         }
-        for url in toDelete {
-            main.backgroundTask(message: NSLocalizedString("Deleting pairing...", comment: "PairingsView")) {
+        main.backgroundTask(message: NSLocalizedString("Deleting pairing...", comment: "PairingsView")) {
+            for url in toDelete {
                 try main.deletePairing(url)
             }
+        } onComplete: {
+            main.pairings.remove(atOffsets: indicies)
         }
     }
     

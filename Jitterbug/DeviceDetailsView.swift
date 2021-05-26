@@ -52,7 +52,7 @@ struct DeviceDetailsView: View {
             }
         }.navigationTitle(host.name)
         .listStyle(PlainListStyle())
-        .popover(item: $fileSelectType) { type in
+        .sheet(item: $fileSelectType) { type in
             switch type {
             case .pairing:
                 FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing, title: Text("Select Pairing"))
@@ -72,7 +72,7 @@ struct DeviceDetailsView: View {
                     fileSelectType = .supportImage
                 } label: {
                     Text("Mount")
-                }
+                }.disabled(host.udid == nil)
             }
         }.onChange(of: selectedPairing) { url in
             guard let selected = url else {
@@ -101,7 +101,7 @@ struct DeviceDetailsView: View {
             guard let supportImageSignature = url else {
                 return
             }
-            main.backgroundTask(message: NSLocalizedString("Mounting developer image...", comment: "DeviceDetailsView")) {
+            main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
                 try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
             } onComplete: {
                 selectedSupportImage = nil

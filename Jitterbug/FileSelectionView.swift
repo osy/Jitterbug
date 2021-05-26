@@ -24,14 +24,21 @@ struct FileSelectionView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(urls) { url in
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                        selectedUrl = url
-                    } label: {
-                        Text(url.lastPathComponent)
-                            .lineLimit(1)
+            Group {
+                if urls.isEmpty {
+                    Text("No files found.")
+                        .font(.headline)
+                } else {
+                    List {
+                        ForEach(urls) { url in
+                            Button {
+                                presentationMode.wrappedValue.dismiss()
+                                selectedUrl = url
+                            } label: {
+                                Text(url.lastPathComponent)
+                                    .lineLimit(1)
+                            }
+                        }
                     }
                 }
             }.navigationTitle(title)

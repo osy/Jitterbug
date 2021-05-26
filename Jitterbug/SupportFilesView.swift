@@ -17,8 +17,64 @@
 import SwiftUI
 
 struct SupportFilesView: View {
+    @EnvironmentObject private var main: Main
+    @State private var isImporterPresented: Bool = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            Group {
+                if main.supportImages.isEmpty {
+                    Text("No support files found.")
+                        .font(.headline)
+                } else {
+                    List {
+                        ForEach(main.supportImages) { pairing in
+                            Text(pairing.lastPathComponent)
+                                .lineLimit(1)
+                        }.onDelete { indexSet in
+                            deleteAll(indicies: indexSet)
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                }
+            }
+            .navigationTitle("Support Files")
+            .toolbar {
+                HStack {
+                    Button(action: { isImporterPresented.toggle() }, label: {
+                        Label("Import", systemImage: "square.and.arrow.down")
+                            .labelStyle(IconOnlyLabelStyle())
+                    })
+                    if !main.pairings.isEmpty {
+                        EditButton()
+                    }
+                }
+            }
+            .fileImporter(isPresented: $isImporterPresented, allowedContentTypes: [.dmg, .signature], allowsMultipleSelection: true, onCompletion: importFiles)
+        }.navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    private func deleteAll(indicies: IndexSet) {
+        var toDelete: [URL] = []
+        for i in indicies {
+            toDelete.append(main.pairings[i])
+        }
+        main.backgroundTask(message: NSLocalizedString("Deleting support file...", comment: "PairingsView")) {
+            for url in toDelete {
+                try main.deleteSupportImage(url)
+            }
+        } onComplete: {
+            main.supportImages.remove(atOffsets: indicies)
+        }
+    }
+    
+    private func importFiles(result: Result<[URL], Error>) {
+        main.backgroundTask(message: NSLocalizedString("Importing support file...", comment: "PairingsView")) {
+            let urls = try result.get()
+            for url in urls {
+                try main.importSupportImage(url)
+            }
+        }
     }
 }
 

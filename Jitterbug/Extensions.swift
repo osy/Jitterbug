@@ -30,4 +30,6 @@ extension String: Identifiable {
 
 extension UTType {
     public static let mobileDevicePairing = UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!
+    public static let dmg = UTType(filenameExtension: "dmg", conformingTo: .data)!
+    public static let signature = UTType(filenameExtension: "signature", conformingTo: .data)!
 }

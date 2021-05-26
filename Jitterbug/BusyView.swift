@@ -20,11 +20,12 @@ struct BusyView: View {
     @State var message: String?
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             BigWhiteSpinner()
             if let m = message {
                 Text(m)
                     .font(.headline)
+                    .multilineTextAlignment(.center)
             }
         }
         .frame(width: 200, height: 200, alignment: .center)
