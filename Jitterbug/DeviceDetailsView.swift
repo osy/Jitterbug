@@ -44,7 +44,7 @@ struct DeviceDetailsView: View {
             } else {
                 List {
                     ForEach(apps) { app in
-                        Text(app.bundleName)
+                        AppItem(app: app, saved: false)
                     }
                 }
             }
@@ -88,6 +88,32 @@ struct DeviceDetailsView: View {
             try host.updateInfo()
             apps = try host.installedApps()
         }
+    }
+}
+
+struct AppItem: View {
+    let app: JBApp
+    let saved: Bool
+    
+    var body: some View {
+        HStack {
+            Button {
+            } label: {
+                Label("Save", systemImage: saved ? "star.fill" : "star")
+                    .foregroundColor(.accentColor)
+            }
+            if let icon = UIImage(data: app.icon) {
+                Image(uiImage: icon)
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                    .aspectRatio(contentMode: .fit)
+            } else {
+                EmptyView()
+                    .frame(width: 32, height: 32)
+            }
+            Text(app.bundleName)
+            Spacer()
+        }.buttonStyle(PlainButtonStyle())
     }
 }
 

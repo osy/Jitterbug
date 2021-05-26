@@ -46,7 +46,6 @@ struct DeviceListView: View {
             })
         }
         .listStyle(PlainListStyle())
-        .labelStyle(IconOnlyLabelStyle())
         .onAppear {
             main.startScanning()
         }
@@ -86,8 +85,7 @@ struct HostView: View {
             }
             Text(host.name)
             Spacer()
-        }.labelStyle(IconOnlyLabelStyle())
-        .buttonStyle(PlainButtonStyle())
+        }.buttonStyle(PlainButtonStyle())
     }
 }
 

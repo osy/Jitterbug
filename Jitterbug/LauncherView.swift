@@ -27,7 +27,7 @@ struct LauncherView: View {
                         Spinner()
                     }
                 })
-        }
+        }.labelStyle(IconOnlyLabelStyle())
     }
 }
 

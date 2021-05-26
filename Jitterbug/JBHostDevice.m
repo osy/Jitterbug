@@ -17,7 +17,10 @@
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/installation_proxy.h>
 #include <libimobiledevice/lockdown.h>
+#include <libimobiledevice/sbservices.h>
+#import "JBApp.h"
 #import "JBHostDevice.h"
+#import "Jitterbug.h"
 #import "Jitterbug-Swift.h"
 #import "CacheStorage.h"
 
@@ -198,9 +201,6 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
         return NO;
     }
-#if DEBUG
-    idevice_set_debug_level(1);
-#endif
     if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
         [self freePairing];
@@ -254,9 +254,6 @@ end:
         [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
         return nil;
     }
-#if DEBUG
-    idevice_set_debug_level(1);
-#endif
     if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
         [self freePairing];
@@ -279,6 +276,29 @@ end:
     
     ret = [self parseLookupResult:apps];
     plist_free(apps);
+    if (ret == nil) {
+        goto end;
+    }
+    
+    sbservices_client_t sbs = NULL;
+    if (sbservices_client_start_service(device, &sbs, TOOL_NAME) != SBSERVICES_E_SUCCESS) {
+        DEBUG_PRINT("ignoring sbservices error, no icons generated");
+        goto end;
+    }
+    
+    for (JBApp *app in ret) {
+        char *pngdata = NULL;
+        uint64_t pngsize = 0;
+        if (sbservices_get_icon_pngdata(sbs, app.bundleIdentifier.UTF8String, &pngdata, &pngsize) != SBSERVICES_E_SUCCESS) {
+            DEBUG_PRINT("failed to get icon for '%s'", app.bundleIdentifier.UTF8String);
+            continue;
+        }
+        NSData *data = [NSData dataWithBytes:pngdata length:pngsize];
+        app.icon = data;
+        free(pngdata);
+    }
+    
+    sbservices_client_free(sbs);
     
 end:
     if (instproxy_client) {
