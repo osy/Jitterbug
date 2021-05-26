@@ -28,7 +28,7 @@
 #import "CacheStorage.h"
 
 #define TOOL_NAME "jitterbug"
-NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
+NSString *const kJBErrorDomain = @"com.osy86.Jitterbug";
 const NSInteger kJBHostImageNotMounted = -666;
 static const char PKG_PATH[] = "PublicStaging";
 static const char PATH_PREFIX[] = "/private/var/mobile/Media";
