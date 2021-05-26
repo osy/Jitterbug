@@ -22,6 +22,12 @@ extension URL: Identifiable {
     }
 }
 
+extension String: Identifiable {
+    public var id: String {
+        self
+    }
+}
+
 extension UTType {
     public static let mobileDevicePairing = UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!
 }

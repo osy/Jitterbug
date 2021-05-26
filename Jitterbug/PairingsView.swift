@@ -69,7 +69,7 @@ struct PairingsView: View {
             let url = try result.get()
             main.importPairing(url)
         } catch {
-            main.alertMessage = AlertMessage(error.localizedDescription)
+            main.alertMessage = error.localizedDescription
         }
     }
 }

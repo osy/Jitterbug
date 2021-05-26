@@ -17,8 +17,40 @@
 import SwiftUI
 
 struct DeviceListView: View {
+    @EnvironmentObject private var main: Main
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            if !main.savedHosts.isEmpty {
+                Section(header: Text("Saved")) {
+                    ForEach(main.savedHosts) { host in
+                        HostView(host: host)
+                    }
+                }
+            }
+            Section(header: Text("Discovered")) {
+                ForEach(main.foundHosts) { host in
+                    HostView(host: host)
+                }
+            }
+        }.navigationTitle("Devices")
+        .listStyle(PlainListStyle())
+        .onAppear {
+            main.startScanning()
+        }
+        .onDisappear {
+            main.stopScanning()
+        }
+    }
+}
+
+struct HostView: View {
+    @EnvironmentObject private var main: Main
+    
+    let host: JBHostDevice
+    
+    var body: some View {
+        Text(host.hostname)
     }
 }
 

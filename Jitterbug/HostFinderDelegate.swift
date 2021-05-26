@@ -15,9 +15,9 @@
 //
 
 protocol HostFinderDelegate : class {
-    func hostFinderWillStart();
-    func hostFinderDidStop();
-    func hostFinderError(_ error: String);
-    func hostFinderNewHost(_ host: String, address: Data);
-    func hostFinderRemoveHost(_ host: String);
+    func hostFinderWillStart()
+    func hostFinderDidStop()
+    func hostFinderError(_ error: String)
+    func hostFinderNewHost(_ host: String, address: Data)
+    func hostFinderRemoveHost(_ host: String)
 }

@@ -21,3 +21,9 @@ import Combine
         DispatchQueue.main.async { self.objectWillChange.send() }
     }
 }
+
+@objc extension JBHostDevice: Identifiable {
+    public var id: String {
+        self.hostname
+    }
+}

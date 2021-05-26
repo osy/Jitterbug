@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSData *address;
 @property (nonatomic) JBHostDeviceType hostDeviceType;
 @property (nonatomic) NSString *hostVersion;
+@property (nonatomic) BOOL discovered;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address NS_DESIGNATED_INITIALIZER;

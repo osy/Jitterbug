@@ -38,6 +38,8 @@ struct ContentView: View {
             if main.busy {
                 BusyView(message: main.busyMessage)
             }
+        }.alert(item: $main.alertMessage) { message in
+            Alert(title: Text(message))
         }.onOpenURL { url in
             main.importPairing(url)
         }.disabled(main.busy)

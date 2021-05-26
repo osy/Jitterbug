@@ -56,6 +56,13 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
     }
 }
 
+- (void)setDiscovered:(BOOL)discovered {
+    if (_discovered != discovered) {
+        [self propertyWillChange];
+        _discovered = discovered;
+    }
+}
+
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address {
     if (self = [super init]) {
         self.hostname = hostname;

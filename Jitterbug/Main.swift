@@ -16,24 +16,19 @@
 
 import Combine
 
-struct AlertMessage: Identifiable {
-    var message: String
-    public var id: String {
-        message
-    }
-    
-    init(_ message: String) {
-        self.message = message
-    }
-}
-
 class Main: ObservableObject {
-    @Published var alertMessage: AlertMessage?
+    @Published var alertMessage: String?
     @Published var busy: Bool = false
     @Published var busyMessage: String?
     
+    @Published var scanning: Bool = false
+    @Published var savedHosts: [JBHostDevice] = []
+    @Published var foundHosts: [JBHostDevice] = []
+    
     @Published var pairings: [URL] = []
     @Published var supportImages: [URL] = []
+    
+    private let hostFinder = HostFinder()
     
     private var fileManager: FileManager {
         FileManager.default
@@ -52,6 +47,7 @@ class Main: ObservableObject {
     }
     
     init() {
+        hostFinder.delegate = self
         refreshPairings()
         refreshSupportImages()
     }
@@ -72,11 +68,13 @@ class Main: ObservableObject {
                 try task()
             } catch {
                 DispatchQueue.main.async {
-                    self.alertMessage = AlertMessage(error.localizedDescription)
+                    self.alertMessage = error.localizedDescription
                 }
             }
         }
     }
+    
+    // MARK: - File management
     
     private func importFile(_ file: URL, toDirectory: URL) {
         _ = file.startAccessingSecurityScopedResource()
@@ -143,5 +141,68 @@ class Main: ObservableObject {
     
     func deleteSupportImage(_ supportImage: URL) {
         delete(supportImage, list: &supportImages)
+    }
+    
+    // MARK: - Scanning
+    func startScanning() {
+        hostFinder.startSearch()
+    }
+    
+    func stopScanning() {
+        hostFinder.stopSearch()
+    }
+}
+
+extension Main: HostFinderDelegate {
+    func hostFinderWillStart() {
+        DispatchQueue.main.async {
+            self.scanning = true
+        }
+    }
+    
+    func hostFinderDidStop() {
+        DispatchQueue.main.async {
+            self.scanning = false
+        }
+    }
+    
+    func hostFinderError(_ error: String) {
+        DispatchQueue.main.async {
+            self.alertMessage = error
+        }
+    }
+    
+    func hostFinderNewHost(_ host: String, address: Data) {
+        DispatchQueue.main.async {
+            for hostDevice in self.savedHosts {
+                if hostDevice.hostname == host {
+                    hostDevice.updateAddress(address)
+                    hostDevice.discovered = true
+                    return
+                }
+            }
+            for hostDevice in self.foundHosts {
+                if hostDevice.hostname == host {
+                    hostDevice.updateAddress(address)
+                    hostDevice.discovered = true
+                    return
+                }
+            }
+            let newHost = JBHostDevice(hostname: host, address: address)
+            self.foundHosts.append(newHost)
+        }
+    }
+    
+    func hostFinderRemoveHost(_ host: String) {
+        DispatchQueue.main.async {
+            for hostDevice in self.savedHosts {
+                if hostDevice.hostname == host {
+                    hostDevice.discovered = false
+                }
+            }
+            self.foundHosts.removeAll { hostDevice in
+                hostDevice.hostname == host
+            }
+        }
     }
 }

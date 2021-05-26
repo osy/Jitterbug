@@ -40,15 +40,14 @@ class HostFinder: NSObject {
 
 extension HostFinder: NetServiceBrowserDelegate {
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind: NetService, moreComing: Bool) {
-        NSLog("[HostFinder] resolving host %@", didFind.hostName ?? "(unknown)")
+        NSLog("[HostFinder] resolving %@", didFind.name)
+        didFind.delegate = self
         didFind.resolve(withTimeout: resolveTimeout)
     }
     
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove: NetService, moreComing: Bool) {
-        NSLog("[HostFinder] removing %@", didRemove.hostName ?? "(unknown)")
-        if let hostName = didRemove.hostName {
-            delegate?.hostFinderRemoveHost(hostName)
-        }
+        NSLog("[HostFinder] removing %@", didRemove.name)
+        delegate?.hostFinderRemoveHost(didRemove.name)
     }
     
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
@@ -64,23 +63,20 @@ extension HostFinder: NetServiceBrowserDelegate {
 
 extension HostFinder: NetServiceDelegate {
     func netServiceDidResolveAddress(_ sender: NetService) {
-        NSLog("[HostFinder] resolved %@", sender.hostName ?? "(unknown)")
-        guard let hostName = sender.hostName else {
-            return
-        }
+        NSLog("[HostFinder] resolved %@", sender.name)
+        sender.stop()
         guard let address = sender.addresses?[0] else {
-            delegate?.hostFinderError(NSLocalizedString("Failed to resolve \(hostName)", comment: "HostFinder"))
+            delegate?.hostFinderError(NSLocalizedString("Failed to resolve \(sender.name)", comment: "HostFinder"))
             return
         }
-        delegate?.hostFinderNewHost(hostName, address: address)
+        delegate?.hostFinderNewHost(sender.name, address: address)
     }
     
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
-        let hostName = sender.hostName ?? "(unknown)"
-        NSLog("[HostFinder] resolve failed for %@", hostName)
+        NSLog("[HostFinder] resolve failed for %@", sender.name)
         let errorCode = errorDict[NetService.errorCode]!
         let errorDomain = errorDict[NetService.errorDomain]!
-        let error = NSLocalizedString("Resolving \(hostName) failed with the error domain \(errorDomain), code \(errorCode)", comment: "HostFinder")
+        let error = NSLocalizedString("Resolving \(sender.name) failed with the error domain \(errorDomain), code \(errorCode)", comment: "HostFinder")
         delegate?.hostFinderError(error)
     }
 }

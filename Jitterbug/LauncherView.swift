@@ -17,8 +17,29 @@
 import SwiftUI
 
 struct LauncherView: View {
+    @EnvironmentObject private var main: Main
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            DeviceListView()
+                .toolbar {
+                    if main.scanning {
+                        Spinner()
+                    }
+                }
+        }
+    }
+}
+
+struct Spinner: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.color = .label
+        view.startAnimating()
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
     }
 }
 
