@@ -22,11 +22,11 @@ struct LauncherView: View {
     var body: some View {
         NavigationView {
             DeviceListView()
-                .toolbar {
+                .navigationBarItems(leading: Group {
                     if main.scanning {
                         Spinner()
                     }
-                }
+                })
         }
     }
 }

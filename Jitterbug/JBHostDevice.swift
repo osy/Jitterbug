@@ -30,6 +30,6 @@ import Combine
 
 @objc extension JBApp: Identifiable {
     public var id: String {
-        ""
+        self.bundleIdentifier
     }
 }

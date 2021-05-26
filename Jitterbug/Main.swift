@@ -52,7 +52,7 @@ class Main: ObservableObject {
         refreshSupportImages()
     }
     
-    func backgroundTask(message: String?, task: @escaping () throws -> Void) {
+    func backgroundTask(message: String?, task: @escaping () throws -> Void, onComplete: @escaping () -> Void = {}) {
         DispatchQueue.main.async {
             self.busy = true
             self.busyMessage = message
@@ -62,6 +62,7 @@ class Main: ObservableObject {
                 DispatchQueue.main.async {
                     self.busy = false
                     self.busyMessage = nil
+                    onComplete()
                 }
             }
             do {
@@ -76,7 +77,7 @@ class Main: ObservableObject {
     
     // MARK: - File management
     
-    private func importFile(_ file: URL, toDirectory: URL) throws {
+    private func importFile(_ file: URL, toDirectory: URL, onComplete: @escaping () -> Void) throws {
         _ = file.startAccessingSecurityScopedResource()
         defer {
             file.stopAccessingSecurityScopedResource()
@@ -91,19 +92,21 @@ class Main: ObservableObject {
                 try self.fileManager.removeItem(at: dest)
             }
             try self.fileManager.copyItem(at: file, to: dest)
-            DispatchQueue.main.async {
-                self.refreshPairings()
-                self.refreshSupportImages()
-            }
+        } onComplete: {
+            onComplete()
         }
     }
     
     func importPairing(_ pairing: URL) throws {
-        try importFile(pairing, toDirectory: pairingsURL)
+        try importFile(pairing, toDirectory: pairingsURL) {
+            self.refreshPairings()
+        }
     }
     
     func importSupportImage(_ support: URL) throws {
-        try importFile(support, toDirectory: supportImagesURL)
+        try importFile(support, toDirectory: supportImagesURL) {
+            self.refreshSupportImages()
+        }
     }
     
     private func refresh(directory: URL, list: inout [URL]) {

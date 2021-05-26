@@ -76,6 +76,8 @@ struct DeviceDetailsView: View {
             }
             main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
                 try host.loadPairingData(for: selected)
+            } onComplete: {
+                selectedPairing = nil
                 refreshAppsList()
             }
         }

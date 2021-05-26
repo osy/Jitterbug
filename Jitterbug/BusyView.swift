@@ -29,7 +29,7 @@ struct BusyView: View {
         }
         .frame(width: 200, height: 200, alignment: .center)
         .foregroundColor(.white)
-        .background(Color.gray.opacity(0.5))
+        .background(Color.black.opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 25.0, style: .continuous))
     }
 }

@@ -169,10 +169,13 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
 }
 
 - (NSArray<JBApp *> *)parseLookupResult:(plist_t)plist {
-    uint32_t len = plist_array_get_size(plist);
+    plist_dict_iter iter = NULL;
+    uint32_t len = plist_dict_get_size(plist);
     NSMutableArray<JBApp *> *ret = [NSMutableArray arrayWithCapacity:len];
+    plist_dict_new_iter(plist, &iter);
     for (uint32_t i = 0; i < len; i++) {
-        plist_t item = plist_array_get_item(plist, i);
+        plist_t item = NULL;
+        plist_dict_next_item(plist, iter, NULL, &item);
         JBApp *app = [JBApp new];
         app.bundleName = plist_dict_get_nsstring(item, "CFBundleName");
         app.bundleIdentifier = plist_dict_get_nsstring(item, "CFBundleIdentifier");
@@ -180,6 +183,7 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         app.container = plist_dict_get_nsstring(item, "Container");
         [ret addObject:app];
     }
+    free(iter);
     return ret;
 }
 
@@ -194,13 +198,18 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
         return nil;
     }
+#if DEBUG
+    idevice_set_debug_level(1);
+#endif
     if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
+        [self freePairing];
         goto end;
     }
     
     if (instproxy_client_start_service(device, &instproxy_client, TOOL_NAME) != INSTPROXY_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice")];
+        [self freePairing];
         goto end;
     }
     

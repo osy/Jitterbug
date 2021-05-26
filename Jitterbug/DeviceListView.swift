@@ -18,6 +18,7 @@ import SwiftUI
 
 struct DeviceListView: View {
     @EnvironmentObject private var main: Main
+    @State private var showIpAlert: Bool = false
     
     var body: some View {
         List {
@@ -39,7 +40,13 @@ struct DeviceListView: View {
                 }
             }
         }.navigationTitle("Devices")
+        .toolbar {
+            Button(action: { showIpAlert.toggle() }, label: {
+                Label("Add", systemImage: "plus")
+            })
+        }
         .listStyle(PlainListStyle())
+        .labelStyle(IconOnlyLabelStyle())
         .onAppear {
             main.startScanning()
         }
