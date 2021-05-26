@@ -60,16 +60,16 @@ struct PairingsView: View {
             toDelete.append(main.pairings[i])
         }
         for url in toDelete {
-            main.deletePairing(url)
+            main.backgroundTask(message: NSLocalizedString("Deleting pairing...", comment: "PairingsView")) {
+                try main.deletePairing(url)
+            }
         }
     }
     
     private func importFile(result: Result<URL, Error>) {
-        do {
+        main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "PairingsView")) {
             let url = try result.get()
-            main.importPairing(url)
-        } catch {
-            main.alertMessage = error.localizedDescription
+            try main.importPairing(url)
         }
     }
 }

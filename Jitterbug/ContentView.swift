@@ -41,7 +41,9 @@ struct ContentView: View {
         }.alert(item: $main.alertMessage) { message in
             Alert(title: Text(message))
         }.onOpenURL { url in
-            main.importPairing(url)
+            main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "ContentView")) {
+                try main.importPairing(url)
+            }
         }.disabled(main.busy)
     }
 }

@@ -138,6 +138,7 @@
 		CEE8B4B8265DC014007728F4 /* HostFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B7265DC014007728F4 /* HostFinder.swift */; };
 		CEE8B4BE265DC843007728F4 /* HostFinderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */; };
 		CEE8B4C8265DDDB3007728F4 /* DeviceDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */; };
+		CEE8B4D0265DEAAF007728F4 /* FileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -327,6 +328,7 @@
 		CEE8B4B7265DC014007728F4 /* HostFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinder.swift; sourceTree = "<group>"; };
 		CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinderDelegate.swift; sourceTree = "<group>"; };
 		CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetailsView.swift; sourceTree = "<group>"; };
+		CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +393,7 @@
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
 				CEE8B48B265D797E007728F4 /* DeviceListView.swift */,
 				CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */,
+				CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */,
 				CEE8B493265D7AE2007728F4 /* LauncherView.swift */,
 				CEE8B499265D7B6F007728F4 /* PairingsView.swift */,
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
@@ -865,6 +868,7 @@
 				CEE8B468265CC57D007728F4 /* CacheStorage.c in Sources */,
 				CEE8B45A265CBF49007728F4 /* socket.c in Sources */,
 				CE98584D265C6E1800F9AAD4 /* companion_proxy.c in Sources */,
+				CEE8B4D0265DEAAF007728F4 /* FileSelectionView.swift in Sources */,
 				CE985858265C6E1800F9AAD4 /* house_arrest.c in Sources */,
 				CE9857A8265C655A00F9AAD4 /* hashtable.c in Sources */,
 				CEE8B494265D7AE2007728F4 /* LauncherView.swift in Sources */,

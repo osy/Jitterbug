@@ -76,7 +76,7 @@ class Main: ObservableObject {
     
     // MARK: - File management
     
-    private func importFile(_ file: URL, toDirectory: URL) {
+    private func importFile(_ file: URL, toDirectory: URL) throws {
         _ = file.startAccessingSecurityScopedResource()
         defer {
             file.stopAccessingSecurityScopedResource()
@@ -98,12 +98,12 @@ class Main: ObservableObject {
         }
     }
     
-    func importPairing(_ pairing: URL) {
-        importFile(pairing, toDirectory: pairingsURL)
+    func importPairing(_ pairing: URL) throws {
+        try importFile(pairing, toDirectory: pairingsURL)
     }
     
-    func importSupportImage(_ support: URL) {
-        importFile(support, toDirectory: supportImagesURL)
+    func importSupportImage(_ support: URL) throws {
+        try importFile(support, toDirectory: supportImagesURL)
     }
     
     private func refresh(directory: URL, list: inout [URL]) {
@@ -126,21 +126,12 @@ class Main: ObservableObject {
         refresh(directory: supportImagesURL, list: &supportImages)
     }
     
-    private func delete(_ file: URL, list: inout [URL]) {
-        backgroundTask(message: NSLocalizedString("Deleting file...", comment: "Settings")) {
-            try self.fileManager.removeItem(at: file)
-        }
-        list.removeAll { url in
-            url.lastPathComponent == file.lastPathComponent
-        }
+    func deletePairing(_ pairing: URL) throws {
+        try self.fileManager.removeItem(at: pairing)
     }
     
-    func deletePairing(_ pairing: URL) {
-        delete(pairing, list: &pairings)
-    }
-    
-    func deleteSupportImage(_ supportImage: URL) {
-        delete(supportImage, list: &supportImages)
+    func deleteSupportImage(_ supportImage: URL) throws {
+        try self.fileManager.removeItem(at: supportImage)
     }
     
     // MARK: - Devices

@@ -27,7 +27,7 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
 
 @property (nonatomic, readwrite) NSString *hostname;
 @property (nonatomic, readwrite) NSData *address;
-@property (nonatomic, nullable) NSString *udid;
+@property (nonatomic, nullable, readwrite) NSString *udid;
 
 @end
 
