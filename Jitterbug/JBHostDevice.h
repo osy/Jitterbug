@@ -28,14 +28,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JBHostDevice : NSObject<NSSecureCoding>
 
 @property (nonatomic) NSString *name;
-@property (nonatomic, readonly) NSString *ipAddress;
+@property (nonatomic, readonly) NSString *hostname;
+@property (nonatomic, readonly) NSData *address;
 @property (nonatomic) JBHostDeviceType hostDeviceType;
 @property (nonatomic) NSString *hostVersion;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithIpaddress:(NSString *)ipAddress NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address NS_DESIGNATED_INITIALIZER;
 
 - (BOOL)loadPairingDataForUrl:(NSURL *)url error:(NSError **)error;
+- (void)updateAddress:(NSData *)address;
 
 - (nullable NSArray<JBApp *> *)installedAppsWithError:(NSError **)error;
 

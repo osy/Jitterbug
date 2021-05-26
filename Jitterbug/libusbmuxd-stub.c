@@ -39,9 +39,6 @@
 
 USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info_t *device)
 {
-    char *ipaddr = NULL;
-    struct sockaddr_in saddr = {0};
-    
     if (!udid) {
         DEBUG_PRINT("udid cannot be null!");
         return -EINVAL;
@@ -50,18 +47,12 @@ USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info
         DEBUG_PRINT("device cannot be null!");
         return -EINVAL;
     }
-    if (!cachePairingGetIpaddr(udid, &ipaddr)) {
+    if (!cachePairingGetAddress(udid, device->conn_data)) {
         DEBUG_PRINT("no cache entry for %s", udid);
         return -ENOENT;
     }
     strcpy(device->udid, udid);
     device->conn_type = CONNECTION_TYPE_NETWORK;
-    saddr.sin_len = sizeof(saddr);
-    saddr.sin_family = AF_INET;
-    saddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    inet_aton(ipaddr, &saddr.sin_addr);
-    free(ipaddr);
-    memcpy(device->conn_data, &saddr, saddr.sin_len);
     return 1;
 }
 

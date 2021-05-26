@@ -20,13 +20,13 @@
 
 typedef struct {
     char *udid;
-    char *ipaddr;
+    CFDataRef address;
     CFDataRef data;
 } pairing_t;
 
 static struct collection g_pairing_cache = {0};
 
-int cachePairingAdd(const char *udid, const char *ipaddr, CFDataRef data) {
+int cachePairingAdd(const char *udid, CFDataRef address, CFDataRef data) {
     pairing_t *pairing = NULL;
     
     if (g_pairing_cache.capacity == 0) {
@@ -34,10 +34,32 @@ int cachePairingAdd(const char *udid, const char *ipaddr, CFDataRef data) {
     }
     pairing = calloc(sizeof(pairing_t), 1);
     pairing->udid = strdup(udid);
-    pairing->ipaddr = strdup(ipaddr);
+    pairing->address = CFRetain(address);
     pairing->data = CFRetain(data);
     collection_add(&g_pairing_cache, pairing);
     return 1;
+}
+
+int cachePairingUpdateAddress(const char *udid, CFDataRef address) {
+    FOREACH(pairing_t *pairing, &g_pairing_cache) {
+        if (pairing && strcmp(pairing->udid, udid) == 0) {
+            CFRelease(pairing->address);
+            pairing->address = CFRetain(address);
+            return 1;
+        }
+    } ENDFOREACH
+    return 0;
+}
+
+int cachePairingUpdateData(const char *udid, CFDataRef data) {
+    FOREACH(pairing_t *pairing, &g_pairing_cache) {
+        if (pairing && strcmp(pairing->udid, udid) == 0) {
+            CFRelease(pairing->data);
+            pairing->data = CFRetain(data);
+            return 1;
+        }
+    } ENDFOREACH
+    return 0;
 }
 
 int cachePairingRemove(const char *udid) {
@@ -46,7 +68,7 @@ int cachePairingRemove(const char *udid) {
         if (pairing && strcmp(pairing->udid, udid) == 0) {
             collection_remove(&g_pairing_cache, pairing);
             free(pairing->udid);
-            free(pairing->ipaddr);
+            CFRelease(pairing->address);
             CFRelease(pairing->data);
             free(pairing);
             ret = 1;
@@ -55,10 +77,11 @@ int cachePairingRemove(const char *udid) {
     return ret;
 }
 
-int cachePairingGetIpaddr(const char *udid, char **ipaddr) {
+int cachePairingGetAddress(const char *udid, char address[static 200]) {
     FOREACH(pairing_t *pairing, &g_pairing_cache) {
         if (pairing && strcmp(pairing->udid, udid) == 0) {
-            *ipaddr = strdup(pairing->ipaddr);
+            CFIndex len = CFDataGetLength(pairing->address);
+            CFDataGetBytes(pairing->address, CFRangeMake(0, len > 200 ? 200 : len), (void *)address);
             return 1;
         }
     } ENDFOREACH

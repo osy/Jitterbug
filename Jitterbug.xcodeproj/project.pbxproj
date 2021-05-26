@@ -135,6 +135,8 @@
 		CEE8B4A6265D7DF4007728F4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4A5265D7DF3007728F4 /* Settings.swift */; };
 		CEE8B4AA265D8870007728F4 /* BusyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4A9265D8870007728F4 /* BusyView.swift */; };
 		CEE8B4B2265D9550007728F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B1265D954F007728F4 /* Extensions.swift */; };
+		CEE8B4B8265DC014007728F4 /* HostFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B7265DC014007728F4 /* HostFinder.swift */; };
+		CEE8B4BE265DC843007728F4 /* HostFinderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -321,6 +323,8 @@
 		CEE8B4A5265D7DF3007728F4 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CEE8B4A9265D8870007728F4 /* BusyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusyView.swift; sourceTree = "<group>"; };
 		CEE8B4B1265D954F007728F4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEE8B4B7265DC014007728F4 /* HostFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinder.swift; sourceTree = "<group>"; };
+		CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinderDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -378,6 +382,8 @@
 				CEE8B470265CC9BA007728F4 /* Jitterbug.h */,
 				CE98574A265C635000F9AAD4 /* JitterbugApp.swift */,
 				CEE8B4B1265D954F007728F4 /* Extensions.swift */,
+				CEE8B4B7265DC014007728F4 /* HostFinder.swift */,
+				CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */,
 				CEE8B4A5265D7DF3007728F4 /* Settings.swift */,
 				CEE8B4A9265D8870007728F4 /* BusyView.swift */,
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
@@ -808,6 +814,7 @@
 				CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */,
 				CEE8B46D265CC787007728F4 /* collection.c in Sources */,
 				CE985849265C6E1800F9AAD4 /* service.c in Sources */,
+				CEE8B4B8265DC014007728F4 /* HostFinder.swift in Sources */,
 				CE9857A1265C655A00F9AAD4 /* Dictionary.cpp in Sources */,
 				CE9857AB265C655A00F9AAD4 /* Date.cpp in Sources */,
 				CEE8B4AA265D8870007728F4 /* BusyView.swift in Sources */,
@@ -822,6 +829,7 @@
 				CEE8B461265CBFC2007728F4 /* libusbmuxd-stub.c in Sources */,
 				CE985853265C6E1800F9AAD4 /* mobilebackup2.c in Sources */,
 				CE985846265C6E1800F9AAD4 /* debugserver.c in Sources */,
+				CEE8B4BE265DC843007728F4 /* HostFinderDelegate.swift in Sources */,
 				CE9857F1265C6DF300F9AAD4 /* debug.c in Sources */,
 				CEE8B475265D59C0007728F4 /* JBHostDevice.m in Sources */,
 				CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */,

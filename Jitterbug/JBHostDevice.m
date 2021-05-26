@@ -25,7 +25,8 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
 
 @interface JBHostDevice ()
 
-@property (nonatomic, readwrite) NSString *ipAddress;
+@property (nonatomic, readwrite) NSString *hostname;
+@property (nonatomic, readwrite) NSData *address;
 @property (nonatomic, nullable) NSString *udid;
 
 @end
@@ -55,10 +56,11 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
     }
 }
 
-- (instancetype)initWithIpaddress:(NSString *)ipAddress {
+- (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address {
     if (self = [super init]) {
-        self.ipAddress = ipAddress;
-        self.name = ipAddress;
+        self.hostname = hostname;
+        self.address = address;
+        self.name = hostname;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
         self.hostVersion = @"";
     }
@@ -79,8 +81,12 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
         if (!self.name) {
             return nil;
         }
-        self.ipAddress = [coder decodeObjectForKey:@"ipAddress"];
-        if (!self.ipAddress) {
+        self.hostname = [coder decodeObjectForKey:@"hostname"];
+        if (!self.hostname) {
+            return nil;
+        }
+        self.address = [coder decodeObjectForKey:@"address"];
+        if (!self.address) {
             return nil;
         }
         self.hostDeviceType = [coder decodeIntegerForKey:@"hostDeviceType"];
@@ -97,7 +103,8 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeObject:self.name forKey:@"name"];
-    [coder encodeObject:self.ipAddress forKey:@"ipAddress"];
+    [coder encodeObject:self.hostname forKey:@"hostname"];
+    [coder encodeObject:self.address forKey:@"address"];
     [coder encodeInteger:self.hostDeviceType forKey:@"hostDeviceType"];
     [coder encodeObject:self.hostVersion forKey:@"hostVersion"];
 }
@@ -131,13 +138,21 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
     if (!udid) {
         [self createError:error withString:NSLocalizedString(@"Pairing data missing key 'UDID'", @"JBHostDevice")];
     }
-    [self freePairing];
-    if (!cachePairingAdd(udid.UTF8String, self.ipAddress.UTF8String, (__bridge CFDataRef)(data))) {
-        [self createError:error withString:NSLocalizedString(@"Failed cache pairing data.", @"JBHostDevice")];
-        return NO;
+    if (!cachePairingUpdateData(udid.UTF8String, (__bridge CFDataRef)(data))) {
+        if (!cachePairingAdd(udid.UTF8String, (__bridge CFDataRef)(self.address), (__bridge CFDataRef)(data))) {
+            [self createError:error withString:NSLocalizedString(@"Failed cache pairing data.", @"JBHostDevice")];
+            return NO;
+        }
     }
     self.udid = udid;
     return YES;
+}
+
+- (void)updateAddress:(NSData *)address {
+    self.address = address;
+    if (self.udid) {
+        cachePairingUpdateAddress(self.udid.UTF8String, (__bridge CFDataRef)(address));
+    }
 }
 
 - (NSArray<JBApp *> *)parseLookupResult:(plist_t)plist {

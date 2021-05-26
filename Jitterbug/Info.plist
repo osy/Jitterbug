@@ -46,5 +46,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Discover iOS devices on the local network.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_apple-mobdev2._tcp</string>
+	</array>
 </dict>
 </plist>
