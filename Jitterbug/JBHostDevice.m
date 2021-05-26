@@ -16,6 +16,7 @@
 
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/installation_proxy.h>
+#include <libimobiledevice/lockdown.h>
 #import "JBHostDevice.h"
 #import "Jitterbug-Swift.h"
 #import "CacheStorage.h"
@@ -184,6 +185,61 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         [ret addObject:app];
     }
     free(iter);
+    return ret;
+}
+
+- (BOOL)updateDeviceInfoWithError:(NSError **)error {
+    idevice_t device = NULL;
+    lockdownd_client_t client = NULL;
+    plist_t node = NULL;
+    BOOL ret = NO;
+    
+    if (!self.udid) {
+        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
+        return NO;
+    }
+#if DEBUG
+    idevice_set_debug_level(1);
+#endif
+    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
+        [self freePairing];
+        goto end;
+    }
+    
+    if (lockdownd_client_new_with_handshake(device, &client, TOOL_NAME) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to query device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice")];
+        [self freePairing];
+        goto end;
+    }
+    
+    if (lockdownd_get_value(client, NULL, "DeviceName", &node) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to read device name.", @"JBHostDevice")];
+        [self freePairing];
+        goto end;
+    }
+    self.name = [NSString stringWithUTF8String:plist_get_string_ptr(node, NULL)];
+    plist_free(node);
+    
+    if (lockdownd_get_value(client, NULL, "DeviceClass", &node) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to read device class.", @"JBHostDevice")];
+        [self freePairing];
+        goto end;
+    }
+    if (strcmp(plist_get_string_ptr(node, NULL), "iPhone") == 0) {
+        self.hostDeviceType = JBHostDeviceTypeiPhone;
+    } else if (strcmp(plist_get_string_ptr(node, NULL), "iPad") == 0) {
+        self.hostDeviceType = JBHostDeviceTypeiPad;
+    } else {
+        self.hostDeviceType = JBHostDeviceTypeUnknown;
+    }
+    plist_free(node);
+    ret = YES;
+    
+end:
+    if (device) {
+        idevice_free(device);
+    }
     return ret;
 }
 

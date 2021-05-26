@@ -84,7 +84,8 @@ struct DeviceDetailsView: View {
     }
     
     private func refreshAppsList() {
-        main.backgroundTask(message: NSLocalizedString("Loading apps list...", comment: "DeviceDetailsView")) {
+        main.backgroundTask(message: NSLocalizedString("Querying device...", comment: "DeviceDetailsView")) {
+            try host.updateInfo()
             apps = try host.installedApps()
         }
     }

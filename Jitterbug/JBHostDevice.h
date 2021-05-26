@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)loadPairingDataForUrl:(NSURL *)url error:(NSError **)error;
 - (void)updateAddress:(NSData *)address;
 
+- (BOOL)updateDeviceInfoWithError:(NSError **)error;
 - (nullable NSArray<JBApp *> *)installedAppsWithError:(NSError **)error;
 
 @end
