@@ -17,7 +17,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject private var settings: Settings
+    @EnvironmentObject private var main: Main
     
     var body: some View {
         ZStack {
@@ -35,12 +35,12 @@ struct ContentView: View {
                         Label("Support Files", systemImage: "doc.zipper")
                     }
             }
-            if settings.busy {
-                BusyView(message: settings.busyMessage)
+            if main.busy {
+                BusyView(message: main.busyMessage)
             }
         }.onOpenURL { url in
-            settings.importPairing(url)
-        }.disabled(settings.busy)
+            main.importPairing(url)
+        }.disabled(main.busy)
     }
 }
 

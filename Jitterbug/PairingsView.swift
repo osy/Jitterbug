@@ -17,18 +17,18 @@
 import SwiftUI
 
 struct PairingsView: View {
-    @EnvironmentObject private var settings: Settings
+    @EnvironmentObject private var main: Main
     @State private var isImporterPresented: Bool = false
     
     var body: some View {
         NavigationView {
             Group {
-                if settings.pairings.isEmpty {
+                if main.pairings.isEmpty {
                     Text("No pairings found.")
                         .font(.headline)
                 } else {
                     List {
-                        ForEach(settings.pairings) { pairing in
+                        ForEach(main.pairings) { pairing in
                             Text(pairing.lastPathComponent)
                                 .lineLimit(1)
                         }.onDelete { indexSet in
@@ -45,7 +45,7 @@ struct PairingsView: View {
                         Label("Import", systemImage: "square.and.arrow.down")
                             .labelStyle(IconOnlyLabelStyle())
                     })
-                    if !settings.pairings.isEmpty {
+                    if !main.pairings.isEmpty {
                         EditButton()
                     }
                 }
@@ -57,19 +57,19 @@ struct PairingsView: View {
     private func deleteAll(indicies: IndexSet) {
         var toDelete: [URL] = []
         for i in indicies {
-            toDelete.append(settings.pairings[i])
+            toDelete.append(main.pairings[i])
         }
         for url in toDelete {
-            settings.deletePairing(url)
+            main.deletePairing(url)
         }
     }
     
     private func importFile(result: Result<URL, Error>) {
         do {
             let url = try result.get()
-            settings.importPairing(url)
+            main.importPairing(url)
         } catch {
-            settings.alertMessage = AlertMessage(error.localizedDescription)
+            main.alertMessage = AlertMessage(error.localizedDescription)
         }
     }
 }

@@ -27,7 +27,7 @@ struct AlertMessage: Identifiable {
     }
 }
 
-class Settings: ObservableObject {
+class Main: ObservableObject {
     @Published var alertMessage: AlertMessage?
     @Published var busy: Bool = false
     @Published var busyMessage: String?

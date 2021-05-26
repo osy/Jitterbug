@@ -18,12 +18,12 @@ import SwiftUI
 
 @main
 struct JitterbugApp: App {
-    @StateObject var settings = Settings()
+    @StateObject var main = Main()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(settings)
+                .environmentObject(main)
         }
     }
 }
