@@ -23,6 +23,7 @@ fileprivate enum FileType: Int, Identifiable {
     
     case pairing
     case supportImage
+    case supportImageSignature
 }
 
 struct DeviceDetailsView: View {
@@ -30,6 +31,7 @@ struct DeviceDetailsView: View {
     @State private var fileSelectType: FileType?
     @State private var selectedPairing: URL?
     @State private var selectedSupportImage: URL?
+    @State private var selectedSupportImageSignature: URL?
     @State private var apps: [JBApp] = []
     
     let host: JBHostDevice
@@ -56,6 +58,8 @@ struct DeviceDetailsView: View {
                 FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing, title: Text("Select Pairing"))
             case .supportImage:
                 FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage, title: Text("Select Developer Image"))
+            case .supportImageSignature:
+                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImageSignature, title: Text("Select Developer Image Signature"))
             }
         }.toolbar {
             HStack {
@@ -65,7 +69,7 @@ struct DeviceDetailsView: View {
                     Text("Pair")
                 }
                 Button {
-                    
+                    fileSelectType = .supportImage
                 } label: {
                     Text("Mount")
                 }
@@ -79,6 +83,29 @@ struct DeviceDetailsView: View {
             } onComplete: {
                 selectedPairing = nil
                 refreshAppsList()
+            }
+        }.onChange(of: selectedSupportImage) { url in
+            guard let supportImage = url else {
+                return
+            }
+            let maybeSig = supportImage.appendingPathExtension("signature")
+            if FileManager.default.fileExists(atPath: maybeSig.path) {
+                selectedSupportImageSignature = maybeSig
+            } else {
+                fileSelectType = .supportImageSignature
+            }
+        }.onChange(of :selectedSupportImageSignature) { url in
+            guard let supportImage = selectedSupportImage else {
+                return
+            }
+            guard let supportImageSignature = url else {
+                return
+            }
+            main.backgroundTask(message: NSLocalizedString("Mounting developer image...", comment: "DeviceDetailsView")) {
+                try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
+            } onComplete: {
+                selectedSupportImage = nil
+                selectedSupportImageSignature = nil
             }
         }
     }

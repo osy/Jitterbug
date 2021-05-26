@@ -17,7 +17,9 @@
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/installation_proxy.h>
 #include <libimobiledevice/lockdown.h>
+#include <libimobiledevice/mobile_image_mounter.h>
 #include <libimobiledevice/sbservices.h>
+#include "common/utils.h"
 #import "JBApp.h"
 #import "JBHostDevice.h"
 #import "Jitterbug.h"
@@ -26,6 +28,8 @@
 
 #define TOOL_NAME "jitterbug"
 NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
+static const char PKG_PATH[] = "PublicStaging";
+static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 @interface JBHostDevice ()
 
@@ -311,6 +315,180 @@ end:
         idevice_free(device);
     }
     return ret;
+}
+
+static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
+{
+    return fread(buf, 1, size, (FILE*)userdata);
+}
+
+- (BOOL)mountImageForUrl:(NSURL *)url signatureUrl:(NSURL *)signatureUrl error:(NSError **)error {
+    idevice_t device = NULL;
+    lockdownd_client_t lckd = NULL;
+    lockdownd_error_t ldret = LOCKDOWN_E_UNKNOWN_ERROR;
+    mobile_image_mounter_client_t mim = NULL;
+    lockdownd_service_descriptor_t service = NULL;
+    BOOL res = NO;
+    const char *image_path = url.path.UTF8String;
+    size_t image_size = 0;
+    const char *image_sig_path = signatureUrl.path.UTF8String;
+    const char *imagetype = "Developer";
+    
+    if (!self.udid) {
+        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
+        return NO;
+    }
+    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
+        [self freePairing];
+        return NO;
+    }
+
+    if (LOCKDOWN_E_SUCCESS != (ldret = lockdownd_client_new_with_handshake(device, &lckd, TOOL_NAME))) {
+        [self createError:error withString:NSLocalizedString(@"Could not connect to lockdown.", @"JBHostDevice")];
+        goto leave;
+    }
+
+    lockdownd_start_service(lckd, "com.apple.mobile.mobile_image_mounter", &service);
+
+    if (!service || service->port == 0) {
+        [self createError:error withString:NSLocalizedString(@"Could not start mobile_image_mounter service!", @"JBHostDevice")];
+        goto leave;
+    }
+
+    if (mobile_image_mounter_new(device, service, &mim) != MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Could not connect to mobile_image_mounter!", @"JBHostDevice")];
+        goto leave;
+    }
+
+    if (service) {
+        lockdownd_service_descriptor_free(service);
+        service = NULL;
+    }
+
+    struct stat fst;
+    if (stat(image_path, &fst) != 0) {
+        [self createError:error withString:NSLocalizedString(@"Cannot stat image file!", @"JBHostDevice")];
+        goto leave;
+    }
+    image_size = fst.st_size;
+    if (stat(image_sig_path, &fst) != 0) {
+        [self createError:error withString:NSLocalizedString(@"Cannot stat signature file!", @"JBHostDevice")];
+        goto leave;
+    }
+
+    lockdownd_client_free(lckd);
+    lckd = NULL;
+
+    mobile_image_mounter_error_t err = MOBILE_IMAGE_MOUNTER_E_UNKNOWN_ERROR;
+    plist_t result = NULL;
+
+    char sig[8192];
+    size_t sig_length = 0;
+    FILE *f = fopen(image_sig_path, "rb");
+    if (!f) {
+        [self createError:error withString:NSLocalizedString(@"Error opening signature file.", @"JBHostDevice")];
+        goto leave;
+    }
+    sig_length = fread(sig, 1, sizeof(sig), f);
+    fclose(f);
+    if (sig_length == 0) {
+        [self createError:error withString:NSLocalizedString(@"Could not read signature from file.", @"JBHostDevice")];
+        goto leave;
+    }
+
+    f = fopen(image_path, "rb");
+    if (!f) {
+        [self createError:error withString:NSLocalizedString(@"Error opening image file.", @"JBHostDevice")];
+        goto leave;
+    }
+
+    char *targetname = NULL;
+    if (asprintf(&targetname, "%s/%s", PKG_PATH, "staging.dimage") < 0) {
+        [self createError:error withString:NSLocalizedString(@"Out of memory!?", @"JBHostDevice")];
+        goto leave;
+    }
+    char *mountname = NULL;
+    if (asprintf(&mountname, "%s/%s", PATH_PREFIX, targetname) < 0) {
+        [self createError:error withString:NSLocalizedString(@"Out of memory!?", @"JBHostDevice")];
+        goto leave;
+    }
+
+    DEBUG_PRINT("Uploading %s\n", image_path);
+    err = mobile_image_mounter_upload_image(mim, imagetype, image_size, sig, sig_length, mim_upload_cb, f);
+
+    fclose(f);
+
+    if (err != MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
+        if (err == MOBILE_IMAGE_MOUNTER_E_DEVICE_LOCKED) {
+            [self createError:error withString:NSLocalizedString(@"Device is locked, can't mount. Unlock device and try again.", @"JBHostDevice")];
+        } else {
+            [self createError:error withString:NSLocalizedString(@"Unknown error occurred, can't mount.", @"JBHostDevice")];
+        }
+        goto error_out;
+    }
+    DEBUG_PRINT("done.\n");
+
+    DEBUG_PRINT("Mounting...\n");
+    err = mobile_image_mounter_mount_image(mim, mountname, sig, sig_length, imagetype, &result);
+    if (err == MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
+        if (result) {
+            plist_t node = plist_dict_get_item(result, "Status");
+            if (node) {
+                char *status = NULL;
+                plist_get_string_val(node, &status);
+                if (status) {
+                    if (!strcmp(status, "Complete")) {
+                        DEBUG_PRINT("Done.\n");
+                        res = 0;
+                    } else {
+                        DEBUG_PRINT("unexpected status value:\n");
+                        plist_print_to_stream(result, stderr);
+                    }
+                    free(status);
+                } else {
+                    DEBUG_PRINT("unexpected result:\n");
+                    plist_print_to_stream(result, stderr);
+                }
+            }
+            node = plist_dict_get_item(result, "Error");
+            if (node) {
+                char *errstr = NULL;
+                plist_get_string_val(node, &errstr);
+                if (error) {
+                    DEBUG_PRINT("Error: %s\n", errstr);
+                    [self createError:error withString:[NSString stringWithUTF8String:errstr]];
+                    free(error);
+                } else {
+                    DEBUG_PRINT("unexpected result:\n");
+                    plist_print_to_stream(result, stderr);
+                }
+
+            } else {
+                plist_print_to_stream(result, stderr);
+            }
+        }
+    } else {
+        [self createError:error withString:NSLocalizedString(@"Mount image failed.", @"JBHostDevice")];
+    }
+
+    if (result) {
+        plist_free(result);
+    }
+
+error_out:
+    /* perform hangup command */
+    mobile_image_mounter_hangup(mim);
+    /* free client */
+    mobile_image_mounter_free(mim);
+
+leave:
+    if (lckd) {
+        lockdownd_client_free(lckd);
+    }
+    idevice_free(device);
+
+    return res;
 }
 
 @end
