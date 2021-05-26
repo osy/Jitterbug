@@ -33,6 +33,7 @@ struct DeviceDetailsView: View {
     @State private var selectedSupportImage: URL?
     @State private var selectedSupportImageSignature: URL?
     @State private var apps: [JBApp] = []
+    @State private var appToLaunchAfterMount: JBApp?
     
     let host: JBHostDevice
     
@@ -105,12 +106,7 @@ struct DeviceDetailsView: View {
             guard let supportImageSignature = url else {
                 return
             }
-            main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
-                try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
-            } onComplete: {
-                selectedSupportImage = nil
-                selectedSupportImageSignature = nil
-            }
+            mountImage(supportImage, signature: supportImageSignature)
         }
     }
     
@@ -118,6 +114,19 @@ struct DeviceDetailsView: View {
         main.backgroundTask(message: NSLocalizedString("Querying device...", comment: "DeviceDetailsView")) {
             try host.updateInfo()
             apps = try host.installedApps()
+        }
+    }
+    
+    private func mountImage(_ supportImage: URL, signature supportImageSignature: URL) {
+        main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
+            try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
+        } onComplete: {
+            selectedSupportImage = nil
+            selectedSupportImageSignature = nil
+            if let app = appToLaunchAfterMount {
+                appToLaunchAfterMount = nil
+                launchApplication(app)
+            }
         }
     }
     
@@ -131,15 +140,19 @@ struct DeviceDetailsView: View {
                     throw error
                 }
                 DispatchQueue.main.async {
-                    self.handleImageNotMounted()
+                    self.handleImageNotMounted(app: app)
                 }
             }
         }
     }
     
-    private func handleImageNotMounted() {
-        main.alertMessage = NSLocalizedString("Developer image is not mounted. You need DeveloperDiskImage.dmg and DeveloperDiskImage.dmg.signature imported in Support Files.", comment: "DeviceDetailsView")
-        fileSelectType = .supportImage
+    private func handleImageNotMounted(app: JBApp) {
+        if main.supportImages.isEmpty {
+            main.alertMessage = NSLocalizedString("Developer image is not mounted. You need DeveloperDiskImage.dmg and DeveloperDiskImage.dmg.signature imported in Support Files.", comment: "DeviceDetailsView")
+        } else {
+            fileSelectType = .supportImage
+            appToLaunchAfterMount = app
+        }
     }
 }
 
