@@ -30,20 +30,32 @@ struct DeviceDetailsView: View {
     @State private var fileSelectType: FileType?
     @State private var selectedPairing: URL?
     @State private var selectedSupportImage: URL?
+    @State private var apps: [JBApp] = []
     
     let host: JBHostDevice
     
     var body: some View {
-        List {
-            Text("Hello World")
+        Group {
+            if host.udid == nil {
+                Text("Not paired.")
+                    .font(.headline)
+            } else if apps.isEmpty {
+                Text("No apps found on device.")
+            } else {
+                List {
+                    ForEach(apps) { app in
+                        Text(app.bundleName)
+                    }
+                }
+            }
         }.navigationTitle(host.name)
         .listStyle(PlainListStyle())
         .popover(item: $fileSelectType) { type in
             switch type {
             case .pairing:
-                FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing)
+                FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing, title: Text("Select Pairing"))
             case .supportImage:
-                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage)
+                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage, title: Text("Select Developer Image"))
             }
         }.toolbar {
             HStack {
@@ -64,7 +76,14 @@ struct DeviceDetailsView: View {
             }
             main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
                 try host.loadPairingData(for: selected)
+                refreshAppsList()
             }
+        }
+    }
+    
+    private func refreshAppsList() {
+        main.backgroundTask(message: NSLocalizedString("Loading apps list...", comment: "DeviceDetailsView")) {
+            apps = try host.installedApps()
         }
     }
 }

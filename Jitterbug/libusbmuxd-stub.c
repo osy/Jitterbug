@@ -68,19 +68,10 @@ USBMUXD_API int usbmuxd_get_device(const char *udid, usbmuxd_device_info_t *devi
 
 #pragma mark - Device pairing
 
-static char *last_seen_buid = NULL;
-
 USBMUXD_API int usbmuxd_read_buid(char **buid)
 {
-    if (!last_seen_buid) {
-        DEBUG_PRINT("usbmuxd_read_pair_record must be called first!");
-        return -EINVAL;
-    }
-    if (!buid) {
-        return -EINVAL;
-    }
-    *buid = strdup(last_seen_buid);
-    return 0;
+    // ignore BUID
+    return -EINVAL;
 }
 
 USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t *record_size)
@@ -93,7 +84,7 @@ USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_da
     }
     *record_data = data;
     *record_size = (uint32_t)len;
-    return 1;
+    return 0;
 }
 
 #pragma mark - Unimplemented functions

@@ -162,9 +162,24 @@ NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
     }
 }
 
+static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
+    plist_t *value = plist_dict_get_item(dict, key);
+    NSString *string = [NSString stringWithUTF8String:plist_get_string_ptr(value, NULL)];
+    return string;
+}
+
 - (NSArray<JBApp *> *)parseLookupResult:(plist_t)plist {
-    NSMutableArray<JBApp *> *ret = [NSMutableArray array];
-    // TODO: implement this
+    uint32_t len = plist_array_get_size(plist);
+    NSMutableArray<JBApp *> *ret = [NSMutableArray arrayWithCapacity:len];
+    for (uint32_t i = 0; i < len; i++) {
+        plist_t item = plist_array_get_item(plist, i);
+        JBApp *app = [JBApp new];
+        app.bundleName = plist_dict_get_nsstring(item, "CFBundleName");
+        app.bundleIdentifier = plist_dict_get_nsstring(item, "CFBundleIdentifier");
+        app.bundleExecutable = plist_dict_get_nsstring(item, "CFBundleExecutable");
+        app.container = plist_dict_get_nsstring(item, "Container");
+        [ret addObject:app];
+    }
     return ret;
 }
 

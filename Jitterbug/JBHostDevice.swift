@@ -27,3 +27,9 @@ import Combine
         self.hostname
     }
 }
+
+@objc extension JBApp: Identifiable {
+    public var id: String {
+        ""
+    }
+}

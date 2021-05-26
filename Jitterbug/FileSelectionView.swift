@@ -19,19 +19,11 @@ import SwiftUI
 struct FileSelectionView: View {
     let urls: [URL]
     @Binding var selectedUrl: URL?
+    let title: Text
     @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     
     var body: some View {
-        VStack {
-            HStack {
-                Button {
-                    presentationMode.wrappedValue.dismiss()
-                    selectedUrl = nil
-                } label: {
-                    Text("Cancel")
-                }.padding()
-                Spacer()
-            }
+        NavigationView {
             List {
                 ForEach(urls) { url in
                     Button {
@@ -41,6 +33,16 @@ struct FileSelectionView: View {
                         Text(url.lastPathComponent)
                             .lineLimit(1)
                     }
+                }
+            }.navigationTitle(title)
+            .navigationViewStyle(StackNavigationViewStyle())
+            .listStyle(PlainListStyle())
+            .toolbar {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                    selectedUrl = nil
+                } label: {
+                    Text("Cancel")
                 }
             }
         }
@@ -53,6 +55,6 @@ struct FileSelectionView_Previews: PreviewProvider {
                             .init(fileURLWithPath: "/test1"),
                             .init(fileURLWithPath: "/test2"),
                             .init(fileURLWithPath: "/test3")
-        ], selectedUrl: .constant(nil))
+        ], selectedUrl: .constant(nil), title: Text("Hi"))
     }
 }

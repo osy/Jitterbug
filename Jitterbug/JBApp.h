@@ -20,6 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JBApp : NSObject
 
+@property (nonatomic) NSString *bundleName;
+@property (nonatomic) NSString *bundleIdentifier;
+@property (nonatomic) NSString *bundleExecutable;
+@property (nonatomic) NSString *container;
+
 @end
 
 NS_ASSUME_NONNULL_END
