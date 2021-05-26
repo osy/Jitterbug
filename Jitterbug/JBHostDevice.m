@@ -15,6 +15,7 @@
 //
 
 #include <libimobiledevice/libimobiledevice.h>
+#include <libimobiledevice/debugserver.h>
 #include <libimobiledevice/installation_proxy.h>
 #include <libimobiledevice/lockdown.h>
 #include <libimobiledevice/mobile_image_mounter.h>
@@ -28,6 +29,7 @@
 
 #define TOOL_NAME "jitterbug"
 NSString *const kJBErrorDomain = @"com.utmapp.Jitterbug";
+const NSInteger kJBHostImageNotMounted = -666;
 static const char PKG_PATH[] = "PublicStaging";
 static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
@@ -126,10 +128,14 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 #pragma mark - Methods
 
-- (void)createError:(NSError **)error withString:(NSString *)string {
+- (void)createError:(NSError **)error withString:(NSString *)string code:(NSInteger)code {
     if (error) {
-        *error = [NSError errorWithDomain:kJBErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: string}];
+        *error = [NSError errorWithDomain:kJBErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: string}];
     }
+}
+
+- (void)createError:(NSError **)error withString:(NSString *)string {
+    [self createError:error withString:string code:-1];
 }
 
 - (void)freePairing {
@@ -189,6 +195,7 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         app.bundleIdentifier = plist_dict_get_nsstring(item, "CFBundleIdentifier");
         app.bundleExecutable = plist_dict_get_nsstring(item, "CFBundleExecutable");
         app.container = plist_dict_get_nsstring(item, "Container");
+        app.path = plist_dict_get_nsstring(item, "Path");
         [ret addObject:app];
     }
     free(iter);
@@ -198,6 +205,7 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
 - (BOOL)updateDeviceInfoWithError:(NSError **)error {
     idevice_t device = NULL;
     lockdownd_client_t client = NULL;
+    lockdownd_error_t err = LOCKDOWN_E_SUCCESS;
     plist_t node = NULL;
     BOOL ret = NO;
     
@@ -211,22 +219,22 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         goto end;
     }
     
-    if (lockdownd_client_new_with_handshake(device, &client, TOOL_NAME) != LOCKDOWN_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to query device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice")];
+    if ((err = lockdownd_client_new_with_handshake(device, &client, TOOL_NAME)) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to query device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
         [self freePairing];
         goto end;
     }
     
-    if (lockdownd_get_value(client, NULL, "DeviceName", &node) != LOCKDOWN_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to read device name.", @"JBHostDevice")];
+    if ((err = lockdownd_get_value(client, NULL, "DeviceName", &node)) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to read device name.", @"JBHostDevice") code:err];
         [self freePairing];
         goto end;
     }
     self.name = [NSString stringWithUTF8String:plist_get_string_ptr(node, NULL)];
     plist_free(node);
     
-    if (lockdownd_get_value(client, NULL, "DeviceClass", &node) != LOCKDOWN_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to read device class.", @"JBHostDevice")];
+    if ((err = lockdownd_get_value(client, NULL, "DeviceClass", &node)) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to read device class.", @"JBHostDevice") code:err];
         [self freePairing];
         goto end;
     }
@@ -250,6 +258,7 @@ end:
 - (NSArray<JBApp *> *)installedAppsWithError:(NSError **)error {
     idevice_t device = NULL;
     instproxy_client_t instproxy_client = NULL;
+    instproxy_error_t err = INSTPROXY_E_SUCCESS;
     plist_t client_opts = NULL;
     plist_t apps = NULL;
     NSArray<JBApp *> *ret = nil;
@@ -264,17 +273,17 @@ end:
         goto end;
     }
     
-    if (instproxy_client_start_service(device, &instproxy_client, TOOL_NAME) != INSTPROXY_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice")];
+    if ((err = instproxy_client_start_service(device, &instproxy_client, TOOL_NAME)) != INSTPROXY_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
         [self freePairing];
         goto end;
     }
     
     client_opts = instproxy_client_options_new();
     instproxy_client_options_add(client_opts, "ApplicationType", "User", NULL);
-    instproxy_client_options_set_return_attributes(client_opts, "CFBundleName", "CFBundleIdentifier", "CFBundleExecutable", "Container", "iTunesArtwork", NULL);
-    if (instproxy_lookup(instproxy_client, NULL, client_opts, &apps) != INSTPROXY_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to lookup installed apps.", @"JBHostDevice")];
+    instproxy_client_options_set_return_attributes(client_opts, "CFBundleName", "CFBundleIdentifier", "CFBundleExecutable", "Path", "Container", "iTunesArtwork", NULL);
+    if ((err = instproxy_lookup(instproxy_client, NULL, client_opts, &apps)) != INSTPROXY_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to lookup installed apps.", @"JBHostDevice") code:err];
         goto end;
     }
     
@@ -345,7 +354,7 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
     }
 
     if (LOCKDOWN_E_SUCCESS != (ldret = lockdownd_client_new_with_handshake(device, &lckd, TOOL_NAME))) {
-        [self createError:error withString:NSLocalizedString(@"Could not connect to lockdown.", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Could not connect to lockdown.", @"JBHostDevice") code:ldret];
         goto leave;
     }
 
@@ -368,12 +377,12 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
 
     struct stat fst;
     if (stat(image_path, &fst) != 0) {
-        [self createError:error withString:NSLocalizedString(@"Cannot stat image file!", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Cannot stat image file!", @"JBHostDevice") code:-errno];
         goto leave;
     }
     image_size = fst.st_size;
     if (stat(image_sig_path, &fst) != 0) {
-        [self createError:error withString:NSLocalizedString(@"Cannot stat signature file!", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Cannot stat signature file!", @"JBHostDevice") code:-errno];
         goto leave;
     }
 
@@ -387,19 +396,19 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
     size_t sig_length = 0;
     FILE *f = fopen(image_sig_path, "rb");
     if (!f) {
-        [self createError:error withString:NSLocalizedString(@"Error opening signature file.", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Error opening signature file.", @"JBHostDevice") code:-errno];
         goto leave;
     }
     sig_length = fread(sig, 1, sizeof(sig), f);
     fclose(f);
     if (sig_length == 0) {
-        [self createError:error withString:NSLocalizedString(@"Could not read signature from file.", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Could not read signature from file.", @"JBHostDevice") code:-errno];
         goto leave;
     }
 
     f = fopen(image_path, "rb");
     if (!f) {
-        [self createError:error withString:NSLocalizedString(@"Error opening image file.", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Error opening image file.", @"JBHostDevice") code:-errno];
         goto leave;
     }
 
@@ -421,9 +430,9 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
 
     if (err != MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
         if (err == MOBILE_IMAGE_MOUNTER_E_DEVICE_LOCKED) {
-            [self createError:error withString:NSLocalizedString(@"Device is locked, can't mount. Unlock device and try again.", @"JBHostDevice")];
+            [self createError:error withString:NSLocalizedString(@"Device is locked, can't mount. Unlock device and try again.", @"JBHostDevice") code:err];
         } else {
-            [self createError:error withString:NSLocalizedString(@"Unknown error occurred, can't mount.", @"JBHostDevice")];
+            [self createError:error withString:NSLocalizedString(@"Unknown error occurred, can't mount.", @"JBHostDevice") code:err];
         }
         goto error_out;
     }
@@ -469,7 +478,7 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
             }
         }
     } else {
-        [self createError:error withString:NSLocalizedString(@"Mount image failed.", @"JBHostDevice")];
+        [self createError:error withString:NSLocalizedString(@"Mount image failed.", @"JBHostDevice") code:err];
     }
 
     if (result) {
@@ -487,6 +496,111 @@ leave:
         lockdownd_client_free(lckd);
     }
     idevice_free(device);
+
+    return res;
+}
+
+- (BOOL)launchApplication:(JBApp *)application error:(NSError **)error {
+    int res = NO;
+    idevice_t device = NULL;
+    debugserver_client_t debugserver_client = NULL;
+    char* response = NULL;
+    debugserver_command_t command = NULL;
+    debugserver_error_t dres = DEBUGSERVER_E_UNKNOWN_ERROR;
+    
+    if (!self.udid) {
+        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
+        return NO;
+    }
+    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
+        [self freePairing];
+        return NO;
+    }
+    
+    /* start and connect to debugserver */
+    if (debugserver_client_start_service(device, &debugserver_client, TOOL_NAME) != DEBUGSERVER_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to start debugserver.", @"JBHostDevice") code:kJBHostImageNotMounted];
+        goto cleanup;
+    }
+    
+    /* set maximum packet size */
+    DEBUG_PRINT("Setting maximum packet size...");
+    char* packet_size[2] = {strdup("1024"), NULL};
+    debugserver_command_new("QSetMaxPacketSize:", 1, packet_size, &command);
+    free(packet_size[0]);
+    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+    if (response) {
+        if (strncmp(response, "OK", 2)) {
+            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            goto cleanup;
+        }
+        free(response);
+        response = NULL;
+    }
+    
+    /* set working directory */
+    DEBUG_PRINT("Setting working directory...");
+    const char *working_dir[2] = {application.container.UTF8String, NULL};
+    debugserver_command_new("QSetWorkingDir:", 1, (char **)working_dir, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+    if (response) {
+        if (strncmp(response, "OK", 2)) {
+            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            goto cleanup;
+        }
+        free(response);
+        response = NULL;
+    }
+    
+    /* set arguments and run app */
+    DEBUG_PRINT("Setting argv...");
+    int app_argc = 1;
+    const char *app_argv[] = { application.executablePath.UTF8String, NULL };
+    DEBUG_PRINT("app_argv[%d] = %s", 0, app_argv[0]);
+    debugserver_client_set_argv(debugserver_client, app_argc, (char **)app_argv, NULL);
+    
+    /* check if launch succeeded */
+    DEBUG_PRINT("Checking if launch succeeded...");
+    debugserver_command_new("qLaunchSuccess", 0, NULL, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+    if (response) {
+        if (strncmp(response, "OK", 2)) {
+            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            goto cleanup;
+        }
+        free(response);
+        response = NULL;
+    }
+    
+    DEBUG_PRINT("Detaching from app");
+    debugserver_command_new("D", 0, NULL, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+
+    res = (dres == DEBUGSERVER_E_SUCCESS) ? YES : NO;
+    if (!res) {
+        [self createError:error withString:NSLocalizedString(@"Failed to start application.", @"JBHostDevice") code:dres];
+    }
+    
+cleanup:
+    /* cleanup the house */
+
+    if (response)
+        free(response);
+
+    if (debugserver_client)
+        debugserver_client_free(debugserver_client);
+
+    if (device)
+        idevice_free(device);
 
     return res;
 }

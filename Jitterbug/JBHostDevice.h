@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, JBHostDeviceType) {
     JBHostDeviceTypeiPad
 };
 
+const NSInteger kJBHostImageNotMounted;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface JBHostDevice : NSObject<NSSecureCoding>
@@ -44,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)updateDeviceInfoWithError:(NSError **)error;
 - (nullable NSArray<JBApp *> *)installedAppsWithError:(NSError **)error;
 - (BOOL)mountImageForUrl:(NSURL *)url signatureUrl:(NSURL *)signatureUrl error:(NSError **)error;
+- (BOOL)launchApplication:(JBApp *)application error:(NSError **)error;
 
 @end
 

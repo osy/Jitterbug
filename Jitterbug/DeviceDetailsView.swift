@@ -46,7 +46,11 @@ struct DeviceDetailsView: View {
             } else {
                 List {
                     ForEach(apps) { app in
-                        AppItem(app: app, saved: false)
+                        Button {
+                            launchApplication(app)
+                        } label: {
+                            AppItem(app: app, saved: false)
+                        }
                     }
                 }
             }
@@ -115,6 +119,27 @@ struct DeviceDetailsView: View {
             try host.updateInfo()
             apps = try host.installedApps()
         }
+    }
+    
+    private func launchApplication(_ app: JBApp) {
+        main.backgroundTask(message: NSLocalizedString("Launching...", comment: "DeviceDetailsView")) {
+            do {
+                try host.launchApplication(app)
+            } catch {
+                let code = (error as NSError).code
+                guard code == kJBHostImageNotMounted else {
+                    throw error
+                }
+                DispatchQueue.main.async {
+                    self.handleImageNotMounted()
+                }
+            }
+        }
+    }
+    
+    private func handleImageNotMounted() {
+        main.alertMessage = NSLocalizedString("Developer image is not mounted. You need DeveloperDiskImage.dmg and DeveloperDiskImage.dmg.signature imported in Support Files.", comment: "DeviceDetailsView")
+        fileSelectType = .supportImage
     }
 }
 

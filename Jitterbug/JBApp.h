@@ -24,7 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSString *bundleIdentifier;
 @property (nonatomic) NSString *bundleExecutable;
 @property (nonatomic) NSString *container;
+@property (nonatomic) NSString *path;
 @property (nonatomic) NSData *icon;
+@property (nonatomic, readonly) NSString *executablePath;
 
 @end
 

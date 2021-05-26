@@ -18,4 +18,8 @@
 
 @implementation JBApp
 
+- (NSString *)executablePath {
+    return [self.path stringByAppendingPathComponent:self.bundleExecutable];
+}
+
 @end
