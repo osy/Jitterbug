@@ -14,10 +14,18 @@
 // limitations under the License.
 //
 
-protocol HostFinderDelegate : class {
-    func hostFinderWillStart()
-    func hostFinderDidStop()
-    func hostFinderError(_ error: String)
-    func hostFinderNewHost(_ host: String, name: String?, address: Data)
-    func hostFinderRemoveHost(_ host: String)
+import SwiftUI
+
+struct DeviceDetailsView: View {
+    let host: JBHostDevice
+    
+    var body: some View {
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    }
+}
+
+struct DeviceDetailsView_Previews: PreviewProvider {
+    static var previews: some View {
+        DeviceDetailsView(host: JBHostDevice(hostname: "", address: Data()))
+    }
 }

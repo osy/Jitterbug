@@ -19,6 +19,7 @@ import Foundation
 class HostFinder: NSObject {
     private let browser: NetServiceBrowser
     private let resolveTimeout = TimeInterval(30)
+    private var resolving = Set<NetService>()
     
     public weak var delegate: HostFinderDelegate?
     
@@ -43,6 +44,7 @@ extension HostFinder: NetServiceBrowserDelegate {
         NSLog("[HostFinder] resolving %@", didFind.name)
         didFind.delegate = self
         didFind.resolve(withTimeout: resolveTimeout)
+        resolving.insert(didFind)
     }
     
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove: NetService, moreComing: Bool) {
@@ -63,17 +65,19 @@ extension HostFinder: NetServiceBrowserDelegate {
 
 extension HostFinder: NetServiceDelegate {
     func netServiceDidResolveAddress(_ sender: NetService) {
-        NSLog("[HostFinder] resolved %@", sender.name)
+        NSLog("[HostFinder] resolved %@ to %@", sender.name, sender.hostName ?? "(unknown)")
         sender.stop()
+        resolving.remove(sender)
         guard let address = sender.addresses?[0] else {
             delegate?.hostFinderError(NSLocalizedString("Failed to resolve \(sender.name)", comment: "HostFinder"))
             return
         }
-        delegate?.hostFinderNewHost(sender.name, address: address)
+        delegate?.hostFinderNewHost(sender.name, name: sender.hostName, address: address)
     }
     
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
         NSLog("[HostFinder] resolve failed for %@", sender.name)
+        resolving.remove(sender)
         let errorCode = errorDict[NetService.errorCode]!
         let errorDomain = errorDict[NetService.errorDomain]!
         let error = NSLocalizedString("Resolving \(sender.name) failed with the error domain \(errorDomain), code \(errorCode)", comment: "HostFinder")

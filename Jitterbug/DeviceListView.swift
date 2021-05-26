@@ -24,13 +24,18 @@ struct DeviceListView: View {
             if !main.savedHosts.isEmpty {
                 Section(header: Text("Saved")) {
                     ForEach(main.savedHosts) { host in
-                        HostView(host: host)
+                        NavigationLink(destination: DeviceDetailsView(host: host)) {
+                            HostView(host: host, saved: true)
+                                .foregroundColor(host.discovered ? .primary : .secondary)
+                        }
                     }
                 }
             }
             Section(header: Text("Discovered")) {
                 ForEach(main.foundHosts) { host in
-                    HostView(host: host)
+                    NavigationLink(destination: DeviceDetailsView(host: host)) {
+                        HostView(host: host, saved: false)
+                    }
                 }
             }
         }.navigationTitle("Devices")
@@ -48,9 +53,34 @@ struct HostView: View {
     @EnvironmentObject private var main: Main
     
     let host: JBHostDevice
+    let saved: Bool
     
     var body: some View {
-        Text(host.hostname)
+        HStack {
+            Button {
+                if saved {
+                    main.removeSavedHost(host)
+                } else {
+                    main.saveHost(host)
+                }
+            } label: {
+                Label("Save", systemImage: saved ? "star.fill" : "star")
+                    .foregroundColor(.accentColor)
+            }
+            switch (host.hostDeviceType) {
+            case .typeUnknown:
+                Label("Unknown", systemImage: "questionmark")
+            case .typeiPhone:
+                Label("iPhone", systemImage: "apps.iphone")
+            case .typeiPad:
+                Label("iPhone", systemImage: "apps.ipad")
+            @unknown default:
+                Label("Unknown", systemImage: "questionmark")
+            }
+            Text(host.name)
+            Spacer()
+        }.labelStyle(IconOnlyLabelStyle())
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

@@ -137,6 +137,7 @@
 		CEE8B4B2265D9550007728F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B1265D954F007728F4 /* Extensions.swift */; };
 		CEE8B4B8265DC014007728F4 /* HostFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B7265DC014007728F4 /* HostFinder.swift */; };
 		CEE8B4BE265DC843007728F4 /* HostFinderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */; };
+		CEE8B4C8265DDDB3007728F4 /* DeviceDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -325,6 +326,7 @@
 		CEE8B4B1265D954F007728F4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEE8B4B7265DC014007728F4 /* HostFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinder.swift; sourceTree = "<group>"; };
 		CEE8B4BD265DC843007728F4 /* HostFinderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFinderDelegate.swift; sourceTree = "<group>"; };
+		CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +390,7 @@
 				CEE8B4A9265D8870007728F4 /* BusyView.swift */,
 				CE98574C265C635000F9AAD4 /* ContentView.swift */,
 				CEE8B48B265D797E007728F4 /* DeviceListView.swift */,
+				CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */,
 				CEE8B493265D7AE2007728F4 /* LauncherView.swift */,
 				CEE8B499265D7B6F007728F4 /* PairingsView.swift */,
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
@@ -820,6 +823,7 @@
 				CEE8B4AA265D8870007728F4 /* BusyView.swift in Sources */,
 				CE985795265C655A00F9AAD4 /* plist.c in Sources */,
 				CE985851265C6E1800F9AAD4 /* installation_proxy.c in Sources */,
+				CEE8B4C8265DDDB3007728F4 /* DeviceDetailsView.swift in Sources */,
 				CE98584A265C6E1800F9AAD4 /* mobileactivation.c in Sources */,
 				CEE8B4A0265D7BCA007728F4 /* SupportFilesView.swift in Sources */,
 				CE9857BC265C671B00F9AAD4 /* node.c in Sources */,

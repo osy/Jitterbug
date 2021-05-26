@@ -143,13 +143,27 @@ class Main: ObservableObject {
         delete(supportImage, list: &supportImages)
     }
     
-    // MARK: - Scanning
+    // MARK: - Devices
     func startScanning() {
         hostFinder.startSearch()
     }
     
     func stopScanning() {
         hostFinder.stopSearch()
+    }
+    
+    func saveHost(_ host: JBHostDevice) {
+        savedHosts.append(host)
+        foundHosts.removeAll { found in
+            found.hostname == host.hostname
+        }
+    }
+    
+    func removeSavedHost(_ host: JBHostDevice) {
+        savedHosts.removeAll { saved in
+            saved.hostname == host.hostname
+        }
+        foundHosts.append(host)
     }
 }
 
@@ -172,23 +186,33 @@ extension Main: HostFinderDelegate {
         }
     }
     
-    func hostFinderNewHost(_ host: String, address: Data) {
+    func hostFinderNewHost(_ host: String, name: String?, address: Data) {
         DispatchQueue.main.async {
             for hostDevice in self.savedHosts {
                 if hostDevice.hostname == host {
                     hostDevice.updateAddress(address)
+                    if hostDevice.name == host, let newName = name {
+                        hostDevice.name = newName
+                    }
                     hostDevice.discovered = true
+                    self.objectWillChange.send()
                     return
                 }
             }
             for hostDevice in self.foundHosts {
                 if hostDevice.hostname == host {
                     hostDevice.updateAddress(address)
+                    hostDevice.name = name ?? host
                     hostDevice.discovered = true
+                    self.objectWillChange.send()
                     return
                 }
             }
             let newHost = JBHostDevice(hostname: host, address: address)
+            if let newName = name {
+                newHost.name = newName
+            }
+            newHost.discovered = true
             self.foundHosts.append(newHost)
         }
     }
@@ -198,6 +222,7 @@ extension Main: HostFinderDelegate {
             for hostDevice in self.savedHosts {
                 if hostDevice.hostname == host {
                     hostDevice.discovered = false
+                    self.objectWillChange.send()
                 }
             }
             self.foundHosts.removeAll { hostDevice in
