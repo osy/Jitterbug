@@ -83,13 +83,13 @@ class Main: ObservableObject {
     // MARK: - File management
     
     private func importFile(_ file: URL, toDirectory: URL, onComplete: @escaping () -> Void) throws {
-        _ = file.startAccessingSecurityScopedResource()
-        defer {
-            file.stopAccessingSecurityScopedResource()
-        }
         let name = file.lastPathComponent
         let dest = toDirectory.appendingPathComponent(name)
         backgroundTask(message: NSLocalizedString("Importing file...", comment: "Settings")) {
+            _ = file.startAccessingSecurityScopedResource()
+            defer {
+                file.stopAccessingSecurityScopedResource()
+            }
             if !self.fileManager.fileExists(atPath: toDirectory.path) {
                 try self.fileManager.createDirectory(at: toDirectory, withIntermediateDirectories: false)
             }
