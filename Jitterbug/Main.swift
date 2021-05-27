@@ -230,6 +230,7 @@ class Main: ObservableObject {
             favorites.append(appId)
         }
         saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+        self.objectWillChange.send()
     }
     
     func removeFavorite(appId: String, forHostName hostName: String) {
@@ -238,6 +239,7 @@ class Main: ObservableObject {
             favorite == appId
         }
         saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+        self.objectWillChange.send()
     }
     
     func getFavorites(forHostName hostName: String) -> [String] {
