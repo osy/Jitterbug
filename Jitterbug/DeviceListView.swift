@@ -86,6 +86,15 @@ struct HostView: View {
             Text(host.name)
             Spacer()
         }.buttonStyle(PlainButtonStyle())
+        .contextMenu {
+            Button {
+                main.savePairing(nil, forHostName: host.hostname)
+                main.saveDiskImage(nil, signature: nil, forHostName: host.hostname)
+            } label: {
+                Label("Clear Pairing", systemImage: "xmark.circle")
+                    .labelStyle(DefaultLabelStyle())
+            }
+        }
     }
 }
 

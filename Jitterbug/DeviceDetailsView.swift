@@ -114,6 +114,9 @@ struct DeviceDetailsView: View {
             selectedPairing = main.loadPairing(forHostName: host.hostname)
             selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
             selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
+            if selectedPairing == nil {
+                fileSelectType = .pairing
+            }
         }.onChange(of: selectedPairing) { url in
             guard let selected = url else {
                 return
