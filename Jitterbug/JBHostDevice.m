@@ -534,7 +534,7 @@ leave:
     command = NULL;
     if (response) {
         if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
             goto cleanup;
         }
         free(response);
@@ -550,7 +550,7 @@ leave:
     command = NULL;
     if (response) {
         if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
             goto cleanup;
         }
         free(response);

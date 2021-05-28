@@ -93,9 +93,9 @@ struct DeviceDetailsView: View {
             case .pairing:
                 FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing, title: Text("Select Pairing"))
             case .supportImage:
-                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage, title: Text("Select Developer Image"))
+                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage, title: Text("Select Image"))
             case .supportImageSignature:
-                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImageSignature, title: Text("Select Developer Image Signature"))
+                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImageSignature, title: Text("Select Signature"))
             }
         }.toolbar {
             HStack {
