@@ -274,7 +274,7 @@ end:
     }
     
     if ((err = instproxy_client_start_service(device, &instproxy_client, TOOL_NAME)) != INSTPROXY_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
+        [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected to the network and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
         [self freePairing];
         goto end;
     }
