@@ -572,16 +572,38 @@ leave:
     command = NULL;
     if (response) {
         if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:response]];
+            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
             goto cleanup;
         }
         free(response);
         response = NULL;
     }
     
-    DEBUG_PRINT("Detaching from app");
-    debugserver_command_new("D", 0, NULL, &command);
+    /* set thread */
+    DEBUG_PRINT("Setting thread...");
+    debugserver_command_new("Hc0", 0, NULL, &command);
     dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+    if (response) {
+        if (strncmp(response, "OK", 2)) {
+            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
+            goto cleanup;
+        }
+        free(response);
+        response = NULL;
+    }
+
+    /* continue running process */
+    DEBUG_PRINT("Continue running process...");
+    debugserver_command_new("c", 0, NULL, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, NULL, NULL);
+    debugserver_command_free(command);
+    command = NULL;
+    
+    DEBUG_PRINT("Detaching from app...");
+    debugserver_command_new("D", 0, NULL, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, NULL, NULL);
     debugserver_command_free(command);
     command = NULL;
 
