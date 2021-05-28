@@ -186,15 +186,22 @@ struct DeviceDetailsView: View {
     }
     
     private func launchApplication(_ app: JBApp) {
+        var imageNotMounted = false
         main.backgroundTask(message: NSLocalizedString("Launching...", comment: "DeviceDetailsView")) {
             do {
                 try host.launchApplication(app)
             } catch {
                 let code = (error as NSError).code
-                guard code == kJBHostImageNotMounted else {
+                if code == kJBHostImageNotMounted {
+                    imageNotMounted = true
+                } else {
                     throw error
                 }
-                DispatchQueue.main.async {
+            }
+        } onComplete: {
+            // BUG: SwiftUI shows .disabled() even after it's already done
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
+                if imageNotMounted {
                     self.handleImageNotMounted(app: app)
                 }
             }
