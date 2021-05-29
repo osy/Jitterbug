@@ -154,6 +154,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
 		CE985747265C635000F9AAD4 /* Jitterbug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jitterbug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE98574A265C635000F9AAD4 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
 		CE98574C265C635000F9AAD4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -354,6 +355,7 @@
 		CE98573E265C635000F9AAD4 = {
 			isa = PBXGroup;
 			children = (
+				CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */,
 				CE985749265C635000F9AAD4 /* Jitterbug */,
 				CE985876265C8FD700F9AAD4 /* JitterbugPair */,
 				CE98575A265C636900F9AAD4 /* Libraries */,
@@ -952,6 +954,7 @@
 /* Begin XCBuildConfiguration section */
 		CE985754265C635300F9AAD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1026,6 +1029,7 @@
 		};
 		CE985755265C635300F9AAD4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1103,7 +1107,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Jitterbug/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Jitterbug/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -1111,8 +1115,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.osy86.Jitterbug;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1128,7 +1133,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Jitterbug/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Jitterbug/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -1136,8 +1141,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.osy86.Jitterbug;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

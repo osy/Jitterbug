@@ -1,0 +1,7 @@
+// Your Team ID
+DEVELOPMENT_TEAM = XYZ0123456
+
+// Prefix of unique bundle IDs registered to you in Apple Developer Portal.
+// You need to register:
+//   - com.myuniquename.Jitterbug
+PRODUCT_BUNDLE_PREFIX = com.myuniquename
