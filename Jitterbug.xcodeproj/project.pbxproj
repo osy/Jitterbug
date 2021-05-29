@@ -10,7 +10,6 @@
 		CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574A265C635000F9AAD4 /* JitterbugApp.swift */; };
 		CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574C265C635000F9AAD4 /* ContentView.swift */; };
 		CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE98574E265C635300F9AAD4 /* Assets.xcassets */; };
-		CE985752265C635300F9AAD4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE985751265C635300F9AAD4 /* Preview Assets.xcassets */; };
 		CE985792265C655A00F9AAD4 /* Array.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98576F265C655900F9AAD4 /* Array.cpp */; };
 		CE985794265C655A00F9AAD4 /* Uid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985771265C655900F9AAD4 /* Uid.cpp */; };
 		CE985795265C655A00F9AAD4 /* plist.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985772265C655900F9AAD4 /* plist.c */; };
@@ -159,7 +158,6 @@
 		CE98574A265C635000F9AAD4 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
 		CE98574C265C635000F9AAD4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CE98574E265C635300F9AAD4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CE985751265C635300F9AAD4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CE985753265C635300F9AAD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE985761265C653300F9AAD4 /* Uid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Uid.h; sourceTree = "<group>"; };
 		CE985762265C653300F9AAD4 /* Dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = "<group>"; };
@@ -401,17 +399,8 @@
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
 				CE985753265C635300F9AAD4 /* Info.plist */,
-				CE985750265C635300F9AAD4 /* Preview Content */,
 			);
 			path = Jitterbug;
-			sourceTree = "<group>";
-		};
-		CE985750265C635300F9AAD4 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				CE985751265C635300F9AAD4 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		CE98575A265C636900F9AAD4 /* Libraries */ = {
@@ -799,7 +788,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE985752265C635300F9AAD4 /* Preview Assets.xcassets in Resources */,
 				CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1106,7 +1094,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Jitterbug/Preview Content\"";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Jitterbug/Info.plist;
@@ -1132,7 +1119,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Jitterbug/Preview Content\"";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Jitterbug/Info.plist;
