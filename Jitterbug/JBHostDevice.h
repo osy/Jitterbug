@@ -40,7 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address NS_DESIGNATED_INITIALIZER;
 
-- (BOOL)loadPairingDataForUrl:(NSURL *)url error:(NSError **)error;
+- (BOOL)startLockdownWithPairingUrl:(NSURL *)url error:(NSError **)error;
+- (void)stopLockdown;
 - (void)updateAddress:(NSData *)address;
 
 - (BOOL)updateDeviceInfoWithError:(NSError **)error;

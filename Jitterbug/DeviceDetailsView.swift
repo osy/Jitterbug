@@ -149,7 +149,8 @@ struct DeviceDetailsView: View {
         var success = false
         main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
             main.savePairing(nil, forHostName: host.hostname)
-            try host.loadPairingData(for: selected)
+            try host.startLockdown(withPairingUrl: selected)
+            try host.updateInfo()
             success = true
         } onComplete: {
             selectedPairing = nil
@@ -162,7 +163,7 @@ struct DeviceDetailsView: View {
     }
     
     private func refreshAppsList(onSuccess: @escaping () -> Void) {
-        main.backgroundTask(message: NSLocalizedString("Querying device...", comment: "DeviceDetailsView")) {
+        main.backgroundTask(message: NSLocalizedString("Querying installed apps...", comment: "DeviceDetailsView")) {
             try host.updateInfo()
             apps = try host.installedApps()
             main.archiveSavedHosts()

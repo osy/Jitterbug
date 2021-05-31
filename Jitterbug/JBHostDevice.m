@@ -16,10 +16,12 @@
 
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/debugserver.h>
+#include <libimobiledevice/heartbeat.h>
 #include <libimobiledevice/installation_proxy.h>
 #include <libimobiledevice/lockdown.h>
 #include <libimobiledevice/mobile_image_mounter.h>
 #include <libimobiledevice/sbservices.h>
+#include <libimobiledevice/service.h>
 #include "common/utils.h"
 #import "JBApp.h"
 #import "JBHostDevice.h"
@@ -38,12 +40,21 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 @property (nonatomic, readwrite) NSString *hostname;
 @property (nonatomic, readwrite) NSData *address;
 @property (nonatomic, nullable, readwrite) NSString *udid;
+@property (nonatomic) idevice_t device;
+@property (nonatomic) lockdownd_client_t lockdown;
+@property (nonatomic, nonnull) dispatch_queue_t timerQueue;
+@property (nonatomic, nonnull) dispatch_semaphore_t timerCancelEvent;
+@property (nonatomic, nullable) dispatch_source_t heartbeat;
 
 @end
 
 @implementation JBHostDevice
 
 #pragma mark - Properties and initializers
+
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
 
 - (void)setName:(NSString * _Nonnull)name {
     if (_name != name) {
@@ -73,6 +84,11 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     }
 }
 
+- (void)setupDispatchQueue {
+    self.timerQueue = dispatch_queue_create("heartbeatQueue", DISPATCH_QUEUE_SERIAL);
+    self.timerCancelEvent = dispatch_semaphore_create(0);
+}
+
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address {
     if (self = [super init]) {
         self.hostname = hostname;
@@ -80,14 +96,13 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
         self.name = hostname;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
         self.hostVersion = @"";
+        [self setupDispatchQueue];
     }
     return self;
 }
 
 - (void)dealloc {
-    if (self.udid) {
-        [self freePairing];
-    }
+    [self stopLockdown];
 }
 
 #pragma mark - NSCoding
@@ -114,6 +129,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
         if (!self.hostVersion) {
             return nil;
         }
+        [self setupDispatchQueue];
     }
     return self;
 }
@@ -128,6 +144,38 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 #pragma mark - Methods
 
+static service_error_t service_client_factory_start_service_with_lockdown(lockdownd_client_t lckd, idevice_t device, const char* service_name, void **client, const char* label, int32_t (*constructor_func)(idevice_t, lockdownd_service_descriptor_t, void**), int32_t *error_code)
+{
+    *client = NULL;
+
+    lockdownd_service_descriptor_t service = NULL;
+    lockdownd_start_service(lckd, service_name, &service);
+
+    if (!service || service->port == 0) {
+        DEBUG_PRINT("Could not start service %s!", service_name);
+        return SERVICE_E_START_SERVICE_ERROR;
+    }
+
+    int32_t ec;
+    if (constructor_func) {
+        ec = (int32_t)constructor_func(device, service, client);
+    } else {
+        ec = service_client_new(device, service, (service_client_t*)client);
+    }
+    if (error_code) {
+        *error_code = ec;
+    }
+
+    if (ec != SERVICE_E_SUCCESS) {
+        DEBUG_PRINT("Could not connect to service %s! Port: %i, error: %i", service_name, service->port, ec);
+    }
+
+    lockdownd_service_descriptor_free(service);
+    service = NULL;
+
+    return (ec == SERVICE_E_SUCCESS) ? SERVICE_E_SUCCESS : SERVICE_E_START_SERVICE_ERROR;
+}
+
 - (void)createError:(NSError **)error withString:(NSString *)string code:(NSInteger)code {
     if (error) {
         *error = [NSError errorWithDomain:kJBErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey: string}];
@@ -138,15 +186,27 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     [self createError:error withString:string code:-1];
 }
 
-- (void)freePairing {
-    NSString *udid = self.udid;
-    if (udid) {
-        cachePairingRemove(udid.UTF8String);
+- (void)stopLockdown {
+    [self stopHeartbeat];
+    if (self.lockdown) {
+        lockdownd_client_free(self.lockdown);
+        self.lockdown = NULL;
     }
-    self.udid = nil;
+    if (self.device) {
+        idevice_free(self.device);
+        self.device = NULL;
+    }
+    if (self.udid) {
+        cachePairingRemove(self.udid.UTF8String);
+        self.udid = nil;
+    }
 }
 
-- (BOOL)loadPairingDataForUrl:(NSURL *)url error:(NSError **)error {
+- (BOOL)startLockdownWithPairingUrl:(NSURL *)url error:(NSError **)error {
+    idevice_error_t derr = IDEVICE_E_SUCCESS;
+    lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
+    
+    [self stopLockdown];
     NSData *data = [NSData dataWithContentsOfURL:url options:0 error:error];
     if (!data) {
         return NO;
@@ -165,8 +225,78 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
             return NO;
         }
     }
+    
+    if ((derr = idevice_new_with_options(&_device, udid.UTF8String, IDEVICE_LOOKUP_NETWORK)) != IDEVICE_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice") code:derr];
+        goto error;
+    }
+    
+    if ((lerr = lockdownd_client_new_with_handshake(self.device, &_lockdown, TOOL_NAME)) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to communicate with device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice") code:lerr];
+        goto error;
+    }
+    
+    /**
+     * We need a unique heartbeat service for each hostID or lockdownd immediately kills the service.
+     */
+    if (![self startHeartbeatWithError:error]) {
+        goto error;
+    }
+    
     self.udid = udid;
     return YES;
+    
+error:
+    [self stopLockdown];
+    return NO;
+}
+
+- (BOOL)startHeartbeatWithError:(NSError **)error {
+    heartbeat_client_t client;
+    heartbeat_error_t err = HEARTBEAT_E_UNKNOWN_ERROR;
+    
+    [self stopHeartbeat];
+    service_client_factory_start_service_with_lockdown(self.lockdown, self.device, HEARTBEAT_SERVICE_NAME, (void **)&client, TOOL_NAME, SERVICE_CONSTRUCTOR(heartbeat_client_new), &err);
+    if (err != HEARTBEAT_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create heartbeat service.", @"JBHostDevice") code:err];
+        return NO;
+    }
+    self.heartbeat = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.timerQueue);
+    dispatch_source_set_timer(self.heartbeat, DISPATCH_TIME_NOW, 0, 5LL * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(self.heartbeat, ^{
+        plist_t ping;
+        uint64_t interval = 15;
+        DEBUG_PRINT("Timer run!");
+        if (heartbeat_receive_with_timeout(client, &ping, (uint32_t)interval * 1000) != HEARTBEAT_E_SUCCESS) {
+            DEBUG_PRINT("Did not recieve ping, canceling timer!");
+            dispatch_source_cancel(self.heartbeat);
+            return;
+        }
+        plist_get_uint_val(plist_dict_get_item(ping, "Interval"), &interval);
+        DEBUG_PRINT("Set new timer interval: %llu!", interval);
+        dispatch_source_set_timer(self.heartbeat, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), 0, 5LL * NSEC_PER_SEC);
+        DEBUG_PRINT("Sending heartbeat.");
+        heartbeat_send(client, ping);
+        plist_free(ping);
+    });
+    dispatch_source_set_cancel_handler(self.heartbeat, ^{
+        DEBUG_PRINT("Timer cancel called!");
+        heartbeat_client_free(client);
+        self.heartbeat = nil;
+        dispatch_semaphore_signal(self.timerCancelEvent);
+    });
+    dispatch_resume(self.heartbeat);
+    return YES;
+}
+
+- (void)stopHeartbeat {
+    if (self.heartbeat) {
+        DEBUG_PRINT("Stopping heartbeat");
+        dispatch_source_cancel(self.heartbeat);
+        dispatch_semaphore_wait(self.timerCancelEvent, DISPATCH_TIME_FOREVER);
+        DEBUG_PRINT("Heartbeat should be null now!");
+        assert(self.heartbeat == nil);
+    }
 }
 
 - (void)updateAddress:(NSData *)address {
@@ -203,40 +333,19 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
 }
 
 - (BOOL)updateDeviceInfoWithError:(NSError **)error {
-    idevice_t device = NULL;
-    lockdownd_client_t client = NULL;
     lockdownd_error_t err = LOCKDOWN_E_SUCCESS;
     plist_t node = NULL;
-    BOOL ret = NO;
     
-    if (!self.udid) {
-        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
-        return NO;
-    }
-    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
-        [self freePairing];
-        goto end;
-    }
-    
-    if ((err = lockdownd_client_new_with_handshake(device, &client, TOOL_NAME)) != LOCKDOWN_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to query device. Make sure the device is connected and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
-        [self freePairing];
-        goto end;
-    }
-    
-    if ((err = lockdownd_get_value(client, NULL, "DeviceName", &node)) != LOCKDOWN_E_SUCCESS) {
+    if ((err = lockdownd_get_value(self.lockdown, NULL, "DeviceName", &node)) != LOCKDOWN_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to read device name.", @"JBHostDevice") code:err];
-        [self freePairing];
-        goto end;
+        return NO;
     }
     self.name = [NSString stringWithUTF8String:plist_get_string_ptr(node, NULL)];
     plist_free(node);
     
-    if ((err = lockdownd_get_value(client, NULL, "DeviceClass", &node)) != LOCKDOWN_E_SUCCESS) {
+    if ((err = lockdownd_get_value(self.lockdown, NULL, "DeviceClass", &node)) != LOCKDOWN_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to read device class.", @"JBHostDevice") code:err];
-        [self freePairing];
-        goto end;
+        return NO;
     }
     if (strcmp(plist_get_string_ptr(node, NULL), "iPhone") == 0) {
         self.hostDeviceType = JBHostDeviceTypeiPhone;
@@ -246,36 +355,19 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         self.hostDeviceType = JBHostDeviceTypeUnknown;
     }
     plist_free(node);
-    ret = YES;
-    
-end:
-    if (device) {
-        idevice_free(device);
-    }
-    return ret;
+    return YES;
 }
 
 - (NSArray<JBApp *> *)installedAppsWithError:(NSError **)error {
-    idevice_t device = NULL;
     instproxy_client_t instproxy_client = NULL;
     instproxy_error_t err = INSTPROXY_E_SUCCESS;
     plist_t client_opts = NULL;
     plist_t apps = NULL;
     NSArray<JBApp *> *ret = nil;
     
-    if (!self.udid) {
-        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
-        return nil;
-    }
-    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
-        [self freePairing];
-        goto end;
-    }
-    
-    if ((err = instproxy_client_start_service(device, &instproxy_client, TOOL_NAME)) != INSTPROXY_E_SUCCESS) {
+    service_client_factory_start_service_with_lockdown(self.lockdown, self.device, INSTPROXY_SERVICE_NAME, (void**)&instproxy_client, TOOL_NAME, SERVICE_CONSTRUCTOR(instproxy_client_new), &err);
+    if (err != INSTPROXY_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to start service on device. Make sure the device is connected to the network and unlocked and that the pairing is valid.", @"JBHostDevice") code:err];
-        [self freePairing];
         goto end;
     }
     
@@ -294,7 +386,9 @@ end:
     }
     
     sbservices_client_t sbs = NULL;
-    if (sbservices_client_start_service(device, &sbs, TOOL_NAME) != SBSERVICES_E_SUCCESS) {
+    sbservices_error_t serr = SBSERVICES_E_SUCCESS;
+    service_client_factory_start_service_with_lockdown(self.lockdown, self.device, SBSERVICES_SERVICE_NAME, (void**)&sbs, TOOL_NAME, SERVICE_CONSTRUCTOR(sbservices_client_new), &err);
+    if (serr != SBSERVICES_E_SUCCESS) {
         DEBUG_PRINT("ignoring sbservices error, no icons generated");
         goto end;
     }
@@ -320,9 +414,6 @@ end:
     if (client_opts) {
         instproxy_client_options_free(client_opts);
     }
-    if (device) {
-        idevice_free(device);
-    }
     return ret;
 }
 
@@ -332,62 +423,30 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
 }
 
 - (BOOL)mountImageForUrl:(NSURL *)url signatureUrl:(NSURL *)signatureUrl error:(NSError **)error {
-    idevice_t device = NULL;
-    lockdownd_client_t lckd = NULL;
-    lockdownd_error_t ldret = LOCKDOWN_E_UNKNOWN_ERROR;
+    mobile_image_mounter_error_t merr = MOBILE_IMAGE_MOUNTER_E_SUCCESS;
     mobile_image_mounter_client_t mim = NULL;
-    lockdownd_service_descriptor_t service = NULL;
     BOOL res = NO;
     const char *image_path = url.path.UTF8String;
     size_t image_size = 0;
     const char *image_sig_path = signatureUrl.path.UTF8String;
     const char *imagetype = "Developer";
-    
-    if (!self.udid) {
-        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
+
+    service_client_factory_start_service_with_lockdown(self.lockdown, self.device, MOBILE_IMAGE_MOUNTER_SERVICE_NAME, (void**)&mim, TOOL_NAME, SERVICE_CONSTRUCTOR(mobile_image_mounter_new), &merr);
+    if (merr != MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Could not connect to mobile_image_mounter!", @"JBHostDevice") code:merr];
         return NO;
-    }
-    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
-        [self freePairing];
-        return NO;
-    }
-
-    if (LOCKDOWN_E_SUCCESS != (ldret = lockdownd_client_new_with_handshake(device, &lckd, TOOL_NAME))) {
-        [self createError:error withString:NSLocalizedString(@"Could not connect to lockdown.", @"JBHostDevice") code:ldret];
-        goto leave;
-    }
-
-    lockdownd_start_service(lckd, "com.apple.mobile.mobile_image_mounter", &service);
-
-    if (!service || service->port == 0) {
-        [self createError:error withString:NSLocalizedString(@"Could not start mobile_image_mounter service!", @"JBHostDevice")];
-        goto leave;
-    }
-
-    if (mobile_image_mounter_new(device, service, &mim) != MOBILE_IMAGE_MOUNTER_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Could not connect to mobile_image_mounter!", @"JBHostDevice")];
-        goto leave;
-    }
-
-    if (service) {
-        lockdownd_service_descriptor_free(service);
-        service = NULL;
     }
 
     struct stat fst;
     if (stat(image_path, &fst) != 0) {
         [self createError:error withString:NSLocalizedString(@"Cannot stat image file!", @"JBHostDevice") code:-errno];
-        goto leave;
+        goto error_out;
     }
     image_size = fst.st_size;
     if (stat(image_sig_path, &fst) != 0) {
         [self createError:error withString:NSLocalizedString(@"Cannot stat signature file!", @"JBHostDevice") code:-errno];
-        goto leave;
+        goto error_out;
     }
-
-    lockdownd_client_free(lckd);
-    lckd = NULL;
 
     mobile_image_mounter_error_t err = MOBILE_IMAGE_MOUNTER_E_UNKNOWN_ERROR;
     plist_t result = NULL;
@@ -397,30 +456,30 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
     FILE *f = fopen(image_sig_path, "rb");
     if (!f) {
         [self createError:error withString:NSLocalizedString(@"Error opening signature file.", @"JBHostDevice") code:-errno];
-        goto leave;
+        goto error_out;
     }
     sig_length = fread(sig, 1, sizeof(sig), f);
     fclose(f);
     if (sig_length == 0) {
         [self createError:error withString:NSLocalizedString(@"Could not read signature from file.", @"JBHostDevice") code:-errno];
-        goto leave;
+        goto error_out;
     }
 
     f = fopen(image_path, "rb");
     if (!f) {
         [self createError:error withString:NSLocalizedString(@"Error opening image file.", @"JBHostDevice") code:-errno];
-        goto leave;
+        goto error_out;
     }
 
     char *targetname = NULL;
     if (asprintf(&targetname, "%s/%s", PKG_PATH, "staging.dimage") < 0) {
         [self createError:error withString:NSLocalizedString(@"Out of memory!?", @"JBHostDevice")];
-        goto leave;
+        goto error_out;
     }
     char *mountname = NULL;
     if (asprintf(&mountname, "%s/%s", PATH_PREFIX, targetname) < 0) {
         [self createError:error withString:NSLocalizedString(@"Out of memory!?", @"JBHostDevice")];
-        goto leave;
+        goto error_out;
     }
 
     DEBUG_PRINT("Uploading %s\n", image_path);
@@ -491,35 +550,19 @@ error_out:
     /* free client */
     mobile_image_mounter_free(mim);
 
-leave:
-    if (lckd) {
-        lockdownd_client_free(lckd);
-    }
-    idevice_free(device);
-
     return res;
 }
 
 - (BOOL)launchApplication:(JBApp *)application error:(NSError **)error {
     int res = NO;
-    idevice_t device = NULL;
     debugserver_client_t debugserver_client = NULL;
     char* response = NULL;
     debugserver_command_t command = NULL;
     debugserver_error_t dres = DEBUGSERVER_E_UNKNOWN_ERROR;
     
-    if (!self.udid) {
-        [self createError:error withString:NSLocalizedString(@"No valid pairing was found.", @"JBHostDevice")];
-        return NO;
-    }
-    if (idevice_new_with_options(&device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK) != IDEVICE_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice")];
-        [self freePairing];
-        return NO;
-    }
-    
     /* start and connect to debugserver */
-    if (debugserver_client_start_service(device, &debugserver_client, TOOL_NAME) != DEBUGSERVER_E_SUCCESS) {
+    service_client_factory_start_service_with_lockdown(self.lockdown, self.device, DEBUGSERVER_SECURE_SERVICE_NAME, (void**)&debugserver_client, TOOL_NAME, SERVICE_CONSTRUCTOR(debugserver_client_new), &dres);
+    if (dres != DEBUGSERVER_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to start debugserver.", @"JBHostDevice") code:kJBHostImageNotMounted];
         goto cleanup;
     }
@@ -620,9 +663,6 @@ cleanup:
 
     if (debugserver_client)
         debugserver_client_free(debugserver_client);
-
-    if (device)
-        idevice_free(device);
 
     return res;
 }
