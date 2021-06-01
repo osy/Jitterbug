@@ -1,5 +1,6 @@
 Jitterbug
 =========
+[![Build](https://github.com/osy/Jitterbug/workflows/Build/badge.svg?branch=main&event=push)][1]
 
 This app uses [libimobiledevice][1] and WiFi pairing to use one iOS device to launch apps with the debugger on another iOS device. This "tethered" launch allows JIT to work on the second iOS device.
 
