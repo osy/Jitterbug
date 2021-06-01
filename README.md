@@ -2,7 +2,7 @@ Jitterbug
 =========
 [![Build](https://github.com/osy/Jitterbug/workflows/Build/badge.svg?branch=main&event=push)][1]
 
-This app uses [libimobiledevice][1] and WiFi pairing to use one iOS device to launch apps with the debugger on another iOS device. This "tethered" launch allows JIT to work on the second iOS device.
+This app uses [libimobiledevice][2] and WiFi pairing to use one iOS device to launch apps with the debugger on another iOS device. This "tethered" launch allows JIT to work on the second iOS device.
 
 ## Download
 
@@ -21,7 +21,7 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 ### macOS
 
 1. Make sure you cloned all submodules with `git submodule update --init --recursive`
-2. Install [Homebrew][3] if you have not already.
+2. Install [Homebrew][4] if you have not already.
 3. Install dependencies: `brew install meson openssl@1.1 libusbmuxd libimobiledevice`
 4. Build with `PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig" meson build && cd build && meson compile`
 4. The built executable is in `build/jitterbugpair`. You can install it with `meson install`.
@@ -35,7 +35,7 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 
 ### Windows
 
-1. Install [MSYS][4] and open MSYS shell.
+1. Install [MSYS][5] and open MSYS shell.
 2. Install dependencies: `pacman -Syy git mingw64/mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-pkg-config mingw64/mingw-w64-x86_64-meson mingw64/mingw-w64-x86_64-libusbmuxd mingw64/mingw-w64-x86_64-libimobiledevice`
 3. Clone the repository: `git clone --recursive https://github.com/osy/Jitterbug.git`
 4. Close the MSYS shell and open the MingW64 shell.
@@ -45,15 +45,13 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 
 ## Pairing
 
-(Note in the future, there will be a GUI app but right now we only have a CLI tool. There will also be a CLI tool for other operating systems.)
-
 On macOS and Windows, make sure you have iTunes installed. On Linux, make sure `usbmuxd` is installed (`sudo apt install usbmuxd`).
 
 Run `jitterbugpair` with your device plugged in to generate `YOUR-UDID.mobiledevicepairing`. You need to have a passcode enabled and the device should be unlocked. The first time you run the tool, you will get a prompt for your passcode. Type it in and keep the screen on and unlocked and run the tool again to generate the pairing.
 
 ## Developer Image
 
-Go [here][2] and download the ZIP corresponding to the closest iOS version to the target device. Unzip the download and you should get `DeveloperDiskImage.dmg` and `DeveloperDiskImage.dmg.signature`.
+Go [here][3] and download the ZIP corresponding to the closest iOS version to the target device. Unzip the download and you should get `DeveloperDiskImage.dmg` and `DeveloperDiskImage.dmg.signature`.
 
 ## Running
 
@@ -74,7 +72,8 @@ You may have already mounted the developer image. Try launching an app.
 
 This application does not have the `get-task-allow` entitlement. Or this is not an development app.
 
-[1]: https://libimobiledevice.org
-[2]: https://github.com/xushuduo/Xcode-iOS-Developer-Disk-Image/releases
-[3]: https://brew.sh
-[4]: https://www.msys2.org
+[1]: https://github.com/osy/Jitterbug/actions/workflows/build.yml?query=event%3Apush
+[2]: https://libimobiledevice.org
+[3]: https://github.com/xushuduo/Xcode-iOS-Developer-Disk-Image/releases
+[4]: https://brew.sh
+[5]: https://www.msys2.org
