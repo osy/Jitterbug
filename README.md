@@ -3,6 +3,10 @@ Jitterbug
 
 This app uses [libimobiledevice][1] and WiFi pairing to use one iOS device to launch apps with the debugger on another iOS device. This "tethered" launch allows JIT to work on the second iOS device.
 
+## Download
+
+[Go to Releases](https://github.com/osy/Jitterbug/releases)
+
 ## Building Jitterbug
 
 1. Make sure you cloned all submodules with `git submodule update --init --recursive`
@@ -41,6 +45,8 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 ## Pairing
 
 (Note in the future, there will be a GUI app but right now we only have a CLI tool. There will also be a CLI tool for other operating systems.)
+
+On macOS and Windows, make sure you have iTunes installed. On Linux, make sure `usbmuxd` is installed (`sudo apt install usbmuxd`).
 
 Run `jitterbugpair` with your device plugged in to generate `YOUR-UDID.mobiledevicepairing`. You need to have a passcode enabled and the device should be unlocked. The first time you run the tool, you will get a prompt for your passcode. Type it in and keep the screen on and unlocked and run the tool again to generate the pairing.
 
