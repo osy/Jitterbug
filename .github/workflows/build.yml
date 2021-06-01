@@ -20,6 +20,23 @@ on:
         default: 'false'
 
 jobs:
+  build-ios:
+    name: Jitterbug
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Build
+        run: xcodebuild archive -archivePath Jitterbug -scheme Jitterbug -sdk iphoneos -configuration Release CODE_SIGNING_ALLOWED=NO
+      - name: Compress
+        run: tar cf Jitterbug.xcarchive.tgz Jitterbug.xcarchive
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Jitterbug
+          path: Jitterbug.xcarchive.tgz
   build-macos:
     name: JitterbugPair (macOS)
     runs-on: macos-10.15
