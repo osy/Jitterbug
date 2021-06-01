@@ -86,6 +86,8 @@ int main(int argc, const char * argv[]) {
     int result;
     char *type = NULL;
     plist_t pair_record = NULL;
+    char *host_id = NULL;
+    char *session_id = NULL;
     
     while ((c = getopt(argc, argv, "lu:c")) != -1) {
         switch (c) {
@@ -159,6 +161,25 @@ int main(int argc, const char * argv[]) {
     
     userpref_read_pair_record(udid, &pair_record);
     plist_dict_set_item(pair_record, "UDID", plist_new_string(udid));
+    pair_record_get_host_id(pair_record, &host_id);
+    
+    lerr = lockdownd_start_session(client, host_id, &session_id, NULL);
+    if (lerr != LOCKDOWN_E_SUCCESS) {
+        result = EXIT_FAILURE;
+        print_error_message(lerr, udid);
+        goto leave;
+    }
+    
+    lerr = lockdownd_set_value(client, "com.apple.mobile.wireless_lockdown", "EnableWifiDebugging", plist_new_bool(1));
+    if (lerr != LOCKDOWN_E_SUCCESS) {
+        result = EXIT_FAILURE;
+        if (lerr == LOCKDOWN_E_UNKNOWN_ERROR) {
+            fprintf(stderr, "ERROR: You must set up a passcode to enable wireless pairing.\n");
+        } else {
+            print_error_message(lerr, udid);
+        }
+        goto leave;
+    }
     
     if (!plist_write_to_filename(pair_record, path, PLIST_FORMAT_XML)) {
         result = EXIT_FAILURE;
@@ -170,6 +191,13 @@ int main(int argc, const char * argv[]) {
     }
     
 leave:
+    if (session_id) {
+        lockdownd_stop_session(client, session_id);
+        free(session_id);
+    }
+    if (host_id) {
+        free(host_id);
+    }
     lockdownd_client_free(client);
     idevice_free(device);
     free(udid);
