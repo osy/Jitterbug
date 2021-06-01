@@ -567,39 +567,6 @@ error_out:
         goto cleanup;
     }
     
-    /* set maximum packet size */
-    DEBUG_PRINT("Setting maximum packet size...");
-    char* packet_size[2] = {strdup("1024"), NULL};
-    debugserver_command_new("QSetMaxPacketSize:", 1, packet_size, &command);
-    free(packet_size[0]);
-    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
-    debugserver_command_free(command);
-    command = NULL;
-    if (response) {
-        if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
-            goto cleanup;
-        }
-        free(response);
-        response = NULL;
-    }
-    
-    /* set working directory */
-    DEBUG_PRINT("Setting working directory...");
-    const char *working_dir[2] = {application.container.UTF8String, NULL};
-    debugserver_command_new("QSetWorkingDir:", 1, (char **)working_dir, &command);
-    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
-    debugserver_command_free(command);
-    command = NULL;
-    if (response) {
-        if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
-            goto cleanup;
-        }
-        free(response);
-        response = NULL;
-    }
-    
     /* set arguments and run app */
     DEBUG_PRINT("Setting argv...");
     int app_argc = 1;
@@ -621,34 +588,24 @@ error_out:
         free(response);
         response = NULL;
     }
-    
-    /* set thread */
-    DEBUG_PRINT("Setting thread...");
-    debugserver_command_new("Hc0", 0, NULL, &command);
-    dres = debugserver_client_send_command(debugserver_client, command, &response, NULL);
-    debugserver_command_free(command);
-    command = NULL;
-    if (response) {
-        if (strncmp(response, "OK", 2)) {
-            [self createError:error withString:[NSString stringWithUTF8String:&response[1]]];
-            goto cleanup;
-        }
-        free(response);
-        response = NULL;
-    }
 
     /* continue running process */
     DEBUG_PRINT("Continue running process...");
     debugserver_command_new("c", 0, NULL, &command);
     dres = debugserver_client_send_command(debugserver_client, command, NULL, NULL);
     debugserver_command_free(command);
-    command = NULL;
+    
+    DEBUG_PRINT("Getting threads info...");
+    char three = 3;
+    debugserver_client_send(debugserver_client, &three, sizeof(three), NULL);
+    debugserver_command_new("jThreadsInfo", 0, NULL, &command);
+    dres = debugserver_client_send_command(debugserver_client, command, NULL, NULL);
+    debugserver_command_free(command);
     
     DEBUG_PRINT("Detaching from app...");
     debugserver_command_new("D", 0, NULL, &command);
     dres = debugserver_client_send_command(debugserver_client, command, NULL, NULL);
     debugserver_command_free(command);
-    command = NULL;
 
     res = (dres == DEBUGSERVER_E_SUCCESS) ? YES : NO;
     if (!res) {
