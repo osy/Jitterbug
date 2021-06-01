@@ -1,0 +1,58 @@
+name: Build
+on:
+  push:
+    branches:
+      - 'main'
+      - 'dev'
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - 'LICENSE'
+      - '**.md'
+  pull_request:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      test_release:
+        description: 'Test release?'
+        required: true
+        default: 'false'
+
+jobs:
+  build-macos:
+    name: JitterbugPair (macOS)
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Dependencies
+        run: brew install meson openssl@1.1 libusbmuxd libimobiledevice
+      - name: Build
+        run: meson --prefix /usr/local --buildtype=release build && cd build && meson compile
+        env:
+          PKG_CONFIG_PATH: /usr/local/opt/openssl@1.1/lib/pkgconfig
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: jitterbugpair-macos
+          path: build/jitterbugpair
+  build-ubuntu:
+    name: JitterbugPair (Ubuntu)
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Dependencies
+        run: sudo apt install meson libgcrypt-dev libusbmuxd-dev libimobiledevice-dev libunistring-dev
+      - name: Build
+        run: meson --prefix /usr --buildtype=release build && cd build && ninja
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: jitterbugpair-linux
+          path: build/jitterbugpair
