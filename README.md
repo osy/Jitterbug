@@ -28,6 +28,16 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 3. Build with `meson build && cd build && ninja`
 4. The built executable is in `build/jitterbugpair`. You can install it with `sudo ninja install`.
 
+### Windows
+
+1. Install [MSYS][4] and open MSYS shell.
+2. Install dependencies: `pacman -Syy git mingw64/mingw-w64-x86_64-gcc mingw64/mingw-w64-x86_64-pkg-config mingw64/mingw-w64-x86_64-meson mingw64/mingw-w64-x86_64-libusbmuxd mingw64/mingw-w64-x86_64-libimobiledevice`
+3. Clone the repository: `git clone --recursive https://github.com/osy/Jitterbug.git`
+4. Close the MSYS shell and open the MingW64 shell.
+5. Open the cloned repository: `cd Jitterbug`
+6. Build with `meson build && cd build && meson compile`
+7. The built executable is `build/jitterbugpair.exe` and `build/libwinpthread-1.dll`. Both files needs to be in the same directory to run.
+
 ## Pairing
 
 (Note in the future, there will be a GUI app but right now we only have a CLI tool. There will also be a CLI tool for other operating systems.)
@@ -60,3 +70,4 @@ This application does not have the `get-task-allow` entitlement. Or this is not 
 [1]: https://libimobiledevice.org
 [2]: https://github.com/xushuduo/Xcode-iOS-Developer-Disk-Image/releases
 [3]: https://brew.sh
+[4]: https://www.msys2.org
