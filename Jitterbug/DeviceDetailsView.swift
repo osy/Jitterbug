@@ -111,11 +111,14 @@ struct DeviceDetailsView: View {
                 }.disabled(host.udid == nil)
             }
         }.onAppear {
-            selectedPairing = main.loadPairing(forHostName: host.hostname)
-            selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
-            selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
-            if selectedPairing == nil {
-                fileSelectType = .pairing
+            // BUG: sometimes SwiftUI doesn't like this...
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
+                selectedPairing = main.loadPairing(forHostName: host.hostname)
+                selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
+                selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
+                if selectedPairing == nil {
+                    fileSelectType = .pairing
+                }
             }
         }.onChange(of: selectedPairing) { url in
             guard let selected = url else {
