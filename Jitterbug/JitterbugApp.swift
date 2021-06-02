@@ -16,10 +16,15 @@
 
 import SwiftUI
 
+private var shortcutHostName: String?
+
 @main
 struct JitterbugApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject var main = Main()
+    #if os(iOS)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
     
     var body: some Scene {
         WindowGroup {
@@ -27,9 +32,56 @@ struct JitterbugApp: App {
                 .environmentObject(main)
         }
         .onChange(of: scenePhase) { newScenePhase in
-            if newScenePhase != .active {
+            if newScenePhase == .active {
+                main.selectedHostName = shortcutHostName
+                shortcutHostName = nil
+            } else {
                 main.archiveSavedHosts()
+                #if os(iOS)
+                self.updateQuickActions()
+                #endif
             }
         }
     }
+    
+    #if os(iOS)
+    private func updateQuickActions() {
+        let application = UIApplication.shared
+        application.shortcutItems = main.savedHosts.map({ device -> UIApplicationShortcutItem in
+            var icon: UIApplicationShortcutIcon?
+            switch device.hostDeviceType {
+            case .typeiPhone:
+                icon = UIApplicationShortcutIcon(systemImageName: "iphone")
+            case .typeiPad:
+                icon = UIApplicationShortcutIcon(systemImageName: "ipad")
+            default:
+                icon = nil
+            }
+            let userInfo: [String: NSSecureCoding] = [
+                "hostname": device.hostname as NSSecureCoding,
+            ]
+            return UIApplicationShortcutItem(type: "connectHost", localizedTitle: device.name, localizedSubtitle: nil, icon: icon, userInfo: userInfo)
+        })
+    }
+    
+    class AppDelegate: NSObject, UIApplicationDelegate {
+        func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+            let config = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+            config.delegateClass = SceneDelegate.self
+            return config
+        }
+    }
+    
+    class SceneDelegate: NSObject, UIWindowSceneDelegate {
+        func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+            if let shortcutItem = connectionOptions.shortcutItem {
+                shortcutHostName = shortcutItem.userInfo?["hostname"] as? String
+            }
+        }
+        
+        func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+            shortcutHostName = shortcutItem.userInfo?["hostname"] as? String
+        }
+    }
+    #endif
 }

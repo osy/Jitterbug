@@ -24,6 +24,7 @@ class Main: ObservableObject {
     @Published var scanning: Bool = false
     @Published var savedHosts: [JBHostDevice] = []
     @Published var foundHosts: [JBHostDevice] = []
+    @Published var selectedHostName: String?
     
     @Published var pairings: [URL] = []
     @Published var supportImages: [URL] = []

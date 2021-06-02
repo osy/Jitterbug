@@ -25,7 +25,7 @@ struct DeviceListView: View {
             if !main.savedHosts.isEmpty {
                 Section(header: Text("Saved")) {
                     ForEach(main.savedHosts) { host in
-                        NavigationLink(destination: DeviceDetailsView(host: host)) {
+                        NavigationLink(destination: DeviceDetailsView(host: host), tag: host.hostname, selection: $main.selectedHostName) {
                             HostView(host: host, saved: true)
                                 .foregroundColor(host.discovered ? .primary : .secondary)
                         }
