@@ -74,6 +74,7 @@ struct SupportFilesView: View {
             for url in urls {
                 try main.importSupportImage(url)
             }
+            Thread.sleep(forTimeInterval: 1)
         }
     }
 }

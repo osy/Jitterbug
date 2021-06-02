@@ -72,6 +72,7 @@ struct PairingsView: View {
         main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "PairingsView")) {
             let url = try result.get()
             try main.importPairing(url)
+            Thread.sleep(forTimeInterval: 1)
         }
     }
 }

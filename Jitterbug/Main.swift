@@ -62,20 +62,20 @@ class Main: ObservableObject {
         DispatchQueue.main.async {
             self.busy = true
             self.busyMessage = message
-        }
-        DispatchQueue.global(qos: .userInitiated).async {
-            defer {
-                DispatchQueue.main.async {
-                    self.busy = false
-                    self.busyMessage = nil
-                    onComplete()
+            DispatchQueue.global(qos: .background).async {
+                defer {
+                    DispatchQueue.main.async {
+                        self.busy = false
+                        self.busyMessage = nil
+                        onComplete()
+                    }
                 }
-            }
-            do {
-                try task()
-            } catch {
-                DispatchQueue.main.async {
-                    self.alertMessage = error.localizedDescription
+                do {
+                    try task()
+                } catch {
+                    DispatchQueue.main.async {
+                        self.alertMessage = error.localizedDescription
+                    }
                 }
             }
         }
@@ -86,32 +86,33 @@ class Main: ObservableObject {
     private func importFile(_ file: URL, toDirectory: URL, onComplete: @escaping () -> Void) throws {
         let name = file.lastPathComponent
         let dest = toDirectory.appendingPathComponent(name)
-        backgroundTask(message: NSLocalizedString("Importing file...", comment: "Settings")) {
-            _ = file.startAccessingSecurityScopedResource()
-            defer {
-                file.stopAccessingSecurityScopedResource()
-            }
-            if !self.fileManager.fileExists(atPath: toDirectory.path) {
-                try self.fileManager.createDirectory(at: toDirectory, withIntermediateDirectories: false)
-            }
-            if self.fileManager.fileExists(atPath: dest.path) {
-                try self.fileManager.removeItem(at: dest)
-            }
-            try self.fileManager.copyItem(at: file, to: dest)
-        } onComplete: {
-            onComplete()
+        _ = file.startAccessingSecurityScopedResource()
+        defer {
+            file.stopAccessingSecurityScopedResource()
         }
+        if !self.fileManager.fileExists(atPath: toDirectory.path) {
+            try self.fileManager.createDirectory(at: toDirectory, withIntermediateDirectories: false)
+        }
+        if self.fileManager.fileExists(atPath: dest.path) {
+            try self.fileManager.removeItem(at: dest)
+        }
+        try self.fileManager.copyItem(at: file, to: dest)
+        onComplete()
     }
     
     func importPairing(_ pairing: URL) throws {
         try importFile(pairing, toDirectory: pairingsURL) {
-            self.refreshPairings()
+            DispatchQueue.main.async {
+                self.refreshPairings()
+            }
         }
     }
     
     func importSupportImage(_ support: URL) throws {
         try importFile(support, toDirectory: supportImagesURL) {
-            self.refreshSupportImages()
+            DispatchQueue.main.async {
+                self.refreshSupportImages()
+            }
         }
     }
     

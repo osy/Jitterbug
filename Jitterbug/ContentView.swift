@@ -43,6 +43,7 @@ struct ContentView: View {
         }.onOpenURL { url in
             main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "ContentView")) {
                 try main.importPairing(url)
+                Thread.sleep(forTimeInterval: 1)
             }
         }.disabled(main.busy)
     }
