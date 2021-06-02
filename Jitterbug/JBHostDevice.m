@@ -70,13 +70,6 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     }
 }
 
-- (void)setHostVersion:(NSString *)hostVersion {
-    if (_hostVersion != hostVersion) {
-        [self propertyWillChange];
-        _hostVersion = hostVersion;
-    }
-}
-
 - (void)setDiscovered:(BOOL)discovered {
     if (_discovered != discovered) {
         [self propertyWillChange];
@@ -95,7 +88,6 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
         self.address = address;
         self.name = hostname;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
-        self.hostVersion = @"";
         [self setupDispatchQueue];
     }
     return self;
@@ -125,10 +117,6 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
         if (!self.hostDeviceType) {
             return nil;
         }
-        self.hostVersion = [coder decodeObjectForKey:@"hostVersion"];
-        if (!self.hostVersion) {
-            return nil;
-        }
         [self setupDispatchQueue];
     }
     return self;
@@ -139,7 +127,6 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     [coder encodeObject:self.hostname forKey:@"hostname"];
     [coder encodeObject:self.address forKey:@"address"];
     [coder encodeInteger:self.hostDeviceType forKey:@"hostDeviceType"];
-    [coder encodeObject:self.hostVersion forKey:@"hostVersion"];
 }
 
 #pragma mark - Methods
