@@ -24,11 +24,13 @@ struct ContentView: View {
             NavigationView {
                 DeviceListView()
                     .listStyle(SidebarListStyle())
+                    .frame(minWidth: 200, idealWidth: 200)
             }.labelStyle(IconOnlyLabelStyle())
             if main.busy {
                 BusyView(message: main.busyMessage)
             }
-        }.alert(item: $main.alertMessage) { message in
+        }.frame(minWidth: 800, idealWidth: 800, minHeight: 400, idealHeight: 400)
+        .alert(item: $main.alertMessage) { message in
             Alert(title: Text(message))
         }.onOpenURL { url in
             main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "ContentView")) {

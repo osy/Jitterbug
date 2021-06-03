@@ -28,7 +28,7 @@ struct DeviceListView: View {
                         NavigationLink(destination: DeviceDetailsView(host: host), tag: host.identifier, selection: $main.selectedHostId) {
                             HostView(host: host, saved: true)
                                 .foregroundColor(host.discovered ? .primary : .secondary)
-                        }
+                        }.deviceListContextMenu(host: host)
                     }
                 }
             }
@@ -36,7 +36,7 @@ struct DeviceListView: View {
                 ForEach(main.foundHosts) { host in
                     NavigationLink(destination: DeviceDetailsView(host: host), tag: host.identifier, selection: $main.selectedHostId) {
                         HostView(host: host, saved: false)
-                    }
+                    }.deviceListContextMenu(host: host)
                 }
             }
         }.navigationTitle("Devices")
@@ -85,7 +85,15 @@ struct HostView: View {
             Text(host.name)
             Spacer()
         }.buttonStyle(PlainButtonStyle())
-        .contextMenu {
+    }
+}
+
+struct ContextMenuViewModifier: ViewModifier {
+    @EnvironmentObject private var main: Main
+    let host: JBHostDevice
+    
+    func body(content: Content) -> some View {
+        content.contextMenu {
             Button {
                 main.savePairing(nil, forHostIdentifier: host.identifier)
                 main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
@@ -93,7 +101,21 @@ struct HostView: View {
                 Label("Clear Pairing", systemImage: "xmark.circle")
                     .labelStyle(DefaultLabelStyle())
             }
+            #if os(macOS)
+            Button {
+                
+            } label: {
+                Label("Export Pairing", systemImage: "square.and.arrow.up")
+                    .labelStyle(DefaultLabelStyle())
+            }
+            #endif
         }
+    }
+}
+
+extension View {
+    func deviceListContextMenu(host: JBHostDevice) -> some View {
+        self.modifier(ContextMenuViewModifier(host: host))
     }
 }
 

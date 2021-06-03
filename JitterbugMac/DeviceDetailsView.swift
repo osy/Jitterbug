@@ -83,6 +83,18 @@ struct DeviceDetailsView: View {
             }
         }.navigationTitle(host.name)
         .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button {
+                    refreshAppsList()
+                } label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                }
+                Button {
+                    
+                } label: {
+                    Label("Export Pairing", systemImage: "square.and.arrow.up")
+                }
+            }
         }.onAppear {
             if !appsLoaded {
                 appsLoaded = true
