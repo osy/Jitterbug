@@ -53,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)mountImageForUrl:(NSURL *)url signatureUrl:(NSURL *)signatureUrl error:(NSError **)error;
 - (BOOL)launchApplication:(JBApp *)application error:(NSError **)error;
 
+- (BOOL)resetPairingWithError:(NSError **)error;
+- (BOOL)exportPairingToUrl:(NSURL *)url error:(NSError **)error;
+
 @end
 
 NS_ASSUME_NONNULL_END

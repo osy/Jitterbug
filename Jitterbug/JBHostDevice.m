@@ -22,6 +22,7 @@
 #include <libimobiledevice/mobile_image_mounter.h>
 #include <libimobiledevice/sbservices.h>
 #include <libimobiledevice/service.h>
+#include "common/userpref.h"
 #include "common/utils.h"
 #import "JBApp.h"
 #import "JBHostDevice.h"
@@ -408,6 +409,19 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
         self.hostDeviceType = JBHostDeviceTypeUnknown;
     }
     plist_free(node);
+    
+    if (self.isUsbDevice) {
+        err = lockdownd_set_value(self.lockdown, "com.apple.mobile.wireless_lockdown", "EnableWifiDebugging", plist_new_bool(1));
+        if (err != LOCKDOWN_E_SUCCESS) {
+            if (err == LOCKDOWN_E_UNKNOWN_ERROR) {
+                [self createError:error withString:NSLocalizedString(@"You must set up a passcode to enable wireless pairing.", @"JBHostDevice")];
+            } else {
+                [self createError:error withString:NSLocalizedString(@"Error setting up Wifi debugging.", @"JBHostDevice") code:err];
+            }
+            return NO;
+        }
+    }
+    
     return YES;
 }
 
@@ -675,6 +689,41 @@ cleanup:
         debugserver_client_free(debugserver_client);
 
     return res;
+}
+
+- (BOOL)resetPairingWithError:(NSError **)error {
+    lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
+    
+    assert(self.lockdown);
+    lerr = lockdownd_unpair(self.lockdown, NULL);
+    if (lerr != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to reset pairing.", @"JBHostDevice") code:lerr];
+        return NO;
+    }
+    
+    [self stopLockdown];
+    return YES;
+}
+
+- (NSData *)exportPairingWithError:(NSError **)error {
+    userpref_error_t err = USERPREF_E_SUCCESS;
+    plist_t pair_record = NULL;
+    char *plist_xml = NULL;
+    uint32_t length;
+    NSData *data = NULL;
+    
+    assert(self.udid);
+    err = userpref_read_pair_record(self.udid.UTF8String, &pair_record);
+    if (err != USERPREF_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to find pairing record.", @"JBHostDevice") code:err];
+        return nil;
+    }
+    plist_dict_set_item(pair_record, "UDID", plist_new_string(self.udid.UTF8String));
+    plist_to_xml(pair_record, &plist_xml, &length);
+    data = [NSData dataWithBytes:plist_xml length:length];
+    free(plist_xml);
+    plist_free(pair_record);
+    return data;
 }
 
 @end

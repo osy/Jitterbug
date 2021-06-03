@@ -97,6 +97,14 @@ struct ContextMenuViewModifier: ViewModifier {
             Button {
                 main.savePairing(nil, forHostIdentifier: host.identifier)
                 main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
+                #if os(macOS)
+                main.backgroundTask(message: NSLocalizedString("Unpairing...", comment: "DeviceListView")) {
+                    if !host.isConnected {
+                        try host.startLockdown()
+                    }
+                    try host.resetPairing()
+                }
+                #endif
             } label: {
                 Label("Clear Pairing", systemImage: "xmark.circle")
                     .labelStyle(DefaultLabelStyle())
