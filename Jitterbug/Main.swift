@@ -338,7 +338,7 @@ extension Main {
                     hostDevice.updateAddress(addr)
                 }
             }) {
-                let newHost = JBHostDevice(uuid: udid)
+                let newHost = JBHostDevice(udid: udid, address: address)
                 newHost.discovered = true
                 self.foundHosts.append(newHost)
             }

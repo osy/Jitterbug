@@ -86,6 +86,10 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     }
 }
 
+- (BOOL)isConnected {
+    return self.lockdown != nil;
+}
+
 - (void)setupDispatchQueue {
     self.timerQueue = dispatch_queue_create("heartbeatQueue", DISPATCH_QUEUE_SERIAL);
     self.timerCancelEvent = dispatch_semaphore_create(0);
@@ -95,6 +99,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     if (self = [super init]) {
         self.isUsbDevice = NO;
         self.hostname = hostname;
+        self.udid = @"";
         self.address = address;
         self.name = hostname;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
@@ -103,12 +108,13 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     return self;
 }
 
-- (instancetype)initWithUuid:(NSString *)uuid {
+- (instancetype)initWithUdid:(NSString *)udid address:(NSData *)address {
     if (self = [super init]) {
         self.isUsbDevice = YES;
-        self.hostname = uuid;
-        self.address = [NSData data];
-        self.name = uuid;
+        self.hostname = @"";
+        self.udid = udid;
+        self.address = address ? address : [NSData data];
+        self.name = udid;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
         [self setupDispatchQueue];
     }
@@ -132,6 +138,10 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
         if (!self.hostname) {
             return nil;
         }
+        self.udid = [coder decodeObjectForKey:@"udid"];
+        if (!self.udid) {
+            return nil;
+        }
         self.address = [coder decodeObjectForKey:@"address"];
         if (!self.address) {
             return nil;
@@ -149,6 +159,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     [coder encodeBool:self.isUsbDevice forKey:@"isUsbDevice"];
     [coder encodeObject:self.name forKey:@"name"];
     [coder encodeObject:self.hostname forKey:@"hostname"];
+    [coder encodeObject:self.udid forKey:@"hostname"];
     [coder encodeObject:self.address forKey:@"address"];
     [coder encodeInteger:self.hostDeviceType forKey:@"hostDeviceType"];
 }

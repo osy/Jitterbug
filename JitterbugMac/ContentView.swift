@@ -16,36 +16,31 @@
 
 import SwiftUI
 
-struct LauncherView: View {
+struct ContentView: View {
     @EnvironmentObject private var main: Main
     
     var body: some View {
-        NavigationView {
-            DeviceListView()
-                .listStyle(PlainListStyle())
-                .navigationBarItems(leading: Group {
-                    if main.scanning {
-                        Spinner()
-                    }
-                })
-        }.labelStyle(IconOnlyLabelStyle())
+        ZStack {
+            NavigationView {
+                DeviceListView()
+                    .listStyle(SidebarListStyle())
+            }.labelStyle(IconOnlyLabelStyle())
+            if main.busy {
+                BusyView(message: main.busyMessage)
+            }
+        }.alert(item: $main.alertMessage) { message in
+            Alert(title: Text(message))
+        }.onOpenURL { url in
+            main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "ContentView")) {
+                try main.importPairing(url)
+                Thread.sleep(forTimeInterval: 1)
+            }
+        }.disabled(main.busy)
     }
 }
 
-struct Spinner: UIViewRepresentable {
-    func makeUIView(context: Context) -> UIActivityIndicatorView {
-        let view = UIActivityIndicatorView(style: .medium)
-        view.color = .label
-        view.startAnimating()
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
-    }
-}
-
-struct LauncherView_Previews: PreviewProvider {
+struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        LauncherView()
+        ContentView()
     }
 }

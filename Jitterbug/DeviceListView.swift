@@ -45,7 +45,6 @@ struct DeviceListView: View {
                 Label("Add", systemImage: "plus")
             })
         }
-        .listStyle(PlainListStyle())
         .onAppear {
             main.startScanning()
         }

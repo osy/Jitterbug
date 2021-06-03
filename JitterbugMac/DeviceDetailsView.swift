@@ -16,22 +16,9 @@
 
 import SwiftUI
 
-fileprivate enum FileType: Int, Identifiable {
-    var id: Int {
-        self.rawValue
-    }
-    
-    case pairing
-    case supportImage
-    case supportImageSignature
-}
-
 struct DeviceDetailsView: View {
     @EnvironmentObject private var main: Main
-    @State private var fileSelectType: FileType?
-    @State private var selectedPairing: URL?
-    @State private var selectedSupportImage: URL?
-    @State private var selectedSupportImageSignature: URL?
+    @State private var appsLoaded: Bool = false
     @State private var apps: [JBApp] = []
     @State private var appToLaunchAfterMount: JBApp?
     
@@ -88,89 +75,21 @@ struct DeviceDetailsView: View {
             }
         }.navigationTitle(host.name)
         .listStyle(PlainListStyle())
-        .sheet(item: $fileSelectType) { type in
-            switch type {
-            case .pairing:
-                FileSelectionView(urls: main.pairings, selectedUrl: $selectedPairing, title: Text("Select Pairing"))
-            case .supportImage:
-                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImage, title: Text("Select Image"))
-            case .supportImageSignature:
-                FileSelectionView(urls: main.supportImages, selectedUrl: $selectedSupportImageSignature, title: Text("Select Signature"))
-            }
-        }.toolbar {
-            HStack {
-                Button {
-                    fileSelectType = .pairing
-                } label: {
-                    Text("Pair")
-                }
-                Button {
-                    fileSelectType = .supportImage
-                } label: {
-                    Text("Mount")
-                }.disabled(!host.isConnected)
-            }
+        .toolbar {
         }.onAppear {
-            // BUG: sometimes SwiftUI doesn't like this...
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                selectedPairing = main.loadPairing(forHostName: host.hostname)
-                selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
-                selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
-                if selectedPairing == nil {
-                    fileSelectType = .pairing
-                }
-            }
-        }.onChange(of: selectedPairing) { url in
-            guard let selected = url else {
-                return
-            }
-            loadPairing(for: selected)
-        }.onChange(of: selectedSupportImage) { url in
-            guard let supportImage = url else {
-                return
-            }
-            let maybeSig = supportImage.appendingPathExtension("signature")
-            if selectedSupportImageSignature == nil {
-                if FileManager.default.fileExists(atPath: maybeSig.path) {
-                    selectedSupportImageSignature = maybeSig
-                } else {
-                    fileSelectType = .supportImageSignature
-                }
-            }
-        }.onChange(of :selectedSupportImageSignature) { url in
-            guard let supportImage = selectedSupportImage else {
-                return
-            }
-            guard let supportImageSignature = url else {
-                return
-            }
-            mountImage(supportImage, signature: supportImageSignature)
-        }
-    }
-    
-    private func loadPairing(for selected: URL) {
-        var success = false
-        main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
-            main.savePairing(nil, forHostName: host.hostname)
-            try host.startLockdown(withPairingUrl: selected)
-            try host.updateInfo()
-            success = true
-        } onComplete: {
-            selectedPairing = nil
-            if success {
-                refreshAppsList {
-                    main.savePairing(selected, forHostName: host.hostname)
-                }
+            if !appsLoaded {
+                appsLoaded = true
+                refreshAppsList()
             }
         }
     }
     
-    private func refreshAppsList(onSuccess: @escaping () -> Void) {
+    private func refreshAppsList() {
         main.backgroundTask(message: NSLocalizedString("Querying installed apps...", comment: "DeviceDetailsView")) {
+            try host.startLockdown()
             try host.updateInfo()
             apps = try host.installedApps()
             main.archiveSavedHosts()
-            onSuccess()
         }
     }
     
@@ -180,8 +99,6 @@ struct DeviceDetailsView: View {
             try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
             main.saveDiskImage(supportImage, signature: supportImageSignature, forHostName: host.hostname)
         } onComplete: {
-            selectedSupportImage = nil
-            selectedSupportImageSignature = nil
             if let app = appToLaunchAfterMount {
                 appToLaunchAfterMount = nil
                 launchApplication(app)
@@ -203,21 +120,8 @@ struct DeviceDetailsView: View {
                 }
             }
         } onComplete: {
-            // BUG: SwiftUI shows .disabled() even after it's already done
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                if imageNotMounted {
-                    self.handleImageNotMounted(app: app)
-                }
+            if imageNotMounted {
             }
-        }
-    }
-    
-    private func handleImageNotMounted(app: JBApp) {
-        if main.supportImages.isEmpty {
-            main.alertMessage = NSLocalizedString("Developer image is not mounted. You need DeveloperDiskImage.dmg and DeveloperDiskImage.dmg.signature imported in Support Files.", comment: "DeviceDetailsView")
-        } else {
-            fileSelectType = .supportImage
-            appToLaunchAfterMount = app
         }
     }
 }

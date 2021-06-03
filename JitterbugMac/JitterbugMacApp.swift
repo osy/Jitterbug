@@ -14,14 +14,13 @@
 // limitations under the License.
 //
 
-#ifndef Jitterbug_Bridging_Header_h
-#define Jitterbug_Bridging_Header_h
+import SwiftUI
 
-#import <TargetConditionals.h>
-#import "JBHostDevice.h"
-#if TARGET_OS_OSX
-#import "JBHostFinder.h"
-#import "JBHostFinderDelegate.h"
-#endif
-
-#endif /* Jitterbug_Bridging_Header_h */
+@main
+struct JitterbugMacApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}

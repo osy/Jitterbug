@@ -30,17 +30,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JBHostDevice : NSObject<NSSecureCoding>
 
 @property (nonatomic) NSString *name;
+@property (nonatomic, readonly) BOOL isConnected;
 @property (nonatomic, readonly) BOOL isUsbDevice;
 @property (nonatomic, readonly) NSString *identifier;
 @property (nonatomic, readonly) NSString *hostname;
 @property (nonatomic, readonly) NSData *address;
 @property (nonatomic) JBHostDeviceType hostDeviceType;
 @property (nonatomic) BOOL discovered;
-@property (nonatomic, nullable, readonly) NSString *udid;
+@property (nonatomic, readonly) NSString *udid;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithUuid:(NSString *)uuid NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithUdid:(NSString *)udid address:(nullable NSData *)address NS_DESIGNATED_INITIALIZER;
 
 - (BOOL)startLockdownWithPairingUrl:(NSURL *)url error:(NSError **)error;
 - (BOOL)startLockdownWithError:(NSError **)error;
