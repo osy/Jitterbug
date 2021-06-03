@@ -7,3 +7,6 @@
 [submodule "Libraries/libimobiledevice"]
 	path = Libraries/libimobiledevice
 	url = https://github.com/libimobiledevice/libimobiledevice.git
+[submodule "Libraries/openssl-apple"]
+	path = Libraries/openssl-apple
+	url = https://github.com/keeshux/openssl-apple.git

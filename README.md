@@ -11,8 +11,9 @@ This app uses [libimobiledevice][2] and WiFi pairing to use one iOS device to la
 ## Building Jitterbug
 
 1. Make sure you cloned all submodules with `git submodule update --init --recursive`
-2. Open `Jitterbug.xcodeproj` and change the bundle id to a unique value registered to your Apple Developer account.
-3. Build and run "Jitterbug" on your iOS device.
+2. Build OpenSSL with `cd Libraries/openssl-apple && ./build-libssl.sh --version=1.1.1j && ./create-openssl-framework.sh static`
+3. Open `Jitterbug.xcodeproj` and change the bundle id to a unique value registered to your Apple Developer account.
+4. Build and run "Jitterbug" on your iOS device.
 
 ## Building JitterbugPair
 

@@ -61,7 +61,6 @@
 		CE98585A265C6E1800F9AAD4 /* mobilebackup.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98583A265C6E1700F9AAD4 /* mobilebackup.c */; };
 		CE98585B265C6E1800F9AAD4 /* restore.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98583E265C6E1700F9AAD4 /* restore.c */; };
 		CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985841265C6E1800F9AAD4 /* file_relay.c */; };
-		CE985862265C703A00F9AAD4 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = CE985861265C703A00F9AAD4 /* OpenSSL */; };
 		CE985878265C8FD700F9AAD4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985877265C8FD700F9AAD4 /* main.c */; };
 		CE985890265C933000F9AAD4 /* bytearray.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985784265C655900F9AAD4 /* bytearray.c */; };
 		CE985891265C933000F9AAD4 /* lockdown.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985822265C6E1700F9AAD4 /* lockdown.c */; };
@@ -183,13 +182,83 @@
 		CEA02A2E26685A2B00CF57E1 /* idevice.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985811265C6E1700F9AAD4 /* idevice.c */; };
 		CEA02A2F26685A2B00CF57E1 /* installation_proxy.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582D265C6E1700F9AAD4 /* installation_proxy.c */; };
 		CEA02A3026685A2B00CF57E1 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857EB265C6DF300F9AAD4 /* debug.c */; };
-		CEA02A3226685A4B00CF57E1 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = CEA02A3126685A4B00CF57E1 /* OpenSSL */; };
 		CEA02A39266864E300CF57E1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA029DD2668592800CF57E1 /* ContentView.swift */; };
 		CEA02A3D2668693800CF57E1 /* DeviceDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA02A3C2668693800CF57E1 /* DeviceDetailsView.swift */; };
 		CEA02A3F26686B6000CF57E1 /* AppItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA02A3E26686B6000CF57E1 /* AppItemView.swift */; };
 		CEA02A4026686B6000CF57E1 /* AppItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA02A3E26686B6000CF57E1 /* AppItemView.swift */; };
 		CEA02A4126686F7300CF57E1 /* JitterbugMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA029DB2668592800CF57E1 /* JitterbugMacApp.swift */; };
-		CEE8B43F265C998A007728F4 /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8B43E265C998A007728F4 /* OpenSSL */; };
+		CEA02A952668720000CF57E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA02A942668720000CF57E1 /* Assets.xcassets */; };
+		CEA02A9C2668720000CF57E1 /* JitterbugWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CEA02A9B2668720000CF57E1 /* JitterbugWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CEA02AA12668720000CF57E1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA02AA02668720000CF57E1 /* ContentView.swift */; };
+		CEA02AA32668720000CF57E1 /* JitterbugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA02AA22668720000CF57E1 /* JitterbugApp.swift */; };
+		CEA02AAE2668720100CF57E1 /* JitterbugWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = CEA02A92266871FF00CF57E1 /* JitterbugWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CEE5BD612668740100C94BBB /* JBApp.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B483265D6A51007728F4 /* JBApp.m */; };
+		CEE5BD632668740100C94BBB /* libusbmuxd-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */; };
+		CEE5BD642668740100C94BBB /* JBHostDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B474265D59C0007728F4 /* JBHostDevice.m */; };
+		CEE5BD662668740100C94BBB /* CacheStorage.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B467265CC57D007728F4 /* CacheStorage.c */; };
+		CEE5BD672668740100C94BBB /* JBHostDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */; };
+		CEE5BD682668740100C94BBB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4B1265D954F007728F4 /* Extensions.swift */; };
+		CEE5BD692668740100C94BBB /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4A5265D7DF3007728F4 /* Main.swift */; };
+		CEE5BD6A2668745200C94BBB /* property_list_service.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985835265C6E1700F9AAD4 /* property_list_service.c */; };
+		CEE5BD6B2668745200C94BBB /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985782265C655900F9AAD4 /* Dictionary.cpp */; };
+		CEE5BD6C2668745200C94BBB /* Real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98577B265C655900F9AAD4 /* Real.cpp */; };
+		CEE5BD6D2668745200C94BBB /* house_arrest.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985836265C6E1700F9AAD4 /* house_arrest.c */; };
+		CEE5BD6E2668745200C94BBB /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B458265CBF49007728F4 /* thread.c */; };
+		CEE5BD6F2668745200C94BBB /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857E9265C6DF300F9AAD4 /* utils.c */; };
+		CEE5BD702668745200C94BBB /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B456265CBF49007728F4 /* socket.c */; };
+		CEE5BD712668745200C94BBB /* mobilebackup.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98583A265C6E1700F9AAD4 /* mobilebackup.c */; };
+		CEE5BD722668745200C94BBB /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98577A265C655900F9AAD4 /* base64.c */; };
+		CEE5BD732668745200C94BBB /* Boolean.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985780265C655900F9AAD4 /* Boolean.cpp */; };
+		CEE5BD742668745200C94BBB /* Integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985785265C655900F9AAD4 /* Integer.cpp */; };
+		CEE5BD752668745200C94BBB /* mobilebackup2.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582F265C6E1700F9AAD4 /* mobilebackup2.c */; };
+		CEE5BD762668745200C94BBB /* restore.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98583E265C6E1700F9AAD4 /* restore.c */; };
+		CEE5BD772668745200C94BBB /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98578E265C655A00F9AAD4 /* Key.cpp */; };
+		CEE5BD782668745200C94BBB /* debugserver.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985813265C6E1700F9AAD4 /* debugserver.c */; };
+		CEE5BD792668745200C94BBB /* misagent.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985821265C6E1700F9AAD4 /* misagent.c */; };
+		CEE5BD7A2668745200C94BBB /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98578F265C655A00F9AAD4 /* Data.cpp */; };
+		CEE5BD7B2668745200C94BBB /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985779265C655900F9AAD4 /* Node.cpp */; };
+		CEE5BD7C2668745200C94BBB /* userpref.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857EA265C6DF300F9AAD4 /* userpref.c */; };
+		CEE5BD7D2668745200C94BBB /* heartbeat.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985832265C6E1700F9AAD4 /* heartbeat.c */; };
+		CEE5BD7E2668745200C94BBB /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857EB265C6DF300F9AAD4 /* debug.c */; };
+		CEE5BD7F2668745200C94BBB /* mobileactivation.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985820265C6E1700F9AAD4 /* mobileactivation.c */; };
+		CEE5BD802668745200C94BBB /* screenshotr.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985810265C6E1700F9AAD4 /* screenshotr.c */; };
+		CEE5BD812668745200C94BBB /* service.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98581A265C6E1700F9AAD4 /* service.c */; };
+		CEE5BD822668745200C94BBB /* bplist.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985781265C655900F9AAD4 /* bplist.c */; };
+		CEE5BD832668745200C94BBB /* collection.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857D2265C69D600F9AAD4 /* collection.c */; };
+		CEE5BD842668745200C94BBB /* Array.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98576F265C655900F9AAD4 /* Array.cpp */; };
+		CEE5BD852668745200C94BBB /* companion_proxy.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985825265C6E1700F9AAD4 /* companion_proxy.c */; };
+		CEE5BD862668745200C94BBB /* webinspector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582C265C6E1700F9AAD4 /* webinspector.c */; };
+		CEE5BD872668745200C94BBB /* idevice.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985811265C6E1700F9AAD4 /* idevice.c */; };
+		CEE5BD882668745200C94BBB /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98578C265C655A00F9AAD4 /* hashtable.c */; };
+		CEE5BD892668745200C94BBB /* sbservices.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985830265C6E1700F9AAD4 /* sbservices.c */; };
+		CEE5BD8A2668745200C94BBB /* syslog_relay.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985829265C6E1700F9AAD4 /* syslog_relay.c */; };
+		CEE5BD8B2668745200C94BBB /* bytearray.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985784265C655900F9AAD4 /* bytearray.c */; };
+		CEE5BD8C2668745200C94BBB /* time64.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985775265C655900F9AAD4 /* time64.c */; };
+		CEE5BD8D2668745200C94BBB /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857B9265C671B00F9AAD4 /* node.c */; };
+		CEE5BD8E2668745200C94BBB /* preboard.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582E265C6E1700F9AAD4 /* preboard.c */; };
+		CEE5BD8F2668745200C94BBB /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985789265C655A00F9AAD4 /* String.cpp */; };
+		CEE5BD902668745300C94BBB /* ptrarray.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985787265C655900F9AAD4 /* ptrarray.c */; };
+		CEE5BD912668745300C94BBB /* plist.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985772265C655900F9AAD4 /* plist.c */; };
+		CEE5BD922668745300C94BBB /* diagnostics_relay.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985816265C6E1700F9AAD4 /* diagnostics_relay.c */; };
+		CEE5BD932668745300C94BBB /* notification_proxy.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582A265C6E1700F9AAD4 /* notification_proxy.c */; };
+		CEE5BD942668745300C94BBB /* Date.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985790265C655A00F9AAD4 /* Date.cpp */; };
+		CEE5BD952668745300C94BBB /* xplist.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985791265C655A00F9AAD4 /* xplist.c */; };
+		CEE5BD962668745300C94BBB /* Uid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE985771265C655900F9AAD4 /* Uid.cpp */; };
+		CEE5BD972668745300C94BBB /* lockdown.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985822265C6E1700F9AAD4 /* lockdown.c */; };
+		CEE5BD982668745300C94BBB /* node_list.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9857BA265C671B00F9AAD4 /* node_list.c */; };
+		CEE5BD992668745300C94BBB /* file_relay.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985841265C6E1800F9AAD4 /* file_relay.c */; };
+		CEE5BD9A2668745300C94BBB /* installation_proxy.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98582D265C6E1700F9AAD4 /* installation_proxy.c */; };
+		CEE5BD9B2668745300C94BBB /* afc.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985819265C6E1700F9AAD4 /* afc.c */; };
+		CEE5BD9C2668745300C94BBB /* mobilesync.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985837265C6E1700F9AAD4 /* mobilesync.c */; };
+		CEE5BD9D2668745300C94BBB /* Structure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE98577F265C655900F9AAD4 /* Structure.cpp */; };
+		CEE5BD9E2668745300C94BBB /* device_link_service.c in Sources */ = {isa = PBXBuildFile; fileRef = CE985833265C6E1700F9AAD4 /* device_link_service.c */; };
+		CEE5BD9F2668745300C94BBB /* mobile_image_mounter.c in Sources */ = {isa = PBXBuildFile; fileRef = CE98580F265C6E1700F9AAD4 /* mobile_image_mounter.c */; };
+		CEE5BDA32668791200C94BBB /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; };
+		CEE5BDA42668791200C94BBB /* openssl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CEE5BDA62668795D00C94BBB /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; };
+		CEE5BDA72668795D00C94BBB /* openssl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CEE5BDA92668796D00C94BBB /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; };
+		CEE5BDAA2668796E00C94BBB /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE5BDA22668791200C94BBB /* openssl.xcframework */; };
 		CEE8B45A265CBF49007728F4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B456265CBF49007728F4 /* socket.c */; };
 		CEE8B45B265CBF49007728F4 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B458265CBF49007728F4 /* thread.c */; };
 		CEE8B461265CBFC2007728F4 /* libusbmuxd-stub.c in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */; };
@@ -211,6 +280,23 @@
 		CEE8B4D0265DEAAF007728F4 /* FileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CEA02A9D2668720000CF57E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE98573F265C635000F9AAD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEA02A9A2668720000CF57E1;
+			remoteInfo = "JitterbugWatch Extension";
+		};
+		CEA02AAC2668720100CF57E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE98573F265C635000F9AAD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEA02A91266871FF00CF57E1;
+			remoteInfo = JitterbugWatch;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		CE985873265C8FD700F9AAD4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -220,6 +306,50 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		CEA02AAF2668720100CF57E1 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				CEA02AAE2668720100CF57E1 /* JitterbugWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEA02AB22668720100CF57E1 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CEA02A9C2668720000CF57E1 /* JitterbugWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEE5BDA52668791200C94BBB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CEE5BDA42668791200C94BBB /* openssl.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEE5BDA82668795E00C94BBB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CEE5BDA72668795D00C94BBB /* openssl.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -385,6 +515,14 @@
 		CEA029E52668592900CF57E1 /* JitterbugMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JitterbugMac.entitlements; sourceTree = "<group>"; };
 		CEA02A3C2668693800CF57E1 /* DeviceDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDetailsView.swift; sourceTree = "<group>"; };
 		CEA02A3E26686B6000CF57E1 /* AppItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppItemView.swift; sourceTree = "<group>"; };
+		CEA02A92266871FF00CF57E1 /* JitterbugWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JitterbugWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEA02A942668720000CF57E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CEA02A962668720000CF57E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEA02A9B2668720000CF57E1 /* JitterbugWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "JitterbugWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEA02AA02668720000CF57E1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CEA02AA22668720000CF57E1 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
+		CEA02AAB2668720100CF57E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEE5BDA22668791200C94BBB /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "Libraries/openssl-apple/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
 		CEE8B456265CBF49007728F4 /* socket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = socket.c; sourceTree = "<group>"; };
 		CEE8B457265CBF49007728F4 /* socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket.h; sourceTree = "<group>"; };
 		CEE8B458265CBF49007728F4 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
@@ -416,7 +554,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE985862265C703A00F9AAD4 /* OpenSSL in Frameworks */,
+				CEE5BDA32668791200C94BBB /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +562,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEE8B43F265C998A007728F4 /* OpenSSL in Frameworks */,
+				CEE5BDA92668796D00C94BBB /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,7 +570,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA02A3226685A4B00CF57E1 /* OpenSSL in Frameworks */,
+				CEE5BDA62668795D00C94BBB /* openssl.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEA02A982668720000CF57E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEE5BDAA2668796E00C94BBB /* openssl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +593,8 @@
 				CEA029DA2668592800CF57E1 /* JitterbugMac */,
 				CE985876265C8FD700F9AAD4 /* JitterbugPair */,
 				CE98575A265C636900F9AAD4 /* Libraries */,
+				CEA02A93266871FF00CF57E1 /* JitterbugWatch */,
+				CEA02A9F2668720000CF57E1 /* JitterbugWatch Extension */,
 				CE985748265C635000F9AAD4 /* Products */,
 				CE9858C9265C934600F9AAD4 /* Frameworks */,
 			);
@@ -458,6 +606,8 @@
 				CE985747265C635000F9AAD4 /* Jitterbug.app */,
 				CE985875265C8FD700F9AAD4 /* jitterbugpair */,
 				CEA029D92668592800CF57E1 /* Jitterbug.app */,
+				CEA02A92266871FF00CF57E1 /* JitterbugWatch.app */,
+				CEA02A9B2668720000CF57E1 /* JitterbugWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -790,6 +940,7 @@
 		CE9858C9265C934600F9AAD4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEE5BDA22668791200C94BBB /* openssl.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -806,6 +957,25 @@
 			path = JitterbugMac;
 			sourceTree = "<group>";
 		};
+		CEA02A93266871FF00CF57E1 /* JitterbugWatch */ = {
+			isa = PBXGroup;
+			children = (
+				CEA02A942668720000CF57E1 /* Assets.xcassets */,
+				CEA02A962668720000CF57E1 /* Info.plist */,
+			);
+			path = JitterbugWatch;
+			sourceTree = "<group>";
+		};
+		CEA02A9F2668720000CF57E1 /* JitterbugWatch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				CEA02AA02668720000CF57E1 /* ContentView.swift */,
+				CEA02AA22668720000CF57E1 /* JitterbugApp.swift */,
+				CEA02AAB2668720100CF57E1 /* Info.plist */,
+			);
+			path = "JitterbugWatch Extension";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -816,14 +986,16 @@
 				CE985743265C635000F9AAD4 /* Sources */,
 				CE985744265C635000F9AAD4 /* Frameworks */,
 				CE985745265C635000F9AAD4 /* Resources */,
+				CEA02AAF2668720100CF57E1 /* Embed Watch Content */,
+				CEE5BDA52668791200C94BBB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CEA02AAD2668720100CF57E1 /* PBXTargetDependency */,
 			);
 			name = Jitterbug;
 			packageProductDependencies = (
-				CE985861265C703A00F9AAD4 /* OpenSSL */,
 			);
 			productName = Jitterbug;
 			productReference = CE985747265C635000F9AAD4 /* Jitterbug.app */;
@@ -843,7 +1015,6 @@
 			);
 			name = JitterbugPair;
 			packageProductDependencies = (
-				CEE8B43E265C998A007728F4 /* OpenSSL */,
 			);
 			productName = JitterbugPair;
 			productReference = CE985875265C8FD700F9AAD4 /* jitterbugpair */;
@@ -856,6 +1027,7 @@
 				CEA029D52668592800CF57E1 /* Sources */,
 				CEA029D62668592800CF57E1 /* Frameworks */,
 				CEA029D72668592800CF57E1 /* Resources */,
+				CEE5BDA82668795E00C94BBB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -863,11 +1035,46 @@
 			);
 			name = JitterbugMac;
 			packageProductDependencies = (
-				CEA02A3126685A4B00CF57E1 /* OpenSSL */,
 			);
 			productName = JitterbugMac;
 			productReference = CEA029D92668592800CF57E1 /* Jitterbug.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CEA02A91266871FF00CF57E1 /* JitterbugWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEA02AB62668720100CF57E1 /* Build configuration list for PBXNativeTarget "JitterbugWatch" */;
+			buildPhases = (
+				CEA02A90266871FF00CF57E1 /* Resources */,
+				CEA02AB22668720100CF57E1 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CEA02A9E2668720000CF57E1 /* PBXTargetDependency */,
+			);
+			name = JitterbugWatch;
+			productName = JitterbugWatch;
+			productReference = CEA02A92266871FF00CF57E1 /* JitterbugWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		CEA02A9A2668720000CF57E1 /* JitterbugWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEA02AB52668720100CF57E1 /* Build configuration list for PBXNativeTarget "JitterbugWatch Extension" */;
+			buildPhases = (
+				CEA02A972668720000CF57E1 /* Sources */,
+				CEA02A982668720000CF57E1 /* Frameworks */,
+				CEA02A992668720000CF57E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "JitterbugWatch Extension";
+			packageProductDependencies = (
+			);
+			productName = "JitterbugWatch Extension";
+			productReference = CEA02A9B2668720000CF57E1 /* JitterbugWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -889,6 +1096,12 @@
 					CEA029D82668592800CF57E1 = {
 						CreatedOnToolsVersion = 12.5;
 					};
+					CEA02A91266871FF00CF57E1 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					CEA02A9A2668720000CF57E1 = {
+						CreatedOnToolsVersion = 12.5;
+					};
 				};
 			};
 			buildConfigurationList = CE985742265C635000F9AAD4 /* Build configuration list for PBXProject "Jitterbug" */;
@@ -901,7 +1114,6 @@
 			);
 			mainGroup = CE98573E265C635000F9AAD4;
 			packageReferences = (
-				CE985860265C703A00F9AAD4 /* XCRemoteSwiftPackageReference "OpenSSL" */,
 			);
 			productRefGroup = CE985748265C635000F9AAD4 /* Products */;
 			projectDirPath = "";
@@ -910,6 +1122,8 @@
 				CE985746265C635000F9AAD4 /* Jitterbug */,
 				CEA029D82668592800CF57E1 /* JitterbugMac */,
 				CE985874265C8FD700F9AAD4 /* JitterbugPair */,
+				CEA02A91266871FF00CF57E1 /* JitterbugWatch */,
+				CEA02A9A2668720000CF57E1 /* JitterbugWatch Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -928,6 +1142,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEA029E9266859AB00CF57E1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEA02A90266871FF00CF57E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEA02A952668720000CF57E1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEA02A992668720000CF57E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1152,7 +1381,90 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CEA02A972668720000CF57E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEE5BD762668745200C94BBB /* restore.c in Sources */,
+				CEE5BD752668745200C94BBB /* mobilebackup2.c in Sources */,
+				CEE5BD9F2668745300C94BBB /* mobile_image_mounter.c in Sources */,
+				CEE5BD822668745200C94BBB /* bplist.c in Sources */,
+				CEE5BD632668740100C94BBB /* libusbmuxd-stub.c in Sources */,
+				CEE5BD862668745200C94BBB /* webinspector.c in Sources */,
+				CEE5BD8B2668745200C94BBB /* bytearray.c in Sources */,
+				CEE5BD7A2668745200C94BBB /* Data.cpp in Sources */,
+				CEE5BD9A2668745300C94BBB /* installation_proxy.c in Sources */,
+				CEE5BD772668745200C94BBB /* Key.cpp in Sources */,
+				CEE5BD782668745200C94BBB /* debugserver.c in Sources */,
+				CEE5BD7E2668745200C94BBB /* debug.c in Sources */,
+				CEE5BD8A2668745200C94BBB /* syslog_relay.c in Sources */,
+				CEE5BD6B2668745200C94BBB /* Dictionary.cpp in Sources */,
+				CEE5BD8C2668745200C94BBB /* time64.c in Sources */,
+				CEE5BD672668740100C94BBB /* JBHostDevice.swift in Sources */,
+				CEE5BD9D2668745300C94BBB /* Structure.cpp in Sources */,
+				CEE5BD972668745300C94BBB /* lockdown.c in Sources */,
+				CEE5BD942668745300C94BBB /* Date.cpp in Sources */,
+				CEE5BD7F2668745200C94BBB /* mobileactivation.c in Sources */,
+				CEE5BD992668745300C94BBB /* file_relay.c in Sources */,
+				CEE5BD932668745300C94BBB /* notification_proxy.c in Sources */,
+				CEE5BD6F2668745200C94BBB /* utils.c in Sources */,
+				CEE5BD912668745300C94BBB /* plist.c in Sources */,
+				CEE5BD7B2668745200C94BBB /* Node.cpp in Sources */,
+				CEE5BD8E2668745200C94BBB /* preboard.c in Sources */,
+				CEE5BD902668745300C94BBB /* ptrarray.c in Sources */,
+				CEE5BD6D2668745200C94BBB /* house_arrest.c in Sources */,
+				CEE5BD712668745200C94BBB /* mobilebackup.c in Sources */,
+				CEE5BD7D2668745200C94BBB /* heartbeat.c in Sources */,
+				CEE5BD872668745200C94BBB /* idevice.c in Sources */,
+				CEE5BD892668745200C94BBB /* sbservices.c in Sources */,
+				CEE5BD882668745200C94BBB /* hashtable.c in Sources */,
+				CEE5BD802668745200C94BBB /* screenshotr.c in Sources */,
+				CEE5BD6A2668745200C94BBB /* property_list_service.c in Sources */,
+				CEA02AA32668720000CF57E1 /* JitterbugApp.swift in Sources */,
+				CEE5BD842668745200C94BBB /* Array.cpp in Sources */,
+				CEE5BD962668745300C94BBB /* Uid.cpp in Sources */,
+				CEE5BD812668745200C94BBB /* service.c in Sources */,
+				CEE5BD8D2668745200C94BBB /* node.c in Sources */,
+				CEE5BD742668745200C94BBB /* Integer.cpp in Sources */,
+				CEE5BD8F2668745200C94BBB /* String.cpp in Sources */,
+				CEE5BD9B2668745300C94BBB /* afc.c in Sources */,
+				CEA02AA12668720000CF57E1 /* ContentView.swift in Sources */,
+				CEE5BD692668740100C94BBB /* Main.swift in Sources */,
+				CEE5BD702668745200C94BBB /* socket.c in Sources */,
+				CEE5BD6C2668745200C94BBB /* Real.cpp in Sources */,
+				CEE5BD732668745200C94BBB /* Boolean.cpp in Sources */,
+				CEE5BD642668740100C94BBB /* JBHostDevice.m in Sources */,
+				CEE5BD852668745200C94BBB /* companion_proxy.c in Sources */,
+				CEE5BD7C2668745200C94BBB /* userpref.c in Sources */,
+				CEE5BD832668745200C94BBB /* collection.c in Sources */,
+				CEE5BD722668745200C94BBB /* base64.c in Sources */,
+				CEE5BD612668740100C94BBB /* JBApp.m in Sources */,
+				CEE5BD9C2668745300C94BBB /* mobilesync.c in Sources */,
+				CEE5BD9E2668745300C94BBB /* device_link_service.c in Sources */,
+				CEE5BD6E2668745200C94BBB /* thread.c in Sources */,
+				CEE5BD922668745300C94BBB /* diagnostics_relay.c in Sources */,
+				CEE5BD682668740100C94BBB /* Extensions.swift in Sources */,
+				CEE5BD952668745300C94BBB /* xplist.c in Sources */,
+				CEE5BD662668740100C94BBB /* CacheStorage.c in Sources */,
+				CEE5BD982668745300C94BBB /* node_list.c in Sources */,
+				CEE5BD792668745200C94BBB /* misagent.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CEA02A9E2668720000CF57E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEA02A9A2668720000CF57E1 /* JitterbugWatch Extension */;
+			targetProxy = CEA02A9D2668720000CF57E1 /* PBXContainerItemProxy */;
+		};
+		CEA02AAD2668720100CF57E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEA02A91266871FF00CF57E1 /* JitterbugWatch */;
+			targetProxy = CEA02AAC2668720100CF57E1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CE985754265C635300F9AAD4 /* Debug */ = {
@@ -1223,6 +1535,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = "$(PROJECT_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1294,6 +1607,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_MODULE_NAME = "$(PROJECT_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1419,6 +1733,90 @@
 			};
 			name = Release;
 		};
+		CEA02AB02668720100CF57E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				IBSC_MODULE = JitterbugWatch_Extension;
+				INFOPLIST_FILE = JitterbugWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		CEA02AB12668720100CF57E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				IBSC_MODULE = JitterbugWatch_Extension;
+				INFOPLIST_FILE = JitterbugWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
+		CEA02AB32668720100CF57E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "JitterbugWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		CEA02AB42668720100CF57E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "JitterbugWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1458,36 +1856,25 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		CEA02AB52668720100CF57E1 /* Build configuration list for PBXNativeTarget "JitterbugWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEA02AB32668720100CF57E1 /* Debug */,
+				CEA02AB42668720100CF57E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CEA02AB62668720100CF57E1 /* Build configuration list for PBXNativeTarget "JitterbugWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEA02AB02668720100CF57E1 /* Debug */,
+				CEA02AB12668720100CF57E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		CE985860265C703A00F9AAD4 /* XCRemoteSwiftPackageReference "OpenSSL" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 1.1.180;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		CE985861265C703A00F9AAD4 /* OpenSSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE985860265C703A00F9AAD4 /* XCRemoteSwiftPackageReference "OpenSSL" */;
-			productName = OpenSSL;
-		};
-		CEA02A3126685A4B00CF57E1 /* OpenSSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE985860265C703A00F9AAD4 /* XCRemoteSwiftPackageReference "OpenSSL" */;
-			productName = OpenSSL;
-		};
-		CEE8B43E265C998A007728F4 /* OpenSSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE985860265C703A00F9AAD4 /* XCRemoteSwiftPackageReference "OpenSSL" */;
-			productName = OpenSSL;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CE98573F265C635000F9AAD4 /* Project object */;
 }

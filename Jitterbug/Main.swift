@@ -29,7 +29,9 @@ class Main: NSObject, ObservableObject {
     @Published var pairings: [URL] = []
     @Published var supportImages: [URL] = []
     
+    #if !os(watchOS)
     private let hostFinder = HostFinder()
+    #endif
     
     private var storage: UserDefaults {
         UserDefaults.standard
@@ -53,7 +55,9 @@ class Main: NSObject, ObservableObject {
     
     override init() {
         super.init()
+        #if !os(watchOS)
         hostFinder.delegate = self
+        #endif
         refreshPairings()
         refreshSupportImages()
         unarchiveSavedHosts()
@@ -248,8 +252,11 @@ class Main: NSObject, ObservableObject {
     func getFavorites(forHostName hostName: String) -> [String] {
         return loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
     }
-    
-    // MARK: - Devices
+}
+
+#if !os(watchOS)
+extension Main {
+    // MARK: - Device finder
     func startScanning() {
         hostFinder.startSearch()
     }
@@ -271,9 +278,7 @@ class Main: NSObject, ObservableObject {
         }
         foundHosts.append(host)
     }
-}
-
-extension Main {
+    
     func hostFinderWillStart() {
         DispatchQueue.main.async {
             self.scanning = true
@@ -375,3 +380,4 @@ extension Main: HostFinderDelegate {
     }
 }
 #endif
+#endif // !os(watchOS)
