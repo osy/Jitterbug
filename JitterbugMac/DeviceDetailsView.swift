@@ -20,7 +20,9 @@ struct DeviceDetailsView: View {
     @EnvironmentObject private var main: Main
     @State private var appsLoaded: Bool = false
     @State private var apps: [JBApp] = []
-    @State private var appToLaunchAfterMount: JBApp?
+    @State private var fileImporterPresented: Bool = false
+    @State private var shareFilePresented: Bool = false
+    @State private var shareFileUrl: URL?
     
     let host: JBHostDevice
     
@@ -49,6 +51,7 @@ struct DeviceDetailsView: View {
                     .font(.headline)
             } else if apps.isEmpty {
                 Text("No apps found on device.")
+                    .font(.headline)
             } else {
                 List {
                     if !main.getFavorites(forHostIdentifier: host.identifier).isEmpty {
@@ -90,15 +93,27 @@ struct DeviceDetailsView: View {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
                 Button {
-                    
+                    fileImporterPresented.toggle()
                 } label: {
-                    Label("Export Pairing", systemImage: "square.and.arrow.up")
+                    Label("Mount Image", systemImage: "externaldrive.badge.plus")
+                }
+                ZStack {
+                    Button {
+                        exportPairing()
+                    } label: {
+                        Label("Export Pairing", systemImage: "square.and.arrow.up")
+                    }
+                    SharingsPicker(isPresented: $shareFilePresented, sharingItems: [shareFileUrl as Any])
                 }
             }
         }.onAppear {
             if !appsLoaded {
                 appsLoaded = true
                 refreshAppsList()
+            }
+        }.fileImporter(isPresented: $fileImporterPresented, allowedContentTypes: [.dmg]) { result in
+            if let url = try? result.get() {
+                mountImage(url)
             }
         }
     }
@@ -112,34 +127,29 @@ struct DeviceDetailsView: View {
         }
     }
     
-    private func mountImage(_ supportImage: URL, signature supportImageSignature: URL) {
+    private func mountImage(_ supportImage: URL) {
         main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
+            let supportImageSignature = supportImage.appendingPathExtension("signature")
             main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
             try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
             main.saveDiskImage(supportImage, signature: supportImageSignature, forHostIdentifier: host.identifier)
-        } onComplete: {
-            if let app = appToLaunchAfterMount {
-                appToLaunchAfterMount = nil
-                launchApplication(app)
-            }
         }
     }
     
     private func launchApplication(_ app: JBApp) {
-        var imageNotMounted = false
         main.backgroundTask(message: NSLocalizedString("Launching...", comment: "DeviceDetailsView")) {
-            do {
-                try host.launchApplication(app)
-            } catch {
-                let code = (error as NSError).code
-                if code == kJBHostImageNotMounted {
-                    imageNotMounted = true
-                } else {
-                    throw error
-                }
-            }
-        } onComplete: {
-            if imageNotMounted {
+            try host.launchApplication(app)
+        }
+    }
+    
+    private func exportPairing() {
+        main.backgroundTask(message: NSLocalizedString("Exporting...", comment: "DeviceDetailsView")) {
+            let data = try host.exportPairing()
+            let path = FileManager.default.temporaryDirectory.appendingPathComponent("\(host.udid).mobiledevicepairing")
+            try data.write(to: path)
+            DispatchQueue.main.async {
+                shareFileUrl = path
+                shareFilePresented.toggle()
             }
         }
     }

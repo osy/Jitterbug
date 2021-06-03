@@ -630,7 +630,7 @@ error_out:
     /* start and connect to debugserver */
     service_client_factory_start_service_with_lockdown(self.lockdown, self.device, DEBUGSERVER_SECURE_SERVICE_NAME, (void**)&debugserver_client, TOOL_NAME, SERVICE_CONSTRUCTOR(debugserver_client_new), &dres);
     if (dres != DEBUGSERVER_E_SUCCESS) {
-        [self createError:error withString:NSLocalizedString(@"Failed to start debugserver.", @"JBHostDevice") code:kJBHostImageNotMounted];
+        [self createError:error withString:NSLocalizedString(@"Failed to start debugserver. Make sure DeveloperDiskImage.dmg is mounted.", @"JBHostDevice") code:kJBHostImageNotMounted];
         goto cleanup;
     }
     

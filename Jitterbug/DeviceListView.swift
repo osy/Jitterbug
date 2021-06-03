@@ -109,14 +109,6 @@ struct ContextMenuViewModifier: ViewModifier {
                 Label("Clear Pairing", systemImage: "xmark.circle")
                     .labelStyle(DefaultLabelStyle())
             }
-            #if os(macOS)
-            Button {
-                
-            } label: {
-                Label("Export Pairing", systemImage: "square.and.arrow.up")
-                    .labelStyle(DefaultLabelStyle())
-            }
-            #endif
         }
     }
 }

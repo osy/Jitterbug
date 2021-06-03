@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE312D63266997500064C43C /* SharingServicePicker.swift */; };
 		CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574A265C635000F9AAD4 /* JitterbugApp.swift */; };
 		CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574C265C635000F9AAD4 /* ContentView.swift */; };
 		CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE98574E265C635300F9AAD4 /* Assets.xcassets */; };
@@ -224,6 +225,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE312D63266997500064C43C /* SharingServicePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingServicePicker.swift; sourceTree = "<group>"; };
 		CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
 		CE985747265C635000F9AAD4 /* Jitterbug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jitterbug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE98574A265C635000F9AAD4 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
@@ -800,6 +802,7 @@
 				CEA029DB2668592800CF57E1 /* JitterbugMacApp.swift */,
 				CEA029DD2668592800CF57E1 /* ContentView.swift */,
 				CEA02A3C2668693800CF57E1 /* DeviceDetailsView.swift */,
+				CE312D63266997500064C43C /* SharingServicePicker.swift */,
 				CEA029E42668592900CF57E1 /* Info.plist */,
 				CEA029E52668592900CF57E1 /* JitterbugMac.entitlements */,
 			);
@@ -1096,6 +1099,7 @@
 				CEA02A2526685A2B00CF57E1 /* base64.c in Sources */,
 				CEA02A1526685A2B00CF57E1 /* node_list.c in Sources */,
 				CEA02A2B26685A2B00CF57E1 /* mobileactivation.c in Sources */,
+				CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */,
 				CEA02A0E26685A2B00CF57E1 /* mobilesync.c in Sources */,
 				CEA02A39266864E300CF57E1 /* ContentView.swift in Sources */,
 				CEA029EA266859D200CF57E1 /* JBHostFinder.m in Sources */,

@@ -62,6 +62,7 @@ struct DeviceDetailsView: View {
                     .font(.headline)
             } else if apps.isEmpty {
                 Text("No apps found on device.")
+                    .font(.headline)
             } else {
                 List {
                     if !main.getFavorites(forHostIdentifier: host.identifier).isEmpty {

@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)launchApplication:(JBApp *)application error:(NSError **)error;
 
 - (BOOL)resetPairingWithError:(NSError **)error;
-- (BOOL)exportPairingToUrl:(NSURL *)url error:(NSError **)error;
+- (nullable NSData *)exportPairingWithError:(NSError **)error;
 
 @end
 
