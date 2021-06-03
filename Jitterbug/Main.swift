@@ -24,7 +24,7 @@ class Main: NSObject, ObservableObject {
     @Published var scanning: Bool = false
     @Published var savedHosts: [JBHostDevice] = []
     @Published var foundHosts: [JBHostDevice] = []
-    @Published var selectedHostName: String?
+    @Published var selectedHostId: String?
     
     @Published var pairings: [URL] = []
     @Published var supportImages: [URL] = []
@@ -165,31 +165,31 @@ class Main: NSObject, ObservableObject {
         savedHosts = hosts
     }
     
-    private func saveValue(_ value: Any, forKey key: String, forHostName hostName: String) {
+    private func saveValue(_ value: Any, forKey key: String, forHostIdentifier hostIdentifier: String) {
         var database = storage.dictionary(forKey: "Hosts") ?? [:]
-        var hostEntry: [String : Any] = database[hostName] as? [String : Any] ?? [:]
+        var hostEntry: [String : Any] = database[hostIdentifier] as? [String : Any] ?? [:]
         hostEntry[key] = value
-        database[hostName] = hostEntry
+        database[hostIdentifier] = hostEntry
         storage.set(database, forKey: "Hosts")
     }
     
-    private func loadValue(forKey key: String, forHostName hostName: String) -> Any? {
+    private func loadValue(forKey key: String, forHostIdentifier hostIdentifier: String) -> Any? {
         guard let database = storage.dictionary(forKey: "Hosts") else {
             return nil
         }
-        guard let hostEntry = database[hostName] as? [String : Any] else {
+        guard let hostEntry = database[hostIdentifier] as? [String : Any] else {
             return nil
         }
         return hostEntry[key]
     }
     
-    func savePairing(_ pairing: URL?, forHostName hostName: String) {
+    func savePairing(_ pairing: URL?, forHostIdentifier hostIdentifier: String) {
         let file = pairing?.lastPathComponent ?? ""
-        saveValue(file, forKey: "Pairing", forHostName: hostName)
+        saveValue(file, forKey: "Pairing", forHostIdentifier: hostIdentifier)
     }
     
-    func loadPairing(forHostName hostName: String) -> URL? {
-        guard let file = loadValue(forKey: "Pairing", forHostName: hostName) as? String else {
+    func loadPairing(forHostIdentifier hostIdentifier: String) -> URL? {
+        guard let file = loadValue(forKey: "Pairing", forHostIdentifier: hostIdentifier) as? String else {
             return nil
         }
         guard file.count > 0 else {
@@ -198,15 +198,15 @@ class Main: NSObject, ObservableObject {
         return pairingsURL.appendingPathComponent(file)
     }
     
-    func saveDiskImage(_ diskImage: URL?, signature: URL?, forHostName hostName: String) {
+    func saveDiskImage(_ diskImage: URL?, signature: URL?, forHostIdentifier hostIdentifier: String) {
         let diskImageFile = diskImage?.lastPathComponent ?? ""
         let diskImageSignatureFile = signature?.lastPathComponent ?? ""
-        saveValue(diskImageFile, forKey: "DiskImage", forHostName: hostName)
-        saveValue(diskImageSignatureFile, forKey: "DiskImageSignature", forHostName: hostName)
+        saveValue(diskImageFile, forKey: "DiskImage", forHostIdentifier: hostIdentifier)
+        saveValue(diskImageSignatureFile, forKey: "DiskImageSignature", forHostIdentifier: hostIdentifier)
     }
     
-    func loadDiskImage(forHostName hostName: String) -> URL? {
-        guard let diskImageFile = loadValue(forKey: "DiskImage", forHostName: hostName) as? String else {
+    func loadDiskImage(forHostIdentifier hostIdentifier: String) -> URL? {
+        guard let diskImageFile = loadValue(forKey: "DiskImage", forHostIdentifier: hostIdentifier) as? String else {
             return nil
         }
         guard diskImageFile.count > 0 else {
@@ -215,8 +215,8 @@ class Main: NSObject, ObservableObject {
         return supportImagesURL.appendingPathComponent(diskImageFile)
     }
     
-    func loadDiskImageSignature(forHostName hostName: String) -> URL? {
-        guard let diskImageSignatureFile = loadValue(forKey: "DiskImageSignature", forHostName: hostName) as? String else {
+    func loadDiskImageSignature(forHostIdentifier hostIdentifier: String) -> URL? {
+        guard let diskImageSignatureFile = loadValue(forKey: "DiskImageSignature", forHostIdentifier: hostIdentifier) as? String else {
             return nil
         }
         guard diskImageSignatureFile.count > 0 else {
@@ -225,28 +225,28 @@ class Main: NSObject, ObservableObject {
         return supportImagesURL.appendingPathComponent(diskImageSignatureFile)
     }
     
-    func addFavorite(appId: String, forHostName hostName: String) {
-        var favorites = loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
+    func addFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
+        var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
         if !favorites.contains(where: { favorite in
             favorite == appId
         }) {
             favorites.append(appId)
         }
-        saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+        saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
         self.objectWillChange.send()
     }
     
-    func removeFavorite(appId: String, forHostName hostName: String) {
-        var favorites = loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
+    func removeFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
+        var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
         favorites.removeAll { favorite in
             favorite == appId
         }
-        saveValue(favorites, forKey: "Favorites", forHostName: hostName)
+        saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
         self.objectWillChange.send()
     }
     
-    func getFavorites(forHostName hostName: String) -> [String] {
-        return loadValue(forKey: "Favorites", forHostName: hostName) as? [String] ?? []
+    func getFavorites(forHostIdentifier hostIdentifier: String) -> [String] {
+        return loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
     }
     
     // MARK: - Devices
@@ -261,13 +261,13 @@ class Main: NSObject, ObservableObject {
     func saveHost(_ host: JBHostDevice) {
         savedHosts.append(host)
         foundHosts.removeAll { found in
-            found.hostname == host.hostname
+            found.identifier == host.identifier
         }
     }
     
     func removeSavedHost(_ host: JBHostDevice) {
         savedHosts.removeAll { saved in
-            saved.hostname == host.hostname
+            saved.identifier == host.identifier
         }
         foundHosts.append(host)
     }

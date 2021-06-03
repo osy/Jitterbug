@@ -38,7 +38,7 @@ struct DeviceDetailsView: View {
     let host: JBHostDevice
     
     private var favoriteApps: [JBApp] {
-        let favorites = main.getFavorites(forHostName: host.hostname)
+        let favorites = main.getFavorites(forHostIdentifier: host.identifier)
         return apps.filter { app in
             favorites.contains { favorite in
                 app.bundleIdentifier == favorite
@@ -47,7 +47,7 @@ struct DeviceDetailsView: View {
     }
     
     private var notFavoriteApps: [JBApp] {
-        let favorites = main.getFavorites(forHostName: host.hostname)
+        let favorites = main.getFavorites(forHostIdentifier: host.identifier)
         return apps.filter { app in
             !favorites.contains { favorite in
                 app.bundleIdentifier == favorite
@@ -64,13 +64,13 @@ struct DeviceDetailsView: View {
                 Text("No apps found on device.")
             } else {
                 List {
-                    if !main.getFavorites(forHostName: host.hostname).isEmpty {
+                    if !main.getFavorites(forHostIdentifier: host.identifier).isEmpty {
                         Section(header: Text("Favorites")) {
                             ForEach(favoriteApps) { app in
                                 Button {
                                     launchApplication(app)
                                 } label: {
-                                    AppItemView(app: app, saved: true, hostName: host.hostname)
+                                    AppItemView(app: app, saved: true, hostIdentifier: host.identifier)
                                 }
                             }
                         }
@@ -80,7 +80,7 @@ struct DeviceDetailsView: View {
                             Button {
                                 launchApplication(app)
                             } label: {
-                                AppItemView(app: app, saved: false, hostName: host.hostname)
+                                AppItemView(app: app, saved: false, hostIdentifier: host.identifier)
                             }
                         }
                     }
@@ -113,9 +113,9 @@ struct DeviceDetailsView: View {
         }.onAppear {
             // BUG: sometimes SwiftUI doesn't like this...
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                selectedPairing = main.loadPairing(forHostName: host.hostname)
-                selectedSupportImage = main.loadDiskImage(forHostName: host.hostname)
-                selectedSupportImageSignature = main.loadDiskImageSignature(forHostName: host.hostname)
+                selectedPairing = main.loadPairing(forHostIdentifier: host.identifier)
+                selectedSupportImage = main.loadDiskImage(forHostIdentifier: host.identifier)
+                selectedSupportImageSignature = main.loadDiskImageSignature(forHostIdentifier: host.identifier)
                 if selectedPairing == nil {
                     fileSelectType = .pairing
                 }
@@ -151,7 +151,7 @@ struct DeviceDetailsView: View {
     private func loadPairing(for selected: URL) {
         var success = false
         main.backgroundTask(message: NSLocalizedString("Loading pairing data...", comment: "DeviceDetailsView")) {
-            main.savePairing(nil, forHostName: host.hostname)
+            main.savePairing(nil, forHostIdentifier: host.identifier)
             try host.startLockdown(withPairingUrl: selected)
             try host.updateInfo()
             success = true
@@ -159,7 +159,7 @@ struct DeviceDetailsView: View {
             selectedPairing = nil
             if success {
                 refreshAppsList {
-                    main.savePairing(selected, forHostName: host.hostname)
+                    main.savePairing(selected, forHostIdentifier: host.identifier)
                 }
             }
         }
@@ -176,9 +176,9 @@ struct DeviceDetailsView: View {
     
     private func mountImage(_ supportImage: URL, signature supportImageSignature: URL) {
         main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
-            main.saveDiskImage(nil, signature: nil, forHostName: host.hostname)
+            main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
             try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
-            main.saveDiskImage(supportImage, signature: supportImageSignature, forHostName: host.hostname)
+            main.saveDiskImage(supportImage, signature: supportImageSignature, forHostIdentifier: host.identifier)
         } onComplete: {
             selectedSupportImage = nil
             selectedSupportImageSignature = nil

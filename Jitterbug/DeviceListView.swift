@@ -25,7 +25,7 @@ struct DeviceListView: View {
             if !main.savedHosts.isEmpty {
                 Section(header: Text("Saved")) {
                     ForEach(main.savedHosts) { host in
-                        NavigationLink(destination: DeviceDetailsView(host: host), tag: host.hostname, selection: $main.selectedHostName) {
+                        NavigationLink(destination: DeviceDetailsView(host: host), tag: host.identifier, selection: $main.selectedHostId) {
                             HostView(host: host, saved: true)
                                 .foregroundColor(host.discovered ? .primary : .secondary)
                         }
@@ -34,7 +34,7 @@ struct DeviceListView: View {
             }
             Section(header: Text("Discovered")) {
                 ForEach(main.foundHosts) { host in
-                    NavigationLink(destination: DeviceDetailsView(host: host)) {
+                    NavigationLink(destination: DeviceDetailsView(host: host), tag: host.identifier, selection: $main.selectedHostId) {
                         HostView(host: host, saved: false)
                     }
                 }
@@ -87,8 +87,8 @@ struct HostView: View {
         }.buttonStyle(PlainButtonStyle())
         .contextMenu {
             Button {
-                main.savePairing(nil, forHostName: host.hostname)
-                main.saveDiskImage(nil, signature: nil, forHostName: host.hostname)
+                main.savePairing(nil, forHostIdentifier: host.identifier)
+                main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
             } label: {
                 Label("Clear Pairing", systemImage: "xmark.circle")
                     .labelStyle(DefaultLabelStyle())

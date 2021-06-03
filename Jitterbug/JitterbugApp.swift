@@ -16,7 +16,7 @@
 
 import SwiftUI
 
-private var shortcutHostName: String?
+private var shortcutHostId: String?
 
 @main
 struct JitterbugApp: App {
@@ -33,8 +33,8 @@ struct JitterbugApp: App {
         }
         .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .active {
-                main.selectedHostName = shortcutHostName
-                shortcutHostName = nil
+                main.selectedHostId = shortcutHostId
+                shortcutHostId = nil
             } else {
                 main.archiveSavedHosts()
                 #if os(iOS)
@@ -58,7 +58,7 @@ struct JitterbugApp: App {
                 icon = nil
             }
             let userInfo: [String: NSSecureCoding] = [
-                "hostname": device.hostname as NSSecureCoding,
+                "identifier": device.identifier as NSSecureCoding,
             ]
             return UIApplicationShortcutItem(type: "connectHost", localizedTitle: device.name, localizedSubtitle: nil, icon: icon, userInfo: userInfo)
         })
@@ -75,12 +75,12 @@ struct JitterbugApp: App {
     class SceneDelegate: NSObject, UIWindowSceneDelegate {
         func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
             if let shortcutItem = connectionOptions.shortcutItem {
-                shortcutHostName = shortcutItem.userInfo?["hostname"] as? String
+                shortcutHostId = shortcutItem.userInfo?["identifier"] as? String
             }
         }
         
         func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-            shortcutHostName = shortcutItem.userInfo?["hostname"] as? String
+            shortcutHostId = shortcutItem.userInfo?["identifier"] as? String
         }
     }
     #endif

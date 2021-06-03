@@ -21,15 +21,15 @@ struct AppItemView: View {
     
     let app: JBApp
     let saved: Bool
-    let hostName: String
+    let hostIdentifier: String
     
     var body: some View {
         HStack {
             Button {
                 if saved {
-                    main.removeFavorite(appId: app.bundleIdentifier, forHostName: hostName)
+                    main.removeFavorite(appId: app.bundleIdentifier, forHostIdentifier: hostIdentifier)
                 } else {
-                    main.addFavorite(appId: app.bundleIdentifier, forHostName: hostName)
+                    main.addFavorite(appId: app.bundleIdentifier, forHostIdentifier: hostIdentifier)
                 }
             } label: {
                 Label("Save", systemImage: saved ? "star.fill" : "star")
@@ -74,6 +74,6 @@ struct IconView: View {
 
 struct AppItemView_Previews: PreviewProvider {
     static var previews: some View {
-        AppItemView(app: JBApp(), saved: true, hostName: "")
+        AppItemView(app: JBApp(), saved: true, hostIdentifier: "")
     }
 }

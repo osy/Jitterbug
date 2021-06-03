@@ -159,7 +159,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     [coder encodeBool:self.isUsbDevice forKey:@"isUsbDevice"];
     [coder encodeObject:self.name forKey:@"name"];
     [coder encodeObject:self.hostname forKey:@"hostname"];
-    [coder encodeObject:self.udid forKey:@"hostname"];
+    [coder encodeObject:self.udid forKey:@"udid"];
     [coder encodeObject:self.address forKey:@"address"];
     [coder encodeInteger:self.hostDeviceType forKey:@"hostDeviceType"];
 }

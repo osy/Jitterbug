@@ -32,7 +32,7 @@ static void new_device(const idevice_event_t *event, void *user_data) {
             idevice_get_device_list_extended(&devices, &count);
             for (i = 0; i < count; i++) {
                 idevice_info_t device = devices[i];
-                if (strcmp(device->udid, event->udid) == 0) {
+                if (device->conn_type == CONNECTION_NETWORK && strcmp(device->udid, event->udid) == 0) {
                     size_t len = ((uint8_t*)device->conn_data)[0];
                     NSData *address = [NSData dataWithBytes:device->conn_data length:len];
                     [self.delegate hostFinderNewUdid:udidString address:address];

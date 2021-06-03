@@ -25,7 +25,7 @@ struct DeviceDetailsView: View {
     let host: JBHostDevice
     
     private var favoriteApps: [JBApp] {
-        let favorites = main.getFavorites(forHostName: host.hostname)
+        let favorites = main.getFavorites(forHostIdentifier: host.identifier)
         return apps.filter { app in
             favorites.contains { favorite in
                 app.bundleIdentifier == favorite
@@ -34,7 +34,7 @@ struct DeviceDetailsView: View {
     }
     
     private var notFavoriteApps: [JBApp] {
-        let favorites = main.getFavorites(forHostName: host.hostname)
+        let favorites = main.getFavorites(forHostIdentifier: host.identifier)
         return apps.filter { app in
             !favorites.contains { favorite in
                 app.bundleIdentifier == favorite
@@ -51,30 +51,37 @@ struct DeviceDetailsView: View {
                 Text("No apps found on device.")
             } else {
                 List {
-                    if !main.getFavorites(forHostName: host.hostname).isEmpty {
+                    if !main.getFavorites(forHostIdentifier: host.identifier).isEmpty {
                         Section(header: Text("Favorites")) {
                             ForEach(favoriteApps) { app in
-                                Button {
-                                    launchApplication(app)
-                                } label: {
-                                    AppItemView(app: app, saved: true, hostName: host.hostname)
+                                HStack {
+                                    AppItemView(app: app, saved: true, hostIdentifier: host.identifier)
+                                    Spacer()
+                                    Button {
+                                        launchApplication(app)
+                                    } label: {
+                                        Text("Launch")
+                                    }
                                 }
                             }
                         }
                     }
                     Section(header: Text("Installed")) {
                         ForEach(notFavoriteApps) { app in
-                            Button {
-                                launchApplication(app)
-                            } label: {
-                                AppItemView(app: app, saved: false, hostName: host.hostname)
+                            HStack {
+                                AppItemView(app: app, saved: false, hostIdentifier: host.identifier)
+                                Spacer()
+                                Button {
+                                    launchApplication(app)
+                                } label: {
+                                    Text("Launch")
+                                }
                             }
                         }
                     }
                 }
             }
         }.navigationTitle(host.name)
-        .listStyle(PlainListStyle())
         .toolbar {
         }.onAppear {
             if !appsLoaded {
@@ -95,9 +102,9 @@ struct DeviceDetailsView: View {
     
     private func mountImage(_ supportImage: URL, signature supportImageSignature: URL) {
         main.backgroundTask(message: NSLocalizedString("Mounting disk image...", comment: "DeviceDetailsView")) {
-            main.saveDiskImage(nil, signature: nil, forHostName: host.hostname)
+            main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)
             try host.mountImage(for: supportImage, signatureUrl: supportImageSignature)
-            main.saveDiskImage(supportImage, signature: supportImageSignature, forHostName: host.hostname)
+            main.saveDiskImage(supportImage, signature: supportImageSignature, forHostIdentifier: host.identifier)
         } onComplete: {
             if let app = appToLaunchAfterMount {
                 appToLaunchAfterMount = nil
