@@ -14,22 +14,19 @@
 // limitations under the License.
 //
 
-import Combine
+#import <Foundation/Foundation.h>
 
-@objc extension JBHostDevice: ObservableObject {
-    func propertyWillChange() -> Void {
-        DispatchQueue.main.async { self.objectWillChange.send() }
-    }
-}
+NS_ASSUME_NONNULL_BEGIN
 
-@objc extension JBHostDevice: Identifiable {
-    public var id: String {
-        self.identifier
-    }
-}
+NS_SWIFT_NAME(HostFinderDelegate)
+@protocol JBHostFinderDelegate <NSObject>
 
-@objc extension JBApp: Identifiable {
-    public var id: String {
-        self.bundleIdentifier
-    }
-}
+- (void)hostFinderWillStart;
+- (void)hostFinderDidStop;
+- (void)hostFinderError:(NSString *)error;
+- (void)hostFinderNewUdid:(NSString *)udid address:(nullable NSData *)address;
+- (void)hostFinderRemoveUdid:(NSString *)udid;
+
+@end
+
+NS_ASSUME_NONNULL_END

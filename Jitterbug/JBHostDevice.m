@@ -37,6 +37,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 @interface JBHostDevice ()
 
+@property (nonatomic, readwrite) BOOL isUsbDevice;
 @property (nonatomic, readwrite) NSString *hostname;
 @property (nonatomic, readwrite) NSData *address;
 @property (nonatomic, nullable, readwrite) NSString *udid;
@@ -77,6 +78,14 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     }
 }
 
+- (NSString *)identifier {
+    if (self.isUsbDevice) {
+        return self.udid;
+    } else {
+        return self.hostname;
+    }
+}
+
 - (void)setupDispatchQueue {
     self.timerQueue = dispatch_queue_create("heartbeatQueue", DISPATCH_QUEUE_SERIAL);
     self.timerCancelEvent = dispatch_semaphore_create(0);
@@ -84,9 +93,22 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 - (instancetype)initWithHostname:(NSString *)hostname address:(NSData *)address {
     if (self = [super init]) {
+        self.isUsbDevice = NO;
         self.hostname = hostname;
         self.address = address;
         self.name = hostname;
+        self.hostDeviceType = JBHostDeviceTypeUnknown;
+        [self setupDispatchQueue];
+    }
+    return self;
+}
+
+- (instancetype)initWithUuid:(NSString *)uuid {
+    if (self = [super init]) {
+        self.isUsbDevice = YES;
+        self.hostname = uuid;
+        self.address = [NSData data];
+        self.name = uuid;
         self.hostDeviceType = JBHostDeviceTypeUnknown;
         [self setupDispatchQueue];
     }
@@ -101,6 +123,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [self init]) {
+        self.isUsbDevice = [coder decodeBoolForKey:@"isUsbDevice"];
         self.name = [coder decodeObjectForKey:@"name"];
         if (!self.name) {
             return nil;
@@ -123,6 +146,7 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
+    [coder encodeBool:self.isUsbDevice forKey:@"isUsbDevice"];
     [coder encodeObject:self.name forKey:@"name"];
     [coder encodeObject:self.hostname forKey:@"hostname"];
     [coder encodeObject:self.address forKey:@"address"];
@@ -185,7 +209,6 @@ static service_error_t service_client_factory_start_service_with_lockdown(lockdo
     }
     if (self.udid) {
         cachePairingRemove(self.udid.UTF8String);
-        self.udid = nil;
     }
 }
 
@@ -193,6 +216,7 @@ static service_error_t service_client_factory_start_service_with_lockdown(lockdo
     idevice_error_t derr = IDEVICE_E_SUCCESS;
     lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
     
+    assert(!self.isUsbDevice);
     [self stopLockdown];
     NSData *data = [NSData dataWithContentsOfURL:url options:0 error:error];
     if (!data) {
@@ -231,6 +255,37 @@ static service_error_t service_client_factory_start_service_with_lockdown(lockdo
     }
     
     self.udid = udid;
+    return YES;
+    
+error:
+    [self stopLockdown];
+    return NO;
+}
+
+- (BOOL)startLockdownWithError:(NSError **)error {
+    idevice_error_t derr = IDEVICE_E_SUCCESS;
+    lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
+    
+    assert(self.udid);
+    [self stopLockdown];
+    
+    if ((derr = idevice_new_with_options(&_device, self.udid.UTF8String, IDEVICE_LOOKUP_NETWORK | IDEVICE_LOOKUP_USBMUX)) != IDEVICE_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to create device.", @"JBHostDevice") code:derr];
+        goto error;
+    }
+    
+    if ((lerr = lockdownd_client_new_with_handshake(self.device, &_lockdown, TOOL_NAME)) != LOCKDOWN_E_SUCCESS) {
+        [self createError:error withString:NSLocalizedString(@"Failed to communicate with device. Make sure the device is connected, unlocked, and paired.", @"JBHostDevice") code:lerr];
+        goto error;
+    }
+    
+    /**
+     * We need a unique heartbeat service for each hostID or lockdownd immediately kills the service.
+     */
+    if (![self startHeartbeatWithError:error]) {
+        goto error;
+    }
+    
     return YES;
     
 error:

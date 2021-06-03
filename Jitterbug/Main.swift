@@ -16,7 +16,7 @@
 
 import Combine
 
-class Main: ObservableObject {
+class Main: NSObject, ObservableObject {
     @Published var alertMessage: String?
     @Published var busy: Bool = false
     @Published var busyMessage: String?
@@ -51,7 +51,8 @@ class Main: ObservableObject {
         documentsURL.appendingPathComponent("SupportImages", isDirectory: true)
     }
     
-    init() {
+    override init() {
+        super.init()
         hostFinder.delegate = self
         refreshPairings()
         refreshSupportImages()
@@ -272,7 +273,7 @@ class Main: ObservableObject {
     }
 }
 
-extension Main: HostFinderDelegate {
+extension Main {
     func hostFinderWillStart() {
         DispatchQueue.main.async {
             self.scanning = true
@@ -291,48 +292,86 @@ extension Main: HostFinderDelegate {
         }
     }
     
+    private func hostFinderNewHost(identifier: String, name: String?, onFound: (JBHostDevice) -> Void) -> Bool {
+        for hostDevice in self.savedHosts {
+            if hostDevice.identifier == identifier {
+                onFound(hostDevice)
+                if hostDevice.name == identifier, let newName = name {
+                    hostDevice.name = newName
+                }
+                hostDevice.discovered = true
+                self.objectWillChange.send()
+                return true
+            }
+        }
+        for hostDevice in self.foundHosts {
+            if hostDevice.identifier == identifier {
+                onFound(hostDevice)
+                hostDevice.name = name ?? identifier
+                hostDevice.discovered = true
+                self.objectWillChange.send()
+                return true
+            }
+        }
+        return false
+    }
+    
+    func hostFinderRemove(identifier: String) {
+        for hostDevice in self.savedHosts {
+            if hostDevice.identifier == identifier {
+                hostDevice.discovered = false
+                self.objectWillChange.send()
+            }
+        }
+        self.foundHosts.removeAll { hostDevice in
+            hostDevice.identifier == identifier
+        }
+    }
+}
+
+#if os(macOS)
+@objc extension Main: HostFinderDelegate {
+    func hostFinderNewUdid(_ udid: String, address: Data?) {
+        DispatchQueue.main.async {
+            if !self.hostFinderNewHost(identifier: udid, name: nil, onFound: { hostDevice in
+                if let addr = address {
+                    hostDevice.updateAddress(addr)
+                }
+            }) {
+                let newHost = JBHostDevice(uuid: udid)
+                newHost.discovered = true
+                self.foundHosts.append(newHost)
+            }
+        }
+    }
+    
+    func hostFinderRemoveUdid(_ udid: String) {
+        DispatchQueue.main.async {
+            self.hostFinderRemove(identifier: udid)
+        }
+    }
+}
+#else
+extension Main: HostFinderDelegate {
     func hostFinderNewHost(_ host: String, name: String?, address: Data) {
         DispatchQueue.main.async {
-            for hostDevice in self.savedHosts {
-                if hostDevice.hostname == host {
-                    hostDevice.updateAddress(address)
-                    if hostDevice.name == host, let newName = name {
-                        hostDevice.name = newName
-                    }
-                    hostDevice.discovered = true
-                    self.objectWillChange.send()
-                    return
+            if !self.hostFinderNewHost(identifier: host, name: name, onFound: { hostDevice in
+                hostDevice.updateAddress(address)
+            }) {
+                let newHost = JBHostDevice(hostname: host, address: address)
+                if let newName = name {
+                    newHost.name = newName
                 }
+                newHost.discovered = true
+                self.foundHosts.append(newHost)
             }
-            for hostDevice in self.foundHosts {
-                if hostDevice.hostname == host {
-                    hostDevice.updateAddress(address)
-                    hostDevice.name = name ?? host
-                    hostDevice.discovered = true
-                    self.objectWillChange.send()
-                    return
-                }
-            }
-            let newHost = JBHostDevice(hostname: host, address: address)
-            if let newName = name {
-                newHost.name = newName
-            }
-            newHost.discovered = true
-            self.foundHosts.append(newHost)
         }
     }
     
     func hostFinderRemoveHost(_ host: String) {
         DispatchQueue.main.async {
-            for hostDevice in self.savedHosts {
-                if hostDevice.hostname == host {
-                    hostDevice.discovered = false
-                    self.objectWillChange.send()
-                }
-            }
-            self.foundHosts.removeAll { hostDevice in
-                hostDevice.hostname == host
-            }
+            self.hostFinderRemove(identifier: host)
         }
     }
 }
+#endif

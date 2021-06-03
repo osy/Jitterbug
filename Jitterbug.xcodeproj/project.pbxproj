@@ -304,6 +304,9 @@
 		CE985869265C75B300F9AAD4 /* Jitterbug-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Jitterbug-Bridging-Header.h"; sourceTree = "<group>"; };
 		CE985875265C8FD700F9AAD4 /* jitterbugpair */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jitterbugpair; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE985877265C8FD700F9AAD4 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		CEA029D02667DC8A00CF57E1 /* JBHostFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JBHostFinder.h; sourceTree = "<group>"; };
+		CEA029D12667DC8A00CF57E1 /* JBHostFinder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JBHostFinder.m; sourceTree = "<group>"; };
+		CEA029D32667E1F000CF57E1 /* JBHostFinderDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JBHostFinderDelegate.h; sourceTree = "<group>"; };
 		CEE8B456265CBF49007728F4 /* socket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = socket.c; sourceTree = "<group>"; };
 		CEE8B457265CBF49007728F4 /* socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = socket.h; sourceTree = "<group>"; };
 		CEE8B458265CBF49007728F4 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
@@ -383,6 +386,9 @@
 				CEE8B473265D59C0007728F4 /* JBHostDevice.h */,
 				CEE8B474265D59C0007728F4 /* JBHostDevice.m */,
 				CEE8B47A265D5C4F007728F4 /* JBHostDevice.swift */,
+				CEA029D02667DC8A00CF57E1 /* JBHostFinder.h */,
+				CEA029D12667DC8A00CF57E1 /* JBHostFinder.m */,
+				CEA029D32667E1F000CF57E1 /* JBHostFinderDelegate.h */,
 				CEE8B470265CC9BA007728F4 /* Jitterbug.h */,
 				CE98574A265C635000F9AAD4 /* JitterbugApp.swift */,
 				CEE8B4B1265D954F007728F4 /* Extensions.swift */,
