@@ -19,6 +19,7 @@ import SwiftUI
 struct DeviceListView: View {
     @EnvironmentObject private var main: Main
     @State private var showIpAlert: Bool = false
+    @State private var manualAddHostPresented: Bool = false
     
     var body: some View {
         List {
@@ -41,15 +42,21 @@ struct DeviceListView: View {
             }
         }.navigationTitle("Devices")
         .toolbar {
-            Button(action: { showIpAlert.toggle() }, label: {
+            Button {
+                manualAddHostPresented.toggle()
+            } label: {
                 Label("Add", systemImage: "plus")
-            })
+            }
         }
         .onAppear {
             main.startScanning()
         }
         .onDisappear {
             main.stopScanning()
+        }
+        .popover(isPresented: $manualAddHostPresented, arrowEdge: .trailing) {
+            // BUG: SwiftUI won't let us put this on the navbar or it won't close properly
+            ManualAddHostView()
         }
     }
 }

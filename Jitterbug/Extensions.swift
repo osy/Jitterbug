@@ -28,6 +28,12 @@ extension String: Identifiable {
     }
 }
 
+extension String: LocalizedError {
+    public var errorDescription: String? {
+        self
+    }
+}
+
 extension UTType {
     public static let mobileDevicePairing = UTType(filenameExtension: "mobiledevicepairing", conformingTo: .data)!
     public static let dmg = UTType(filenameExtension: "dmg", conformingTo: .data)!

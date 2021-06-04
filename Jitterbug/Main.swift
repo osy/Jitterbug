@@ -258,6 +258,15 @@ class Main: NSObject, ObservableObject {
         hostFinder.stopSearch()
     }
     
+    func saveManualHost(identifier: String, address: Data) {
+        let device = JBHostDevice(hostname: identifier, address: address)
+        if !savedHosts.contains(where: { saved in
+            saved.identifier == identifier || saved.address == address
+        }) {
+            saveHost(device)
+        }
+    }
+    
     func saveHost(_ host: JBHostDevice) {
         savedHosts.append(host)
         foundHosts.removeAll { found in

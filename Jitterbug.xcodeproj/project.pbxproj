@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE312D63266997500064C43C /* SharingServicePicker.swift */; };
+		CE93EC23266ABAA8002BB16C /* ManualAddHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */; };
+		CE93EC24266ABAA8002BB16C /* ManualAddHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */; };
 		CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574A265C635000F9AAD4 /* JitterbugApp.swift */; };
 		CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574C265C635000F9AAD4 /* ContentView.swift */; };
 		CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE98574E265C635300F9AAD4 /* Assets.xcassets */; };
@@ -227,6 +229,7 @@
 /* Begin PBXFileReference section */
 		CE312D63266997500064C43C /* SharingServicePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingServicePicker.swift; sourceTree = "<group>"; };
 		CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
+		CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualAddHostView.swift; sourceTree = "<group>"; };
 		CE985747265C635000F9AAD4 /* Jitterbug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jitterbug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE98574A265C635000F9AAD4 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
 		CE98574C265C635000F9AAD4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -492,6 +495,7 @@
 				CEE8B4C7265DDDB3007728F4 /* DeviceDetailsView.swift */,
 				CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */,
 				CEE8B493265D7AE2007728F4 /* LauncherView.swift */,
+				CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */,
 				CEE8B499265D7B6F007728F4 /* PairingsView.swift */,
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
@@ -949,6 +953,7 @@
 				CEE8B49A265D7B6F007728F4 /* PairingsView.swift in Sources */,
 				CE98584F265C6E1800F9AAD4 /* notification_proxy.c in Sources */,
 				CE98585A265C6E1800F9AAD4 /* mobilebackup.c in Sources */,
+				CE93EC23266ABAA8002BB16C /* ManualAddHostView.swift in Sources */,
 				CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */,
 				CEE8B46D265CC787007728F4 /* collection.c in Sources */,
 				CE985849265C6E1800F9AAD4 /* service.c in Sources */,
@@ -1104,6 +1109,7 @@
 				CEA02A39266864E300CF57E1 /* ContentView.swift in Sources */,
 				CEA029EA266859D200CF57E1 /* JBHostFinder.m in Sources */,
 				CEA02A2626685A2B00CF57E1 /* libusbmuxd.c in Sources */,
+				CE93EC24266ABAA8002BB16C /* ManualAddHostView.swift in Sources */,
 				CEA02A0726685A2B00CF57E1 /* mobilebackup.c in Sources */,
 				CEA02A0526685A2B00CF57E1 /* Key.cpp in Sources */,
 				CEA029EB266859D200CF57E1 /* Extensions.swift in Sources */,
