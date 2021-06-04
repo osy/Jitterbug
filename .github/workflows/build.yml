@@ -37,6 +37,23 @@ jobs:
         with:
           name: Jitterbug
           path: Jitterbug.xcarchive.tgz
+  build-macos-ui:
+    name: Jitterbug (macOS)
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Build
+        run: xcodebuild archive -archivePath JitterbugMac -scheme JitterbugMac -configuration Release
+      - name: Compress
+        run: tar cf JitterbugMac.xcarchive.tgz JitterbugMac.xcarchive
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: JitterbugMac
+          path: JitterbugMac.xcarchive.tgz
   build-macos:
     name: JitterbugPair (macOS)
     runs-on: macos-10.15
@@ -135,6 +152,43 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           repository: ${{ secrets.DISPATCH_ALTSTORE_REPO_NAME }}
           event-type: new-release
+  package-dmg:
+    name: Package DMG
+    runs-on: macos-10.15
+    needs: build-macos-ui
+    if: github.event_name == 'release' || github.event.inputs.test_release == 'true'
+    steps:
+      - name: Import signing certificate into keychain
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.SIGNING_CERTIFICATE_P12_DATA }}
+          p12-password: ${{ secrets.SIGNING_CERTIFICATE_PASSWORD }}
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: JitterbugMac
+      - name: Sign Binaries
+        run: |
+          tar xf JitterbugMac.xcarchive.tgz
+          codesign --force --sign "Developer ID Application" --timestamp=none --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app/Contents/Frameworks/OpenSSL.framework"
+          codesign --force --sign "Developer ID Application" --timestamp=none --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app"
+      - name: Create DMG
+        run: hdiutil create -fs HFS+ -srcfolder "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app" -volname "Jitterbug" "Jitterbug.dmg"
+      - name: Notarize app
+        run: npx notarize-cli --file "Jitterbug.dmg" --bundle-id "com.osy86.Jitterbug"
+        env:
+          NOTARIZE_USERNAME: ${{ secrets.SIGNING_USERNAME }}
+          NOTARIZE_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+      - name: Upload Release Asset
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: Jitterbug.dmg
+          asset_name: Jitterbug.dmg
+          asset_content_type: application/octet-stream
   package-pair:
     name: Package JitterbugPair
     runs-on: ubuntu-20.04
