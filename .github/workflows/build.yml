@@ -170,8 +170,8 @@ jobs:
       - name: Sign Binaries
         run: |
           tar xf JitterbugMac.xcarchive.tgz
-          codesign --force --sign "Developer ID Application" --timestamp=none --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app/Contents/Frameworks/OpenSSL.framework"
-          codesign --force --sign "Developer ID Application" --timestamp=none --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app"
+          codesign --force --sign "Developer ID Application" --timestamp --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app/Contents/Frameworks/OpenSSL.framework"
+          codesign --force --sign "Developer ID Application" --timestamp --options runtime "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app"
       - name: Create DMG
         run: hdiutil create -fs HFS+ -srcfolder "JitterbugMac.xcarchive/Products/Applications/Jitterbug.app" -volname "Jitterbug" "Jitterbug.dmg"
       - name: Notarize app
