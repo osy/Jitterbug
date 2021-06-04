@@ -47,11 +47,11 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 
 On macOS and Windows, make sure you have iTunes installed. On Linux, make sure `usbmuxd` is installed (`sudo apt install usbmuxd`).
 
-## macOS 11
+### macOS 11
 
 Jitterbug is also available for macOS 11 and higher. Run the app and connect your device via USB. Select the device and press the export button on the top toolbar to export `YOUR-UDID.mobiledevicepairing`.
 
-## Other Systems
+### Other Systems
 
 Run `jitterbugpair` with your device plugged in to generate `YOUR-UDID.mobiledevicepairing`. You need to have a passcode enabled and the device should be unlocked. The first time you run the tool, you will get a prompt for your passcode. Type it in and keep the screen on and unlocked and run the tool again to generate the pairing.
 
