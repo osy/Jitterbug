@@ -25,6 +25,7 @@ struct ContentView: View {
                 DeviceListView()
                     .listStyle(SidebarListStyle())
                     .frame(minWidth: 200, idealWidth: 200)
+                Text("Connect an iOS device via USB to start pairing.")
             }.labelStyle(IconOnlyLabelStyle())
             if main.busy {
                 BusyView(message: main.busyMessage)

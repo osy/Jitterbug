@@ -28,6 +28,8 @@ struct LauncherView: View {
                         Spinner()
                     }
                 })
+            Text("Select a device.")
+                .font(.headline)
         }.labelStyle(IconOnlyLabelStyle())
     }
 }
