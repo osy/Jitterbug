@@ -96,13 +96,13 @@ struct DeviceDetailsView: View {
                     fileImporterPresented.toggle()
                 } label: {
                     Label("Mount Image", systemImage: "externaldrive.badge.plus")
-                }
+                }.disabled(!host.isConnected)
                 ZStack {
                     Button {
                         exportPairing()
                     } label: {
                         Label("Export Pairing", systemImage: "square.and.arrow.up")
-                    }
+                    }.disabled(!host.isConnected)
                     SharingsPicker(isPresented: $shareFilePresented, sharingItems: [shareFileUrl as Any])
                 }
             }

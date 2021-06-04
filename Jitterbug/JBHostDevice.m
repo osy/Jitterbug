@@ -410,18 +410,6 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
     }
     plist_free(node);
     
-    if (self.isUsbDevice) {
-        err = lockdownd_set_value(self.lockdown, "com.apple.mobile.wireless_lockdown", "EnableWifiDebugging", plist_new_bool(1));
-        if (err != LOCKDOWN_E_SUCCESS) {
-            if (err == LOCKDOWN_E_UNKNOWN_ERROR) {
-                [self createError:error withString:NSLocalizedString(@"You must set up a passcode to enable wireless pairing.", @"JBHostDevice")];
-            } else {
-                [self createError:error withString:NSLocalizedString(@"Error setting up Wifi debugging.", @"JBHostDevice") code:err];
-            }
-            return NO;
-        }
-    }
-    
     return YES;
 }
 
@@ -706,6 +694,7 @@ cleanup:
 }
 
 - (NSData *)exportPairingWithError:(NSError **)error {
+    lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
     userpref_error_t err = USERPREF_E_SUCCESS;
     plist_t pair_record = NULL;
     char *plist_xml = NULL;
@@ -713,6 +702,20 @@ cleanup:
     NSData *data = NULL;
     
     assert(self.udid);
+    assert(self.lockdown);
+    
+    if (self.isUsbDevice) {
+        lerr = lockdownd_set_value(self.lockdown, "com.apple.mobile.wireless_lockdown", "EnableWifiDebugging", plist_new_bool(1));
+        if (lerr != LOCKDOWN_E_SUCCESS) {
+            if (lerr == LOCKDOWN_E_UNKNOWN_ERROR) {
+                [self createError:error withString:NSLocalizedString(@"You must set up a passcode to enable wireless pairing.", @"JBHostDevice")];
+            } else {
+                [self createError:error withString:NSLocalizedString(@"Error setting up Wifi debugging.", @"JBHostDevice") code:lerr];
+            }
+            return nil;
+        }
+    }
+    
     err = userpref_read_pair_record(self.udid.UTF8String, &pair_record);
     if (err != USERPREF_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to find pairing record.", @"JBHostDevice") code:err];
