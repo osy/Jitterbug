@@ -199,8 +199,13 @@ class Main: NSObject, ObservableObject {
     }
     
     func saveDiskImage(_ diskImage: URL?, signature: URL?, forHostIdentifier hostIdentifier: String) {
+        #if os(macOS)
+        let diskImageFile = diskImage?.path ?? ""
+        let diskImageSignatureFile = signature?.path ?? ""
+        #else
         let diskImageFile = diskImage?.lastPathComponent ?? ""
         let diskImageSignatureFile = signature?.lastPathComponent ?? ""
+        #endif
         saveValue(diskImageFile, forKey: "DiskImage", forHostIdentifier: hostIdentifier)
         saveValue(diskImageSignatureFile, forKey: "DiskImageSignature", forHostIdentifier: hostIdentifier)
     }
@@ -212,7 +217,11 @@ class Main: NSObject, ObservableObject {
         guard diskImageFile.count > 0 else {
             return nil
         }
+        #if os(macOS)
+        return URL(fileURLWithPath: diskImageFile)
+        #else
         return supportImagesURL.appendingPathComponent(diskImageFile)
+        #endif
     }
     
     func loadDiskImageSignature(forHostIdentifier hostIdentifier: String) -> URL? {
@@ -222,7 +231,11 @@ class Main: NSObject, ObservableObject {
         guard diskImageSignatureFile.count > 0 else {
             return nil
         }
+        #if os(macOS)
+        return URL(fileURLWithPath: diskImageSignatureFile)
+        #else
         return supportImagesURL.appendingPathComponent(diskImageSignatureFile)
+        #endif
     }
     
     func addFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
