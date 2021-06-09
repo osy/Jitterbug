@@ -22,7 +22,7 @@ The software to generate a pairing token is available for macOS, Linux, and Wind
 
 1. Make sure you cloned all submodules with `git submodule update --init --recursive`
 2. Install [Homebrew][4] if you have not already.
-3. Install dependencies: `brew install meson openssl@1.1 libusbmuxd libimobiledevice`
+3. Install dependencies: `brew install meson openssl@1.1 libusbmuxd libimobiledevice pkg-config`
 4. Build with `PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig" meson build && cd build && meson compile`
 4. The built executable is in `build/jitterbugpair`. You can install it with `meson install`.
 
