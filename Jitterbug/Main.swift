@@ -70,6 +70,10 @@ class Main: NSObject, ObservableObject {
         UserDefaults.standard.string(forKey: "TunnelSubnetMask") ?? "255.255.255.0"
     }
     
+    var tunnelBundleId: String {
+        Bundle.main.bundleIdentifier!.appending(".JitterbugTunnel")
+    }
+    
     override init() {
         super.init()
         hostFinder.delegate = self
@@ -446,7 +450,7 @@ extension Main {
         let manager = NETunnelProviderManager()
         manager.localizedDescription = NSLocalizedString("Jitterbug Local Device Tunnel", comment: "Main")
         let proto = NETunnelProviderProtocol()
-        proto.providerBundleIdentifier = "com.osy86.Jitterbug.JitterbugTunnel"
+        proto.providerBundleIdentifier = tunnelBundleId
         proto.serverAddress = ""
         manager.protocolConfiguration = proto
         manager.isEnabled = true
