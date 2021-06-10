@@ -33,8 +33,10 @@ struct JitterbugApp: App {
         }
         .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .active {
-                main.selectedHostId = shortcutHostId
-                shortcutHostId = nil
+                if shortcutHostId != nil {
+                    main.selectedHostId = shortcutHostId
+                    shortcutHostId = nil
+                }
             } else {
                 main.archiveSavedHosts()
                 #if os(iOS)
