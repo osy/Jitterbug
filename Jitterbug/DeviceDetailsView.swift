@@ -57,7 +57,10 @@ struct DeviceDetailsView: View {
     
     var body: some View {
         Group {
-            if !host.isConnected {
+            if host == main.localHost && !main.hasLocalDeviceSupport {
+                Text("Local device not supported.")
+                    .font(.headline)
+            } else if !host.isConnected {
                 Text("Not paired.")
                     .font(.headline)
             } else if apps.isEmpty {
@@ -112,13 +115,14 @@ struct DeviceDetailsView: View {
                 }.disabled(!host.isConnected)
             }
         }.onAppear {
-            // BUG: sometimes SwiftUI doesn't like this...
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
-                selectedPairing = main.loadPairing(forHostIdentifier: host.identifier)
-                selectedSupportImage = main.loadDiskImage(forHostIdentifier: host.identifier)
-                selectedSupportImageSignature = main.loadDiskImageSignature(forHostIdentifier: host.identifier)
-                if selectedPairing == nil {
-                    fileSelectType = .pairing
+            if main.localHost == host {
+                if main.hasLocalDeviceSupport && !main.isTunnelStarted {
+                    main.startTunnel()
+                }
+            } else {
+                // BUG: sometimes SwiftUI doesn't like this...
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
+                    loadDefaults()
                 }
             }
         }.onChange(of: selectedPairing) { url in
@@ -146,6 +150,32 @@ struct DeviceDetailsView: View {
                 return
             }
             mountImage(supportImage, signature: supportImageSignature)
+        }.onChange(of: main.isTunnelStarted) { started in
+            resetConnection {
+                if started {
+                    // BUG: sometimes SwiftUI doesn't like this...
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
+                        loadDefaults()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadDefaults() {
+        selectedPairing = main.loadPairing(forHostIdentifier: host.identifier)
+        selectedSupportImage = main.loadDiskImage(forHostIdentifier: host.identifier)
+        selectedSupportImageSignature = main.loadDiskImageSignature(forHostIdentifier: host.identifier)
+        if selectedPairing == nil {
+            fileSelectType = .pairing
+        }
+    }
+    
+    private func resetConnection(onComplete: @escaping () -> Void) {
+        main.backgroundTask(message: NSLocalizedString("Disconnecting...", comment: "DeviceDetailsView")) {
+            host.stopLockdown()
+        } onComplete: {
+            onComplete()
         }
     }
     

@@ -14,15 +14,13 @@
 // limitations under the License.
 //
 
-#ifndef Jitterbug_Bridging_Header_h
-#define Jitterbug_Bridging_Header_h
+#ifndef AddressUtils_h
+#define AddressUtils_h
 
-#import <TargetConditionals.h>
-#import "JBHostDevice.h"
-#if TARGET_OS_OSX
-#import "JBHostFinder.h"
-#import "JBHostFinderDelegate.h"
-#endif
-#import "AddressUtils.h"
+#import <Foundation/Foundation.h>
 
-#endif /* Jitterbug_Bridging_Header_h */
+BOOL addressIsLoopback(NSData * _Nonnull data);
+NSData * _Nonnull addressIPv4StringToData(NSString * _Nonnull ascii);
+NSData * _Nonnull packetReplaceIp(NSData * _Nonnull data, NSString * _Nonnull sourceSearch, NSString * _Nonnull sourceReplace, NSString * _Nonnull destSearch, NSString * _Nonnull destReplace);
+
+#endif /* AddressUtils_h */

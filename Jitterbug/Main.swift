@@ -15,6 +15,7 @@
 //
 
 import Combine
+import NetworkExtension
 
 class Main: NSObject, ObservableObject {
     @Published var alertMessage: String?
@@ -30,6 +31,12 @@ class Main: NSObject, ObservableObject {
     @Published var supportImages: [URL] = []
     
     private let hostFinder = HostFinder()
+    
+    @Published var hasLocalDeviceSupport = false
+    @Published var localHost: JBHostDevice?
+    @Published var isTunnelStarted: Bool = false
+    private var vpnObserver: NSObjectProtocol?
+    private var vpnManager: NETunnelProviderManager!
     
     private var storage: UserDefaults {
         UserDefaults.standard
@@ -51,12 +58,25 @@ class Main: NSObject, ObservableObject {
         documentsURL.appendingPathComponent("SupportImages", isDirectory: true)
     }
     
+    var tunnelDeviceIp: String {
+        UserDefaults.standard.string(forKey: "TunnelDeviceIP") ?? "10.8.0.1"
+    }
+    
+    var tunnelFakeIp: String {
+        UserDefaults.standard.string(forKey: "TunnelFakeIP") ?? "10.8.0.2"
+    }
+    
+    var tunnelSubnetMask: String {
+        UserDefaults.standard.string(forKey: "TunnelSubnetMask") ?? "255.255.255.0"
+    }
+    
     override init() {
         super.init()
         hostFinder.delegate = self
         refreshPairings()
         refreshSupportImages()
         unarchiveSavedHosts()
+        initTunnel()
     }
     
     func backgroundTask(message: String?, task: @escaping () throws -> Void, onComplete: @escaping () -> Void = {}) {
@@ -378,13 +398,18 @@ extension Main: HostFinderDelegate {
     func hostFinderNewHost(_ host: String, name: String?, address: Data) {
         DispatchQueue.main.async {
             if !self.hostFinderNewHost(identifier: host, name: name, onFound: { hostDevice in
-                hostDevice.updateAddress(address)
+                if hostDevice != self.localHost {
+                    hostDevice.updateAddress(address)
+                }
             }) {
                 let newHost = JBHostDevice(hostname: host, address: address)
                 if let newName = name {
                     newHost.name = newName
                 }
                 newHost.discovered = true
+                if addressIsLoopback(address) {
+                    self.localHost = newHost
+                }
                 self.foundHosts.append(newHost)
             }
         }
@@ -393,7 +418,100 @@ extension Main: HostFinderDelegate {
     func hostFinderRemoveHost(_ host: String) {
         DispatchQueue.main.async {
             self.hostFinderRemove(identifier: host)
+            if self.localHost?.identifier == host {
+                self.localHost = nil
+            }
         }
     }
 }
 #endif
+
+// MARK: - VPN Tunnel
+extension Main {
+    private func initTunnel(onSuccess: (() -> ())? = nil) {
+        NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
+            if error == nil {
+                DispatchQueue.main.async {
+                    self.hasLocalDeviceSupport = true
+                }
+            }
+            if !(managers?.isEmpty ?? true), let manager = managers?[0] {
+                self.vpnManager = manager
+                onSuccess?()
+            }
+        }
+    }
+    
+    private func createAndStartTunnel() {
+        let manager = NETunnelProviderManager()
+        manager.localizedDescription = NSLocalizedString("Jitterbug Local Device Tunnel", comment: "Main")
+        let proto = NETunnelProviderProtocol()
+        proto.providerBundleIdentifier = "com.osy86.Jitterbug.JitterbugTunnel"
+        proto.serverAddress = ""
+        manager.protocolConfiguration = proto
+        manager.isEnabled = true
+        var success = false
+        backgroundTask(message: NSLocalizedString("Setting up VPN tunnel...", comment: "Main")) {
+            let lock = DispatchSemaphore(value: 0)
+            var error: Error?
+            manager.saveToPreferences { err in
+                error = err
+                lock.signal()
+            }
+            lock.wait()
+            if let err = error {
+                throw err
+            } else {
+                success = true
+            }
+        } onComplete: {
+            if success {
+                self.initTunnel {
+                    self.startTunnel()
+                }
+            }
+        }
+    }
+    
+    private func startExistingTunnel() {
+        backgroundTask(message: NSLocalizedString("Starting VPN tunnel...", comment: "Main")) {
+            guard let manager = self.vpnManager else {
+                throw NSLocalizedString("No VPN configuration found.", comment: "Main")
+            }
+            let lock = DispatchSemaphore(value: 0)
+            self.vpnObserver = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: manager.connection, queue: nil, using: { [weak self] _ in
+                guard let _self = self else {
+                    return
+                }
+                print("[VPN] Connected? \(manager.connection.status == .connected)")
+                _self.isTunnelStarted = manager.connection.status == .connected
+                if _self.isTunnelStarted {
+                    _self.localHost?.updateAddress(addressIPv4StringToData(_self.tunnelFakeIp))
+                    lock.signal()
+                }
+            })
+            let options = ["TunnelDeviceIP": self.tunnelDeviceIp as NSObject,
+                           "TunnelFakeIP": self.tunnelFakeIp as NSObject,
+                           "TunnelSubnetMask": self.tunnelSubnetMask as NSObject]
+            try manager.connection.startVPNTunnel(options: options)
+            if lock.wait(timeout: .now() + .seconds(15)) == .timedOut {
+                throw NSLocalizedString("Failed to start tunnel.", comment: "Main")
+            }
+        }
+    }
+    
+    func startTunnel() {
+        if self.vpnManager == nil {
+            createAndStartTunnel()
+        } else {
+            startExistingTunnel()
+        }
+    }
+    
+    func stopTunnel() {
+        guard let manager = self.vpnManager else {
+            return
+        }
+        manager.connection.stopVPNTunnel()
+    }
+}

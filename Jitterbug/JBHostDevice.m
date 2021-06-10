@@ -79,6 +79,13 @@ static const char PATH_PREFIX[] = "/private/var/mobile/Media";
     }
 }
 
+- (void)setLockdown:(lockdownd_client_t)lockdown {
+    if (_lockdown != lockdown) {
+        [self propertyWillChange];
+        _lockdown = lockdown;
+    }
+}
+
 - (NSString *)identifier {
     if (self.isUsbDevice) {
         return self.udid;
@@ -219,7 +226,7 @@ static service_error_t service_client_factory_start_service_with_lockdown(lockdo
         idevice_free(self.device);
         self.device = NULL;
     }
-    if (self.udid) {
+    if (self.udid.length > 0) {
         cachePairingRemove(self.udid.UTF8String);
     }
 }
@@ -355,7 +362,7 @@ error:
 
 - (void)updateAddress:(NSData *)address {
     self.address = address;
-    if (self.udid) {
+    if (self.udid.length > 0) {
         cachePairingUpdateAddress(self.udid.UTF8String, (__bridge CFDataRef)(address));
     }
 }

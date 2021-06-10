@@ -8,8 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE312D63266997500064C43C /* SharingServicePicker.swift */; };
+		CE4DEC2C2671732F003BDC3F /* AddressUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DEC2B2671732F003BDC3F /* AddressUtils.m */; };
+		CE4DEC2E26717E00003BDC3F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE97FFC4267113FB007FE23E /* NetworkExtension.framework */; };
+		CE4DEC2F2671D730003BDC3F /* AddressUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DEC2B2671732F003BDC3F /* AddressUtils.m */; };
+		CE4DEC312671E5BF003BDC3F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE4DEC302671E5BF003BDC3F /* Settings.bundle */; };
 		CE93EC23266ABAA8002BB16C /* ManualAddHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */; };
 		CE93EC24266ABAA8002BB16C /* ManualAddHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */; };
+		CE97FFC5267113FB007FE23E /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE97FFC4267113FB007FE23E /* NetworkExtension.framework */; };
+		CE97FFC8267113FC007FE23E /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE97FFC7267113FC007FE23E /* PacketTunnelProvider.swift */; };
+		CE97FFCD267113FC007FE23E /* JitterbugTunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CE97FFC3267113FB007FE23E /* JitterbugTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE98574B265C635000F9AAD4 /* JitterbugApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574A265C635000F9AAD4 /* JitterbugApp.swift */; };
 		CE98574D265C635000F9AAD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98574C265C635000F9AAD4 /* ContentView.swift */; };
 		CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE98574E265C635300F9AAD4 /* Assets.xcassets */; };
@@ -214,7 +221,28 @@
 		CEE8B4D0265DEAAF007728F4 /* FileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8B4CF265DEAAF007728F4 /* FileSelectionView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CE97FFCB267113FC007FE23E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE98573F265C635000F9AAD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE97FFC2267113FB007FE23E;
+			remoteInfo = JitterbugTunnel;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		CE97FFD1267113FC007FE23E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CE97FFCD267113FC007FE23E /* JitterbugTunnel.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE985873265C8FD700F9AAD4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,8 +256,17 @@
 
 /* Begin PBXFileReference section */
 		CE312D63266997500064C43C /* SharingServicePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingServicePicker.swift; sourceTree = "<group>"; };
+		CE4DEC2A2671732F003BDC3F /* AddressUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressUtils.h; sourceTree = "<group>"; };
+		CE4DEC2B2671732F003BDC3F /* AddressUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressUtils.m; sourceTree = "<group>"; };
+		CE4DEC2D26717E00003BDC3F /* Jitterbug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Jitterbug.entitlements; sourceTree = "<group>"; };
+		CE4DEC302671E5BF003BDC3F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
 		CE93EC22266ABAA8002BB16C /* ManualAddHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualAddHostView.swift; sourceTree = "<group>"; };
+		CE97FFC3267113FB007FE23E /* JitterbugTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = JitterbugTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE97FFC4267113FB007FE23E /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		CE97FFC7267113FC007FE23E /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		CE97FFC9267113FC007FE23E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE97FFCA267113FC007FE23E /* JitterbugTunnel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JitterbugTunnel.entitlements; sourceTree = "<group>"; };
 		CE985747265C635000F9AAD4 /* Jitterbug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jitterbug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE98574A265C635000F9AAD4 /* JitterbugApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JitterbugApp.swift; sourceTree = "<group>"; };
 		CE98574C265C635000F9AAD4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -417,11 +454,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CE97FFC0267113FB007FE23E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE97FFC5267113FB007FE23E /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE985744265C635000F9AAD4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CE985862265C703A00F9AAD4 /* OpenSSL in Frameworks */,
+				CE4DEC2E26717E00003BDC3F /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +490,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE97FFC6267113FB007FE23E /* JitterbugTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				CE97FFC7267113FC007FE23E /* PacketTunnelProvider.swift */,
+				CE97FFC9267113FC007FE23E /* Info.plist */,
+				CE97FFCA267113FC007FE23E /* JitterbugTunnel.entitlements */,
+			);
+			path = JitterbugTunnel;
+			sourceTree = "<group>";
+		};
 		CE98573E265C635000F9AAD4 = {
 			isa = PBXGroup;
 			children = (
@@ -451,6 +507,7 @@
 				CE985749265C635000F9AAD4 /* Jitterbug */,
 				CEA029DA2668592800CF57E1 /* JitterbugMac */,
 				CE985876265C8FD700F9AAD4 /* JitterbugPair */,
+				CE97FFC6267113FB007FE23E /* JitterbugTunnel */,
 				CE98575A265C636900F9AAD4 /* Libraries */,
 				CE985748265C635000F9AAD4 /* Products */,
 				CE9858C9265C934600F9AAD4 /* Frameworks */,
@@ -463,6 +520,7 @@
 				CE985747265C635000F9AAD4 /* Jitterbug.app */,
 				CE985875265C8FD700F9AAD4 /* jitterbugpair */,
 				CEA029D92668592800CF57E1 /* Jitterbug.app */,
+				CE97FFC3267113FB007FE23E /* JitterbugTunnel.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -470,8 +528,11 @@
 		CE985749265C635000F9AAD4 /* Jitterbug */ = {
 			isa = PBXGroup;
 			children = (
+				CE4DEC2D26717E00003BDC3F /* Jitterbug.entitlements */,
 				CE985869265C75B300F9AAD4 /* Jitterbug-Bridging-Header.h */,
 				CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */,
+				CE4DEC2A2671732F003BDC3F /* AddressUtils.h */,
+				CE4DEC2B2671732F003BDC3F /* AddressUtils.m */,
 				CEE8B466265CC57D007728F4 /* CacheStorage.h */,
 				CEE8B467265CC57D007728F4 /* CacheStorage.c */,
 				CEE8B482265D6A51007728F4 /* JBApp.h */,
@@ -500,6 +561,7 @@
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
 				CE985753265C635300F9AAD4 /* Info.plist */,
+				CE4DEC302671E5BF003BDC3F /* Settings.bundle */,
 			);
 			path = Jitterbug;
 			sourceTree = "<group>";
@@ -796,6 +858,7 @@
 		CE9858C9265C934600F9AAD4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE97FFC4267113FB007FE23E /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -816,6 +879,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CE97FFC2267113FB007FE23E /* JitterbugTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE97FFCE267113FC007FE23E /* Build configuration list for PBXNativeTarget "JitterbugTunnel" */;
+			buildPhases = (
+				CE97FFBF267113FB007FE23E /* Sources */,
+				CE97FFC0267113FB007FE23E /* Frameworks */,
+				CE97FFC1267113FB007FE23E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JitterbugTunnel;
+			productName = JitterbugTunnel;
+			productReference = CE97FFC3267113FB007FE23E /* JitterbugTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CE985746265C635000F9AAD4 /* Jitterbug */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE985756265C635300F9AAD4 /* Build configuration list for PBXNativeTarget "Jitterbug" */;
@@ -823,10 +903,12 @@
 				CE985743265C635000F9AAD4 /* Sources */,
 				CE985744265C635000F9AAD4 /* Frameworks */,
 				CE985745265C635000F9AAD4 /* Resources */,
+				CE97FFD1267113FC007FE23E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CE97FFCC267113FC007FE23E /* PBXTargetDependency */,
 			);
 			name = Jitterbug;
 			packageProductDependencies = (
@@ -882,10 +964,13 @@
 		CE98573F265C635000F9AAD4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = osy;
 				TargetAttributes = {
+					CE97FFC2267113FB007FE23E = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					CE985746265C635000F9AAD4 = {
 						CreatedOnToolsVersion = 12.4;
 						LastSwiftMigration = 1240;
@@ -917,15 +1002,24 @@
 				CE985746265C635000F9AAD4 /* Jitterbug */,
 				CEA029D82668592800CF57E1 /* JitterbugMac */,
 				CE985874265C8FD700F9AAD4 /* JitterbugPair */,
+				CE97FFC2267113FB007FE23E /* JitterbugTunnel */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CE97FFC1267113FB007FE23E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE985745265C635000F9AAD4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4DEC312671E5BF003BDC3F /* Settings.bundle in Resources */,
 				CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -941,6 +1035,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CE97FFBF267113FB007FE23E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE4DEC2F2671D730003BDC3F /* AddressUtils.m in Sources */,
+				CE97FFC8267113FC007FE23E /* PacketTunnelProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE985743265C635000F9AAD4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -955,6 +1058,7 @@
 				CE98585A265C6E1800F9AAD4 /* mobilebackup.c in Sources */,
 				CE93EC23266ABAA8002BB16C /* ManualAddHostView.swift in Sources */,
 				CE98585C265C6E1800F9AAD4 /* file_relay.c in Sources */,
+				CE4DEC2C2671732F003BDC3F /* AddressUtils.m in Sources */,
 				CEE8B46D265CC787007728F4 /* collection.c in Sources */,
 				CE985849265C6E1800F9AAD4 /* service.c in Sources */,
 				CEE8B4B8265DC014007728F4 /* HostFinder.swift in Sources */,
@@ -1164,7 +1268,63 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		CE97FFCC267113FC007FE23E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE97FFC2267113FB007FE23E /* JitterbugTunnel */;
+			targetProxy = CE97FFCB267113FC007FE23E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		CE97FFCF267113FC007FE23E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = JitterbugTunnel/JitterbugTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = JitterbugTunnel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.JitterbugTunnel";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE97FFD0267113FC007FE23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = JitterbugTunnel/JitterbugTunnel.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				INFOPLIST_FILE = JitterbugTunnel/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_PREFIX:default=com.osy86).Jitterbug.JitterbugTunnel";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Jitterbug/Jitterbug-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CE985754265C635300F9AAD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE905F6A2661BAAB0093E2B0 /* Build.xcconfig */;
@@ -1315,9 +1475,11 @@
 		CE985757265C635300F9AAD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Jitterbug/Jitterbug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
@@ -1340,9 +1502,11 @@
 		CE985758265C635300F9AAD4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Jitterbug/Jitterbug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
@@ -1432,6 +1596,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CE97FFCE267113FC007FE23E /* Build configuration list for PBXNativeTarget "JitterbugTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE97FFCF267113FC007FE23E /* Debug */,
+				CE97FFD0267113FC007FE23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE985742265C635000F9AAD4 /* Build configuration list for PBXProject "Jitterbug" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
