@@ -29,7 +29,12 @@ jobs:
         with:
           submodules: recursive
       - name: Build
-        run: xcodebuild archive -archivePath Jitterbug -scheme Jitterbug -configuration Release CODE_SIGNING_ALLOWED=NO
+        run: |
+          xcodebuild archive -archivePath Jitterbug -scheme Jitterbug -configuration Release CODE_SIGNING_ALLOWED=NO
+          codesign --force --sign - --timestamp=none --preserve-metadata=identifier,entitlements,flags "Jitterbug.xcarchive/Products/Applications/Jitterbug.app/PlugIns/OpenSSL.framework"
+          codesign --force --sign - --timestamp=none --preserve-metadata=identifier,entitlements,flags "Jitterbug.xcarchive/Products/Applications/Jitterbug.app/Frameworks/OpenSSL.framework"
+          codesign --force --sign - --entitlements "JitterbugTunnel/JitterbugTunnel.entitlements" --timestamp=none "Jitterbug.xcarchive/Products/Applications/Jitterbug.app/PlugIns/JitterbugTunnel.appex"
+          codesign --force --sign - --entitlements "Jitterbug/Jitterbug.entitlements" --timestamp=none "Jitterbug.xcarchive/Products/Applications/Jitterbug.app"
       - name: Compress
         run: tar cf Jitterbug.xcarchive.tgz Jitterbug.xcarchive
       - name: Upload
@@ -117,22 +122,18 @@ jobs:
             build/libwinpthread-1.dll
   package-ipa:
     name: Package IPA
-    runs-on: macos-10.15
+    runs-on: ubuntu-20.04
     needs: build-ios
     if: github.event_name == 'release' || github.event.inputs.test_release == 'true'
     steps:
-      - name: Install ldid
-        run: brew install ldid
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
           name: Jitterbug
-      - name: Fakesign IPA
+      - name: Package IPA
         run: |
           tar xf Jitterbug.xcarchive.tgz
           mv Jitterbug.xcarchive/Products/Applications Payload
-          ldid -S Payload/Jitterbug.app/Frameworks/OpenSSL.framework/OpenSSL
-          ldid -S Payload/Jitterbug.app/Jitterbug
           zip -r Jitterbug.ipa Payload -x "._*" -x ".DS_Store" -x "__MACOSX"
       - name: Upload Release Asset
         if: github.event_name == 'release'
