@@ -482,17 +482,20 @@ extension Main {
             guard let manager = self.vpnManager else {
                 throw NSLocalizedString("No VPN configuration found.", comment: "Main")
             }
+            
+            if manager.connection.status == .connected {
+                // Connection already established, nothing to do here
+                self.setTunnelStarted(true)
+                return
+            }
+            
             let lock = DispatchSemaphore(value: 0)
             self.vpnObserver = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: manager.connection, queue: nil, using: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
                 print("[VPN] Connected? \(manager.connection.status == .connected)")
-                _self.isTunnelStarted = manager.connection.status == .connected
-                if _self.isTunnelStarted {
-                    _self.localHost?.updateAddress(addressIPv4StringToData(_self.tunnelFakeIp))
-                    lock.signal()
-                }
+                _self.setTunnelStarted(manager.connection.status == .connected, signallingLock: lock)
             })
             let options = ["TunnelDeviceIP": self.tunnelDeviceIp as NSObject,
                            "TunnelFakeIP": self.tunnelFakeIp as NSObject,
@@ -500,6 +503,17 @@ extension Main {
             try manager.connection.startVPNTunnel(options: options)
             if lock.wait(timeout: .now() + .seconds(15)) == .timedOut {
                 throw NSLocalizedString("Failed to start tunnel.", comment: "Main")
+            }
+        }
+    }
+    
+    private func setTunnelStarted(_ started: Bool, signallingLock lock: DispatchSemaphore? = nil) {
+        self.isTunnelStarted = started
+        
+        if started {
+            self.localHost?.updateAddress(addressIPv4StringToData(self.tunnelFakeIp))
+            if let lock = lock {
+                lock.signal()
             }
         }
     }
