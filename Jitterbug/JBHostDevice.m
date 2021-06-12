@@ -516,7 +516,8 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
     
     if (!needsMount) {
         // Bail out here if there's already a DDI mounted
-        return YES;
+        res = YES;
+        goto error_out;
     }
 
     struct stat fst;
