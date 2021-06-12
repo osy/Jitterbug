@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-protocol HostFinderDelegate : class {
+protocol HostFinderDelegate : AnyObject {
     func hostFinderWillStart()
     func hostFinderDidStop()
     func hostFinderError(_ error: String)
