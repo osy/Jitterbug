@@ -402,7 +402,9 @@ extension Main: HostFinderDelegate {
     func hostFinderNewHost(_ host: String, name: String?, address: Data) {
         DispatchQueue.main.async {
             if !self.hostFinderNewHost(identifier: host, name: name, onFound: { hostDevice in
-                if hostDevice != self.localHost {
+                if addressIsLoopback(address) {
+                    self.localHost = hostDevice
+                } else if hostDevice != self.localHost {
                     hostDevice.updateAddress(address)
                 }
             }) {
