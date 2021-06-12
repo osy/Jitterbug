@@ -264,9 +264,7 @@ class Main: NSObject, ObservableObject {
     
     func addFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
         var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
-        if !favorites.contains(where: { favorite in
-            favorite == appId
-        }) {
+        if !favorites.contains(where: {$0 == appId}) {
             favorites.append(appId)
         }
         saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
@@ -275,9 +273,7 @@ class Main: NSObject, ObservableObject {
     
     func removeFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
         var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
-        favorites.removeAll { favorite in
-            favorite == appId
-        }
+        favorites.removeAll(where: {$0 == appId})
         saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
         self.objectWillChange.send()
     }
@@ -297,24 +293,18 @@ class Main: NSObject, ObservableObject {
     
     func saveManualHost(identifier: String, address: Data) {
         let device = JBHostDevice(hostname: identifier, address: address)
-        if !savedHosts.contains(where: { saved in
-            saved.identifier == identifier || saved.address == address
-        }) {
+        if !savedHosts.contains(where: {$0.identifier == identifier || $0.address == address}) {
             saveHost(device)
         }
     }
     
     func saveHost(_ host: JBHostDevice) {
         savedHosts.append(host)
-        foundHosts.removeAll { found in
-            found.identifier == host.identifier
-        }
+        foundHosts.removeAll(where: {$0.identifier == host.identifier})
     }
     
     func removeSavedHost(_ host: JBHostDevice) {
-        savedHosts.removeAll { saved in
-            saved.identifier == host.identifier
-        }
+        savedHosts.removeAll(where: {$0.identifier == host.identifier})
         foundHosts.append(host)
     }
 }
@@ -363,15 +353,15 @@ extension Main {
     }
     
     func hostFinderRemove(identifier: String) {
-        for hostDevice in self.savedHosts {
-            if hostDevice.identifier == identifier {
-                hostDevice.discovered = false
-                self.objectWillChange.send()
-            }
+        self.savedHosts.filter({$0.identifier == identifier}).forEach { hostDevice in
+            hostDevice.discovered = false
+            self.objectWillChange.send()
         }
+        
         self.foundHosts.removeAll { hostDevice in
             hostDevice.identifier == identifier
         }
+        
     }
 }
 
