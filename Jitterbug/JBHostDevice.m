@@ -498,6 +498,26 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
         [self createError:error withString:NSLocalizedString(@"Could not connect to mobile_image_mounter!", @"JBHostDevice") code:merr];
         return NO;
     }
+    
+    // Check if image is already mounted
+    plist_t result = NULL;
+    BOOL needsMount = YES;
+    
+    merr = mobile_image_mounter_lookup_image(mim, imagetype, &result);
+    if (merr == MOBILE_IMAGE_MOUNTER_E_SUCCESS && result) {
+        plist_t node = plist_dict_get_item(result, "ImageSignature");
+        if (node && plist_array_get_size(node) > 0) {
+            DEBUG_PRINT("Device already has DDI mounted\n");
+            needsMount = NO;
+        }
+        
+        plist_free(result);
+    }
+    
+    if (!needsMount) {
+        // Bail out here if there's already a DDI mounted
+        return YES;
+    }
 
     struct stat fst;
     if (stat(image_path, &fst) != 0) {
@@ -511,7 +531,7 @@ static ssize_t mim_upload_cb(void* buf, size_t size, void* userdata)
     }
 
     mobile_image_mounter_error_t err = MOBILE_IMAGE_MOUNTER_E_UNKNOWN_ERROR;
-    plist_t result = NULL;
+    result = NULL;
 
     char sig[8192];
     size_t sig_length = 0;
