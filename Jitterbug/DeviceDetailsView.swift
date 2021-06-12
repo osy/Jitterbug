@@ -43,7 +43,7 @@ struct DeviceDetailsView: View {
             favorites.contains { favorite in
                 app.bundleIdentifier == favorite
             }
-        }
+        }.sorted { $0.bundleName < $1.bundleName }
     }
     
     private var notFavoriteApps: [JBApp] {
@@ -52,7 +52,7 @@ struct DeviceDetailsView: View {
             !favorites.contains { favorite in
                 app.bundleIdentifier == favorite
             }
-        }
+        }.sorted { $0.bundleName < $1.bundleName }
     }
     
     var body: some View {
