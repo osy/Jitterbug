@@ -1,0 +1,93 @@
+/*
+  Localizable.strings
+  Jitterbug
+
+  Created by Ty on 2021/6/13.
+  Copyright © 2021 osy. All rights reserved.
+*/
+
+"Devices"="设备";
+
+"Launcher"="启动";
+
+"Pairings"="配对";
+
+"Support Files"="支持文件";
+
+"Discovered"="已发现";
+
+"Done"="完成";
+
+"Add"="添加";
+
+"Host"="主机";
+
+"No pairings found."="找不到配对";
+
+"Import"="导入";
+
+"Deleting pairing..."="删除配对";
+
+"Importing pairing..."="导入配对...";
+
+"No support files found."="未找到支持文件";
+
+"Deleting support file..."="删除支持文件...";
+
+"Importing support file..."="导入支持文件";
+
+"Resolving..."="解析中...";
+
+"Failed to resolve host."="解析主机失败";
+
+"Select a device."="选择一个设备";
+
+"No files found."="未找到文件";
+
+"Cancel"="取消";
+
+"Hi"="你好";
+
+"Local device not supported."="不支持本地设备";
+
+"Not paired."="未配对";
+
+"No apps found on device."="未在设备上找到app";
+
+"Favorites"="喜欢";
+
+"Installed"="已安装";
+
+"Select Pairing"="选择配对文件";
+
+"Select Image"="选择镜像";
+
+"Select Signature"="选择签名";
+
+"Mount"="挂载";
+
+"Pair"="配对";
+
+"signature"="签名";
+
+"Disconnecting..."="断开连接...";
+
+"Loading pairing data..."="加载配对信息...";
+
+"Querying installed apps..."="查找已安装app...";
+
+"Mounting disk image..."="挂载磁盘映像";
+
+"Launching..."="启动中...";
+
+"Developer image is not mounted. You need DeveloperDiskImage.dmg and DeveloperDiskImage.dmg.signature imported in Support Files."="未安装开发映像.您需要在支持文件中导入DeveloperDiskImage.dmg和DeveloperDiskImage.dmg.signature。";
+
+"Saved"="已保存";
+
+"Unknown"="未知";
+
+"Unpairing..."="取消配对...";
+
+"Clear Pairing"="清空配对";
+
+"Save"="保存";

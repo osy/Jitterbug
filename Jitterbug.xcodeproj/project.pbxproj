@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1072C6C12676FD29006A950E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1072C6C32676FD29006A950E /* Localizable.strings */; };
 		CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE312D63266997500064C43C /* SharingServicePicker.swift */; };
 		CE4DEC2C2671732F003BDC3F /* AddressUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DEC2B2671732F003BDC3F /* AddressUtils.m */; };
 		CE4DEC2E26717E00003BDC3F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE97FFC4267113FB007FE23E /* NetworkExtension.framework */; };
@@ -255,6 +256,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1072C6C22676FD29006A950E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CE312D63266997500064C43C /* SharingServicePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingServicePicker.swift; sourceTree = "<group>"; };
 		CE4DEC2A2671732F003BDC3F /* AddressUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressUtils.h; sourceTree = "<group>"; };
 		CE4DEC2B2671732F003BDC3F /* AddressUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressUtils.m; sourceTree = "<group>"; };
@@ -528,6 +530,7 @@
 		CE985749265C635000F9AAD4 /* Jitterbug */ = {
 			isa = PBXGroup;
 			children = (
+				1072C6C32676FD29006A950E /* Localizable.strings */,
 				CE4DEC2D26717E00003BDC3F /* Jitterbug.entitlements */,
 				CE985869265C75B300F9AAD4 /* Jitterbug-Bridging-Header.h */,
 				CEE8B460265CBFC2007728F4 /* libusbmuxd-stub.c */,
@@ -990,6 +993,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = CE98573E265C635000F9AAD4;
 			packageReferences = (
@@ -1020,6 +1024,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4DEC312671E5BF003BDC3F /* Settings.bundle in Resources */,
+				1072C6C12676FD29006A950E /* Localizable.strings in Resources */,
 				CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1275,6 +1280,17 @@
 			targetProxy = CE97FFCB267113FC007FE23E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1072C6C32676FD29006A950E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1072C6C22676FD29006A950E /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CE97FFCF267113FC007FE23E /* Debug */ = {
