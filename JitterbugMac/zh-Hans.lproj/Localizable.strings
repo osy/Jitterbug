@@ -1,6 +1,18 @@
 /* No comment provided by engineer. */
 "Add" = "添加";
 
+/* No comment provided by engineer. */
+"Devices" = "设备列表";
+
+/* No comment provided by engineer. */
+"Pairings" = "配对文件";
+
+/* No comment provided by engineer. */
+"Support Files" = "支持文件";
+
+/* No comment provided by engineer. */
+"Launcher" = "启动器";
+
 /* JBHostDevice */
 "Cannot stat image file!" = "无法加载镜像文件(dmg)";
 
