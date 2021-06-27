@@ -1,0 +1,9 @@
+/* Bundle name */
+"CFBundleName" = "Jitterbug";
+
+/* (No Comment) */
+"Mobile device pairing" = "设备配对";
+
+/* Privacy - Local Network Usage Description */
+"NSLocalNetworkUsageDescription" = "查找局域网内的 iOS 设备";
+

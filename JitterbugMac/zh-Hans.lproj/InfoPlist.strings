@@ -1,0 +1,6 @@
+/* Bundle name */
+"CFBundleName" = "Jitterbug";
+
+/* Copyright (human-readable) */
+"NSHumanReadableCopyright" = "版权所有 © 2021 osy.";
+

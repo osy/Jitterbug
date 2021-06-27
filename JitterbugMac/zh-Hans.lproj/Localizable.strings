@@ -1,0 +1,150 @@
+/* No comment provided by engineer. */
+"Add" = "添加";
+
+/* JBHostDevice */
+"Cannot stat image file!" = "无法加载镜像文件(dmg)";
+
+/* JBHostDevice */
+"Cannot stat signature file!" = "无法加载镜像签名文件(signature)";
+
+/* No comment provided by engineer. */
+"Connect an iOS device via USB to start pairing." = "不支持通过 USB 配对设备。";
+
+/* JBHostDevice */
+"Could not connect to mobile_image_mounter!" = "无法挂载镜像";
+
+/* JBHostDevice */
+"Could not read signature from file." = "无法读取镜像签名文件";
+
+/* JBHostDevice */
+"Device is locked, can't mount. Unlock device and try again." = "设备已锁定，无法挂载镜像。请解锁设备后再试。";
+
+/* No comment provided by engineer. */
+"Discovered" = "找到的设备";
+
+/* JBHostDevice */
+"Error opening image file." = "无法加载镜像文件。";
+
+/* JBHostDevice */
+"Error opening signature file." = "无法加载镜像签名文件。";
+
+/* JBHostDevice */
+"Error setting up Wifi debugging." = "无法配置 Wi-Fi 调试。";
+
+/* DeviceDetailsView */
+"Exporting..." = "正在导出...";
+
+/* JBHostDevice */
+"Failed cache pairing data." = "缓存配对数据失败。";
+
+/* JBHostDevice */
+"Failed to communicate with device. Make sure the device is connected and unlocked and that the pairing is valid." = "无法连接到被调试设备。请确保被调试设备在同一个局域网内，设备已解锁，且配对文件是有效的。";
+
+/* JBHostDevice */
+"Failed to communicate with device. Make sure the device is connected, unlocked, and paired." = "无法连接到被调试设备。请确保被调试设备在同一个局域网内，设备已解锁，且配对文件是有效的。";
+
+/* JBHostDevice */
+"Failed to create device." = "创建设备失败。";
+
+/* JBHostDevice */
+"Failed to create heartbeat service." = "初始化心跳包服务失败。";
+
+/* JBHostDevice */
+"Failed to find pairing record." = "查找配对记录失败。";
+
+/* JBLocalHostFinder */
+"Failed to get address for wireless device %@" = "无法获取 %@ 的地址";
+
+/* JBHostDevice */
+"Failed to lookup installed apps." = "无法列出已安装 App。";
+
+/* JBHostDevice */
+"Failed to read device class." = "无法读取设备类型。";
+
+/* JBHostDevice */
+"Failed to read device name." = "无法读取设备名称。";
+
+/* JBHostDevice */
+"Failed to reset pairing." = "无法重置配对。";
+
+/* ManualAddHostView */
+"Failed to resolve host." = "无法解析主机。";
+
+/* JBHostDevice */
+"Failed to start application." = "无法启动应用。";
+
+/* JBHostDevice */
+"Failed to start debugserver. Make sure DeveloperDiskImage.dmg is mounted." = "启动调试服务器失败。请确保DeveloperDiskImage.dmg已挂载。";
+
+/* JBHostDevice */
+"Failed to start service on device. Make sure the device is connected to the network and unlocked and that the pairing is valid." = "无法在设备上启动服务。请确保被调试设备在同一个局域网内，设备已解锁，且设备已匹配。";
+
+/* Main */
+"Failed to start tunnel." = "无法启动VPN隧道。";
+
+/* No comment provided by engineer. */
+"Favorites" = "收藏";
+
+/* No comment provided by engineer. */
+"Host" = "主机";
+
+/* ContentView */
+"Importing pairing..." = "正在导入配对文件...";
+
+/* No comment provided by engineer. */
+"Installed" = "已安装";
+
+/* Main */
+"Jitterbug Local Device Tunnel" = "Jitterbug 本机调试隧道";
+
+/* No comment provided by engineer. */
+"Launch" = "启动";
+
+/* DeviceDetailsView */
+"Launching..." = "启动中...";
+
+/* JBHostDevice */
+"Mount image failed." = "无法挂载镜像。";
+
+/* DeviceDetailsView */
+"Mounting disk image..." = "正在挂载镜像...";
+
+/* No comment provided by engineer. */
+"No apps found on device." = "未在设备上找到应用程序。";
+
+/* Main */
+"No VPN configuration found." = "未找到 VPN 配置。";
+
+/* No comment provided by engineer. */
+"Not paired." = "该设备尚未配对。";
+
+/* JBHostDevice */
+"Out of memory!?" = "内存不足！？";
+
+/* JBHostDevice */
+"Pairing data missing key 'UDID'" = "配对文件中缺少UDID信息。";
+
+/* DeviceDetailsView */
+"Querying installed apps..." = "正在获取设备已安装应用...";
+
+/* ManualAddHostView */
+"Resolving..." = "正在解析...";
+
+/* No comment provided by engineer. */
+"Saved" = "已保存";
+
+/* Main */
+"Setting up VPN tunnel..." = "正在启动 VPN 隧道...";
+
+/* Main */
+"Starting VPN tunnel..." = "正在启动 VPN 隧道...";
+
+/* JBHostDevice */
+"Unknown error occurred, can't mount." = "发生未知错误，无法挂载镜像。";
+
+/* DeviceListView */
+"Unpairing..." = "取消配对中...";
+
+/* JBHostDevice */
+"You must set up a passcode to enable wireless pairing." = "您必须为设备设置锁屏密码才能启用无线调试功能。";
+
