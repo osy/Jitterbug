@@ -260,6 +260,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B30CD8426BC250400ACBA59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B30CD8526BC252100ACBA59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B811C332688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		4B811C362688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4B811C392688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -1310,6 +1312,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				4B811C362688D54100046341 /* zh-Hans */,
+				4B30CD8426BC250400ACBA59 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1326,6 +1329,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				4B811C3C2688D54100046341 /* zh-Hans */,
+				4B30CD8526BC252100ACBA59 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
