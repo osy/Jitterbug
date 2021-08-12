@@ -84,7 +84,9 @@ class Main: NSObject, ObservableObject {
         refreshPairings()
         refreshSupportImages()
         unarchiveSavedHosts()
+        #if !os(macOS)
         initTunnel()
+        #endif
     }
     
     func backgroundTask(message: String?, task: @escaping () throws -> Void, onComplete: @escaping () -> Void = {}) {
@@ -436,6 +438,7 @@ extension Main: HostFinderDelegate {
 }
 #endif
 
+#if !os(macOS)
 // MARK: - VPN Tunnel
 extension Main {
     private func initTunnel(onSuccess: (() -> ())? = nil) {
@@ -595,3 +598,4 @@ extension Main {
         }
     }
 }
+#endif
