@@ -264,9 +264,7 @@ class Main: NSObject, ObservableObject {
     
     func addFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
         var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
-        if !favorites.contains(where: { favorite in
-            favorite == appId
-        }) {
+        if !favorites.contains(where: {$0 == appId}) {
             favorites.append(appId)
         }
         saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
@@ -275,9 +273,7 @@ class Main: NSObject, ObservableObject {
     
     func removeFavorite(appId: String, forHostIdentifier hostIdentifier: String) {
         var favorites = loadValue(forKey: "Favorites", forHostIdentifier: hostIdentifier) as? [String] ?? []
-        favorites.removeAll { favorite in
-            favorite == appId
-        }
+        favorites.removeAll(where: {$0 == appId})
         saveValue(favorites, forKey: "Favorites", forHostIdentifier: hostIdentifier)
         self.objectWillChange.send()
     }
@@ -297,24 +293,18 @@ class Main: NSObject, ObservableObject {
     
     func saveManualHost(identifier: String, address: Data) {
         let device = JBHostDevice(hostname: identifier, address: address)
-        if !savedHosts.contains(where: { saved in
-            saved.identifier == identifier || saved.address == address
-        }) {
+        if !savedHosts.contains(where: {$0.identifier == identifier || $0.address == address}) {
             saveHost(device)
         }
     }
     
     func saveHost(_ host: JBHostDevice) {
         savedHosts.append(host)
-        foundHosts.removeAll { found in
-            found.identifier == host.identifier
-        }
+        foundHosts.removeAll(where: {$0.identifier == host.identifier})
     }
     
     func removeSavedHost(_ host: JBHostDevice) {
-        savedHosts.removeAll { saved in
-            saved.identifier == host.identifier
-        }
+        savedHosts.removeAll(where: {$0.identifier == host.identifier})
         foundHosts.append(host)
     }
 }
@@ -363,15 +353,15 @@ extension Main {
     }
     
     func hostFinderRemove(identifier: String) {
-        for hostDevice in self.savedHosts {
-            if hostDevice.identifier == identifier {
-                hostDevice.discovered = false
-                self.objectWillChange.send()
-            }
+        self.savedHosts.filter({$0.identifier == identifier}).forEach { hostDevice in
+            hostDevice.discovered = false
+            self.objectWillChange.send()
         }
+        
         self.foundHosts.removeAll { hostDevice in
             hostDevice.identifier == identifier
         }
+        
     }
 }
 
@@ -402,7 +392,9 @@ extension Main: HostFinderDelegate {
     func hostFinderNewHost(_ host: String, name: String?, address: Data) {
         DispatchQueue.main.async {
             if !self.hostFinderNewHost(identifier: host, name: name, onFound: { hostDevice in
-                if hostDevice != self.localHost {
+                if addressIsLoopback(address) {
+                    self.localHost = hostDevice
+                } else if hostDevice != self.localHost {
                     hostDevice.updateAddress(address)
                 }
             }) {
@@ -482,17 +474,20 @@ extension Main {
             guard let manager = self.vpnManager else {
                 throw NSLocalizedString("No VPN configuration found.", comment: "Main")
             }
+            
+            if manager.connection.status == .connected {
+                // Connection already established, nothing to do here
+                self.setTunnelStarted(true)
+                return
+            }
+            
             let lock = DispatchSemaphore(value: 0)
             self.vpnObserver = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: manager.connection, queue: nil, using: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
                 print("[VPN] Connected? \(manager.connection.status == .connected)")
-                _self.isTunnelStarted = manager.connection.status == .connected
-                if _self.isTunnelStarted {
-                    _self.localHost?.updateAddress(addressIPv4StringToData(_self.tunnelFakeIp))
-                    lock.signal()
-                }
+                _self.setTunnelStarted(manager.connection.status == .connected, signallingLock: lock)
             })
             let options = ["TunnelDeviceIP": self.tunnelDeviceIp as NSObject,
                            "TunnelFakeIP": self.tunnelFakeIp as NSObject,
@@ -500,6 +495,17 @@ extension Main {
             try manager.connection.startVPNTunnel(options: options)
             if lock.wait(timeout: .now() + .seconds(15)) == .timedOut {
                 throw NSLocalizedString("Failed to start tunnel.", comment: "Main")
+            }
+        }
+    }
+    
+    private func setTunnelStarted(_ started: Bool, signallingLock lock: DispatchSemaphore? = nil) {
+        self.isTunnelStarted = started
+        
+        if started {
+            self.localHost?.updateAddress(addressIPv4StringToData(self.tunnelFakeIp))
+            if let lock = lock {
+                lock.signal()
             }
         }
     }
