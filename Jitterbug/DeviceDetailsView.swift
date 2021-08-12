@@ -115,7 +115,12 @@ struct DeviceDetailsView: View {
                 }.disabled(!host.isConnected)
             }
         }.onAppear {
-            if main.localHost == host && main.hasLocalDeviceSupport && !main.isTunnelStarted {
+            #if WITH_VPN
+            let supportVPN = main.localHost == host && main.hasLocalDeviceSupport && !main.isTunnelStarted
+            #else
+            let supportVPN = false
+            #endif
+            if supportVPN {
                 main.startTunnel()
             } else {
                 // BUG: sometimes SwiftUI doesn't like this...

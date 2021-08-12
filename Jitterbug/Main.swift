@@ -84,7 +84,7 @@ class Main: NSObject, ObservableObject {
         refreshPairings()
         refreshSupportImages()
         unarchiveSavedHosts()
-        #if !os(macOS)
+        #if WITH_VPN
         initTunnel()
         #endif
     }
