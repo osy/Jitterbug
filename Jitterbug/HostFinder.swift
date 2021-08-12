@@ -68,11 +68,18 @@ extension HostFinder: NetServiceDelegate {
         NSLog("[HostFinder] resolved %@ to %@", sender.name, sender.hostName ?? "(unknown)")
         sender.stop()
         resolving.remove(sender)
-        guard let address = sender.addresses?[0] else {
+        guard let addresses = sender.addresses, addresses.count > 0 else {
             delegate?.hostFinderError(NSLocalizedString("Failed to resolve \(sender.name)", comment: "HostFinder"))
             return
         }
-        delegate?.hostFinderNewHost(sender.name, name: sender.hostName, address: address)
+        for address in addresses {
+            // make sure we always return loopback if its available
+            if addressIsLoopback(address) {
+                delegate?.hostFinderNewHost(sender.name, name: sender.hostName, address: address)
+                return
+            }
+        }
+        delegate?.hostFinderNewHost(sender.name, name: sender.hostName, address: addresses[0])
     }
     
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
