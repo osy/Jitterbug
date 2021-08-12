@@ -16,6 +16,9 @@
 
 import Combine
 import NetworkExtension
+#if canImport(UIKit)
+import UIKit
+#endif
 
 class Main: NSObject, ObservableObject {
     @Published var alertMessage: String?
@@ -88,7 +91,14 @@ class Main: NSObject, ObservableObject {
             self.busy = true
             self.busyMessage = message
             DispatchQueue.global(qos: .background).async {
+                #if canImport(UIKit)
+                let app = UIApplication.shared
+                let bgtask = app.beginBackgroundTask()
+                #endif
                 defer {
+                    #if canImport(UIKit)
+                    app.endBackgroundTask(bgtask)
+                    #endif
                     DispatchQueue.main.async {
                         self.busy = false
                         self.busyMessage = nil
