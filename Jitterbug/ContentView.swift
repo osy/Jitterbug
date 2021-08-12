@@ -41,6 +41,9 @@ struct ContentView: View {
         }.alert(item: $main.alertMessage) { message in
             Alert(title: Text(message))
         }.onOpenURL { url in
+            guard url.scheme == "file" else {
+                return // ignore jitterbug urls
+            }
             main.backgroundTask(message: NSLocalizedString("Importing pairing...", comment: "ContentView")) {
                 try main.importPairing(url)
                 Thread.sleep(forTimeInterval: 1)

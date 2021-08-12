@@ -120,6 +120,9 @@ class Main: NSObject, ObservableObject {
     
     private func importFile(_ file: URL, toDirectory: URL, onComplete: @escaping () -> Void) throws {
         let name = file.lastPathComponent
+        guard name.count > 0 else {
+            throw NSLocalizedString("Invalid filename.", comment: "Main")
+        }
         let dest = toDirectory.appendingPathComponent(name)
         _ = file.startAccessingSecurityScopedResource()
         defer {
