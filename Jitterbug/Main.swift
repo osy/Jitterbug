@@ -502,7 +502,11 @@ extension Main {
             let options = ["TunnelDeviceIP": self.tunnelDeviceIp as NSObject,
                            "TunnelFakeIP": self.tunnelFakeIp as NSObject,
                            "TunnelSubnetMask": self.tunnelSubnetMask as NSObject]
-            try manager.connection.startVPNTunnel(options: options)
+            do {
+                try manager.connection.startVPNTunnel(options: options)
+            } catch NEVPNError.configurationDisabled {
+                throw NSLocalizedString("Jitterbug VPN has been disabled in settings or another VPN configuration is selected.", comment: "Main")
+            }
             if lock.wait(timeout: .now() + .seconds(15)) == .timedOut {
                 throw NSLocalizedString("Failed to start tunnel.", comment: "Main")
             }
