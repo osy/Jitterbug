@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B811C342688D54100046341 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B811C322688D54100046341 /* InfoPlist.strings */; };
+		4B811C372688D54100046341 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B811C352688D54100046341 /* Localizable.strings */; };
+		4B811C3A2688D54100046341 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B811C382688D54100046341 /* InfoPlist.strings */; };
+		4B811C3D2688D54100046341 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B811C3B2688D54100046341 /* Localizable.strings */; };
+		4B811C402688D54100046341 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B811C3E2688D54100046341 /* InfoPlist.strings */; };
 		CE312D64266997500064C43C /* SharingServicePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE312D63266997500064C43C /* SharingServicePicker.swift */; };
 		CE4DEC2C2671732F003BDC3F /* AddressUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4DEC2B2671732F003BDC3F /* AddressUtils.m */; };
 		CE4DEC2E26717E00003BDC3F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE97FFC4267113FB007FE23E /* NetworkExtension.framework */; };
@@ -255,6 +260,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B30CD8426BC250400ACBA59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B30CD8526BC252100ACBA59 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B811C332688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		4B811C362688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4B811C392688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		4B811C3C2688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4B811C3F2688D54100046341 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		CE312D63266997500064C43C /* SharingServicePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharingServicePicker.swift; sourceTree = "<group>"; };
 		CE4DEC2A2671732F003BDC3F /* AddressUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressUtils.h; sourceTree = "<group>"; };
 		CE4DEC2B2671732F003BDC3F /* AddressUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressUtils.m; sourceTree = "<group>"; };
@@ -495,6 +507,7 @@
 			children = (
 				CE97FFC7267113FC007FE23E /* PacketTunnelProvider.swift */,
 				CE97FFC9267113FC007FE23E /* Info.plist */,
+				4B811C3E2688D54100046341 /* InfoPlist.strings */,
 				CE97FFCA267113FC007FE23E /* JitterbugTunnel.entitlements */,
 			);
 			path = JitterbugTunnel;
@@ -561,6 +574,8 @@
 				CEE8B49F265D7BCA007728F4 /* SupportFilesView.swift */,
 				CE98574E265C635300F9AAD4 /* Assets.xcassets */,
 				CE985753265C635300F9AAD4 /* Info.plist */,
+				4B811C352688D54100046341 /* Localizable.strings */,
+				4B811C322688D54100046341 /* InfoPlist.strings */,
 				CE4DEC302671E5BF003BDC3F /* Settings.bundle */,
 			);
 			path = Jitterbug;
@@ -871,6 +886,8 @@
 				CEA02A3C2668693800CF57E1 /* DeviceDetailsView.swift */,
 				CE312D63266997500064C43C /* SharingServicePicker.swift */,
 				CEA029E42668592900CF57E1 /* Info.plist */,
+				4B811C3B2688D54100046341 /* Localizable.strings */,
+				4B811C382688D54100046341 /* InfoPlist.strings */,
 				CEA029E52668592900CF57E1 /* JitterbugMac.entitlements */,
 			);
 			path = JitterbugMac;
@@ -990,6 +1007,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = CE98573E265C635000F9AAD4;
 			packageReferences = (
@@ -1012,6 +1030,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B811C402688D54100046341 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1039,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4DEC312671E5BF003BDC3F /* Settings.bundle in Resources */,
+				4B811C372688D54100046341 /* Localizable.strings in Resources */,
+				4B811C342688D54100046341 /* InfoPlist.strings in Resources */,
 				CE98574F265C635300F9AAD4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1029,6 +1050,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEA029E9266859AB00CF57E1 /* Assets.xcassets in Resources */,
+				4B811C3D2688D54100046341 /* Localizable.strings in Resources */,
+				4B811C3A2688D54100046341 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1275,6 +1298,51 @@
 			targetProxy = CE97FFCB267113FC007FE23E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4B811C322688D54100046341 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B811C332688D54100046341 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4B811C352688D54100046341 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B811C362688D54100046341 /* zh-Hans */,
+				4B30CD8426BC250400ACBA59 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		4B811C382688D54100046341 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B811C392688D54100046341 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4B811C3B2688D54100046341 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B811C3C2688D54100046341 /* zh-Hans */,
+				4B30CD8526BC252100ACBA59 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		4B811C3E2688D54100046341 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B811C3F2688D54100046341 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CE97FFCF267113FC007FE23E /* Debug */ = {
