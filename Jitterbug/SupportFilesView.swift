@@ -57,7 +57,7 @@ struct SupportFilesView: View {
     private func deleteAll(indicies: IndexSet) {
         var toDelete: [URL] = []
         for i in indicies {
-            toDelete.append(main.pairings[i])
+            toDelete.append(main.supportImages[i])
         }
         main.backgroundTask(message: NSLocalizedString("Deleting support file...", comment: "PairingsView")) {
             for url in toDelete {
