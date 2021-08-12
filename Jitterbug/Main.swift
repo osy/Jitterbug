@@ -29,6 +29,7 @@ class Main: NSObject, ObservableObject {
     @Published var savedHosts: [JBHostDevice] = []
     @Published var foundHosts: [JBHostDevice] = []
     @Published var selectedHostId: String?
+    @Published var selectedLaunchAppId: String?
     
     @Published var pairings: [URL] = []
     @Published var supportImages: [URL] = []
@@ -540,5 +541,57 @@ extension Main {
             return
         }
         manager.connection.stopVPNTunnel()
+    }
+}
+
+// MARK: - URL parsing
+extension Main {
+    func encodeURL(forHost host: JBHostDevice, launchingApp app: JBApp? = nil) -> URL {
+        var components = URLComponents()
+        components.scheme = "jitterbug"
+        components.host = host.identifier
+        if let app = app {
+            components.queryItems = [
+                URLQueryItem(name: "launch", value: app.bundleIdentifier)
+            ]
+        }
+        return components.url!
+    }
+    
+    func loadURL(_ url: URL) {
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        guard components.scheme == "jitterbug" else {
+            if components.scheme != "file" {
+                print("[URL] unknown scheme \(String(describing: components.scheme))")
+            }
+            return
+        }
+        selectedHostId = components.host
+        guard let queryItems = components.queryItems else {
+            print("[URL] no query to handle")
+            return
+        }
+        for item in queryItems {
+            if item.name == "launch" {
+                selectedLaunchAppId = item.value
+            }
+        }
+    }
+    
+    func processAutoLaunch(withApps apps: [JBApp]) throws -> JBApp? {
+        guard let launchId = selectedLaunchAppId else {
+            return nil
+        }
+        DispatchQueue.main.async {
+            self.selectedLaunchAppId = nil
+        }
+        let selectedApp = apps.first { app in
+            app.bundleIdentifier == launchId
+        }
+        if let selectedApp = selectedApp {
+            return selectedApp
+        } else {
+            throw NSLocalizedString("Cannot find \(launchId)", comment: "Main")
+        }
     }
 }

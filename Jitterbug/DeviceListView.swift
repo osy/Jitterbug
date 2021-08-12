@@ -101,6 +101,14 @@ struct ContextMenuViewModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content.contextMenu {
+            #if os(iOS)
+            Button {
+                UIPasteboard.general.url = main.encodeURL(forHost: host)
+            } label: {
+                Label("Copy Shortcut URL", systemImage: "link")
+                    .labelStyle(DefaultLabelStyle())
+            }
+            #endif
             Button {
                 main.savePairing(nil, forHostIdentifier: host.identifier)
                 main.saveDiskImage(nil, signature: nil, forHostIdentifier: host.identifier)

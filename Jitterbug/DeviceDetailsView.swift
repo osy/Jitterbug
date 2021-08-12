@@ -75,7 +75,7 @@ struct DeviceDetailsView: View {
                                     launchApplication(app)
                                 } label: {
                                     AppItemView(app: app, saved: true, hostIdentifier: host.identifier)
-                                }
+                                }.appContextMenu(host: host, app: app)
                             }
                         }
                     }
@@ -85,7 +85,7 @@ struct DeviceDetailsView: View {
                                 launchApplication(app)
                             } label: {
                                 AppItemView(app: app, saved: false, hostIdentifier: host.identifier)
-                            }
+                            }.appContextMenu(host: host, app: app)
                         }
                     }
                 }
@@ -157,6 +157,14 @@ struct DeviceDetailsView: View {
                     }
                 }
             }
+        }.onChange(of: main.selectedLaunchAppId) { appId in
+            guard apps.count > 0 else {
+                return
+            }
+            guard let autoLaunchApp = try? main.processAutoLaunch(withApps: apps) else {
+                return
+            }
+            launchApplication(autoLaunchApp)
         }
     }
     
@@ -195,11 +203,17 @@ struct DeviceDetailsView: View {
     }
     
     private func refreshAppsList(onSuccess: @escaping () -> Void) {
+        var autoLaunchApp: JBApp?
         main.backgroundTask(message: NSLocalizedString("Querying installed apps...", comment: "DeviceDetailsView")) {
             try host.updateInfo()
             apps = try host.installedApps()
             main.archiveSavedHosts()
+            autoLaunchApp = try main.processAutoLaunch(withApps: apps)
             onSuccess()
+        } onComplete: {
+            if let app = autoLaunchApp {
+                launchApplication(app)
+            }
         }
     }
     
@@ -248,6 +262,29 @@ struct DeviceDetailsView: View {
             fileSelectType = .supportImage
             appToLaunchAfterMount = app
         }
+    }
+}
+
+struct AppContextMenuViewModifier: ViewModifier {
+    @EnvironmentObject private var main: Main
+    let host: JBHostDevice
+    let app: JBApp
+    
+    func body(content: Content) -> some View {
+        content.contextMenu {
+            Button {
+                UIPasteboard.general.url = main.encodeURL(forHost: host, launchingApp: app)
+            } label: {
+                Label("Copy Shortcut URL", systemImage: "link")
+                    .labelStyle(DefaultLabelStyle())
+            }
+        }
+    }
+}
+
+extension View {
+    func appContextMenu(host: JBHostDevice, app: JBApp) -> some View {
+        self.modifier(AppContextMenuViewModifier(host: host, app: app))
     }
 }
 

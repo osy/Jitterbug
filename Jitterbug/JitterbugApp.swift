@@ -30,6 +30,9 @@ struct JitterbugApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(main)
+                .onOpenURL { url in
+                    main.loadURL(url)
+                }
         }
         .onChange(of: scenePhase) { newScenePhase in
             if newScenePhase == .active {
