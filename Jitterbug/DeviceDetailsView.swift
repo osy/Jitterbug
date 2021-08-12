@@ -115,10 +115,8 @@ struct DeviceDetailsView: View {
                 }.disabled(!host.isConnected)
             }
         }.onAppear {
-            if main.localHost == host {
-                if main.hasLocalDeviceSupport && !main.isTunnelStarted {
-                    main.startTunnel()
-                }
+            if main.localHost == host && main.hasLocalDeviceSupport && !main.isTunnelStarted {
+                main.startTunnel()
             } else {
                 // BUG: sometimes SwiftUI doesn't like this...
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(1)) {
