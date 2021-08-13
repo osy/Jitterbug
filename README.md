@@ -33,12 +33,17 @@ Open Jitterbug, go to "Launcher", and look for your secondary iOS device to show
 ### Building Jitterbug
 
 1. Make sure you cloned all submodules with `git submodule update --init --recursive`
-2. Open `Jitterbug.xcodeproj` and change the bundle id to a unique value registered to your Apple Developer account.
-3. Build and run "Jitterbug" on your iOS device.
+2. Rename `CodeSigning.xcconfig.sample` to `CodeSigning.xcconfig` and edit it, filling in the information detailed in the next section.
+3. Open `Jitterbug.xcodeproj`.
+4. Build and run "Jitterbug" or "JitterbugLite" on your iOS device.
 
 #### Entitlements
 
-Jitterbug can create a VPN tunnel so a device can debug itself. This requires the "Network Extensions" entitlement which is not available to free developer accounts. If you have a free account, you will get a code signing error when trying to build. To fix it, delete the "Network Extensions" capability from the "Signing & Capabilities" tab for both the "Jitterbug" and "JitterbugTunnel" targets. You will not be able to use Jitterbug to launch apps on the same device but you can still use it to launch apps on a second device.
+Jitterbug can create a VPN tunnel so a device can debug itself. This requires the "Network Extensions" entitlement which is not available to free developer accounts. If you have a free account, you will get a code signing error when trying to build. Jitterbug Lite is a build target that does not require Network Extensions and can be built with a free account.
+
+Because Apple requires unique bundle IDs for developers, you need to choose a unique bundle ID prefix and fill it in `CodeSigning.xcconfig`.
+
+If you have a paid account, you can find `DEVELOPMENT_TEAM` by going [here](https://developer.apple.com/account/#!/membership). If you have a free account, you can find your Team ID by creating a new Xcode project for iOS, selecting your team under Signing & Capabilities, and looking for the value of `DEVELOPMENT_TEAM` build setting.
 
 ### Building JitterbugPair
 
