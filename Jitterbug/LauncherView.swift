@@ -28,9 +28,33 @@ struct LauncherView: View {
                         Spinner()
                     }
                 })
+            PlaceholderView()
+        }.labelStyle(IconOnlyLabelStyle())
+    }
+}
+
+struct PlaceholderView: View {
+    @EnvironmentObject private var main: Main
+    
+    var isPortraitPad: Bool {
+        let device = UIDevice.current
+        return device.userInterfaceIdiom == .pad && device.orientation.isPortrait
+    }
+    
+    var body: some View {
+        if isPortraitPad, let selectedHostId = main.selectedHostId {
+            if let host = main.savedHosts.first(where: { host in host.identifier == selectedHostId }) {
+                DeviceDetailsView(host: host)
+            } else if let host = main.foundHosts.first(where: { host in host.identifier == selectedHostId }) {
+                DeviceDetailsView(host: host)
+            } else {
+                Text("Host not found.")
+                    .font(.headline)
+            }
+        } else {
             Text("Select a device.")
                 .font(.headline)
-        }.labelStyle(IconOnlyLabelStyle())
+        }
     }
 }
 

@@ -20,6 +20,7 @@ class HostFinder: NSObject {
     private let browser: NetServiceBrowser
     private let resolveTimeout = TimeInterval(30)
     private var resolving = Set<NetService>()
+    private var started = false
     
     public weak var delegate: HostFinderDelegate?
     
@@ -31,11 +32,15 @@ class HostFinder: NSObject {
     }
     
     func startSearch() {
-        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
+        if !started {
+            browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
+        }
+        started = true
     }
     
     func stopSearch() {
         browser.stop()
+        started = false
     }
 }
 
