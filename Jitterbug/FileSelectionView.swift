@@ -29,16 +29,23 @@ struct FileSelectionView: View {
                     Text("No files found.")
                         .font(.headline)
                 } else {
-                    List {
-                        ForEach(urls) { url in
-                            Button {
-                                presentationMode.wrappedValue.dismiss()
-                                selectedUrl = url
-                            } label: {
-                                Text(url.lastPathComponent)
-                                    .lineLimit(1)
+                    Form {
+                        Section {
+                            ForEach(urls) { url in
+                                Button {
+                                    presentationMode.wrappedValue.dismiss()
+                                    selectedUrl = url
+                                } label: {
+                                    Text(url.lastPathComponent)
+                                        .lineLimit(1)
+                                }
                             }
+                        } header: {
+                            Text("Select the file below the list.")
+                        } footer: {
+                            Text("You should select the file that matches the target device.")
                         }
+
                     }
                 }
             }.navigationTitle(title)
