@@ -48,7 +48,7 @@ struct ContentView: View {
             let type = url.pathExtension
             
             if type == "dmg" || type == "signature" {
-                main.backgroundTask(message: NSLocalizedString("Imorting supporting files", comment: "ContentView")) {
+                main.backgroundTask(message: NSLocalizedString("Importing support file...", comment: "ContentView")) {
                     try main.importSupportImage(url)
                 }
             } else if type == "mobiledevicepairing"{
