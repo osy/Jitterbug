@@ -25,7 +25,7 @@ struct FileSelectionView: View {
     var body: some View {
         NavigationView {
             Group {
-                if urls.isEmpty {
+                if urls.count == 0 {
                     Text("No files found.")
                         .font(.headline)
                 } else {
@@ -45,7 +45,6 @@ struct FileSelectionView: View {
                         } footer: {
                             Text("You should select the file that matches the target device.")
                         }
-
                     }
                 }
             }.navigationTitle(title)

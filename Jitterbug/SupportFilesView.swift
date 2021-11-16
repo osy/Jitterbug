@@ -31,7 +31,7 @@ struct SupportFilesView: View {
                         Button {
                             isImporterPresented.toggle()
                         } label: {
-                            Text("Import Pairings")
+                            Text("Import Support Files")
                                 .padding()
                                 .foregroundColor(.white)
                                 .background(Color.blue)
