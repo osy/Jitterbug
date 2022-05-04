@@ -207,11 +207,21 @@
 "Starting VPN tunnel..." = "正在启动 VPN 隧道...";
 
 /* JBHostDevice */
-"Unknown error occurred, can't mount." = "发生未知错误，无法挂载镜像。";
+"Unknown error occurred, can't mount." = "发生未知错误，无法挂载镜像。（请退出 Jitterbug 后重试。）";
 
 /* DeviceListView */
 "Unpairing..." = "取消配对中...";
 
 /* JBHostDevice */
 "You must set up a passcode to enable wireless pairing." = "您必须为设备设置锁屏密码才能启用无线调试功能。";
+
+"Import More..." = "导入更多...";
+
+"Select the file below the list." = "请在列表中选择文件。";
+
+"You should select the file that matches the target device." = "您应该选择与目标设备匹配的文件。";
+
+"Import Pairings" = "导入配对文件";
+
+"Import Support Files" = "导入支持文件";
 

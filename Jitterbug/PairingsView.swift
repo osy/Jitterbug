@@ -24,15 +24,32 @@ struct PairingsView: View {
         NavigationView {
             Group {
                 if main.pairings.isEmpty {
-                    Text("No pairings found.")
-                        .font(.headline)
+                    VStack {
+                        Text("No pairings found.")
+                            .font(.headline)
+                        Button {
+                            isImporterPresented.toggle()
+                        } label: {
+                            Text("Import Pairings")
+                                .padding()
+                                .foregroundColor(.white)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                    }
                 } else {
-                    List {
+                    Form {
                         ForEach(main.pairings) { pairing in
                             Text(pairing.lastPathComponent)
                                 .lineLimit(1)
                         }.onDelete { indexSet in
                             deleteAll(indicies: indexSet)
+                        }
+                        Section {
+                            Button("Import More...") {
+                                isImporterPresented.toggle()
+                            }
+                            .foregroundColor(.blue)
                         }
                     }
                     .listStyle(PlainListStyle())

@@ -24,15 +24,34 @@ struct SupportFilesView: View {
         NavigationView {
             Group {
                 if main.supportImages.isEmpty {
-                    Text("No support files found.")
-                        .font(.headline)
+                    VStack {
+                        Text("No support files found.")
+                            .font(.headline)
+                        
+                        Button {
+                            isImporterPresented.toggle()
+                        } label: {
+                            Text("Import Support Files")
+                                .padding()
+                                .foregroundColor(.white)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                    }
+                    
                 } else {
-                    List {
+                    Form {
                         ForEach(main.supportImages) { pairing in
                             Text(pairing.lastPathComponent)
                                 .lineLimit(1)
                         }.onDelete { indexSet in
                             deleteAll(indicies: indexSet)
+                        }
+                        Section {
+                            Button("Import More...") {
+                                isImporterPresented.toggle()
+                            }
+                            .foregroundColor(.blue)
                         }
                     }
                     .listStyle(PlainListStyle())
