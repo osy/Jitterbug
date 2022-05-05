@@ -22,8 +22,8 @@
 #include <libimobiledevice/mobile_image_mounter.h>
 #include <libimobiledevice/sbservices.h>
 #include <libimobiledevice/service.h>
+#include <libimobiledevice-glue/utils.h>
 #include "common/userpref.h"
-#include "common/utils.h"
 #import "JBApp.h"
 #import "JBHostDevice.h"
 #import "Jitterbug.h"

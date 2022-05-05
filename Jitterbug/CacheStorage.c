@@ -16,7 +16,7 @@
 
 #include "CacheStorage.h"
 #include "Jitterbug.h"
-#include "collection.h"
+#include <libimobiledevice-glue/collection.h>
 
 typedef struct {
     char *udid;

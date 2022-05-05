@@ -4,7 +4,8 @@ sources = ['JitterbugPair/main.c']
 incdir = include_directories(['Libraries/include',
                               'Libraries/libimobiledevice',
                               'Libraries/libimobiledevice/common',
-                              'Libraries/libimobiledevice/include'])
+                              'Libraries/libimobiledevice/include',
+                              'Libraries/libimobiledevice-glue/include'])
 
 os = host_machine.system()
 cflags = []

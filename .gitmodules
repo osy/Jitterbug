@@ -7,3 +7,6 @@
 [submodule "Libraries/libimobiledevice"]
 	path = Libraries/libimobiledevice
 	url = https://github.com/libimobiledevice/libimobiledevice.git
+[submodule "Libraries/libimobiledevice-glue"]
+	path = Libraries/libimobiledevice-glue
+	url = https://github.com/libimobiledevice/libimobiledevice-glue.git
