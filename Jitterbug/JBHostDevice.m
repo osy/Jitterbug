@@ -369,7 +369,11 @@ error:
 
 static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
     plist_t *value = plist_dict_get_item(dict, key);
-    NSString *string = [NSString stringWithUTF8String:plist_get_string_ptr(value, NULL)];
+    const char* cString = plist_get_string_ptr(value, NULL);
+    if (cString == NULL) {
+        return @"";
+    }
+    NSString *string = [NSString stringWithUTF8String:cString];
     return string;
 }
 
