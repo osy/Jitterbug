@@ -369,8 +369,11 @@ error:
 
 static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
     plist_t *value = plist_dict_get_item(dict, key);
-    NSString *string = [NSString stringWithUTF8String:plist_get_string_ptr(value, NULL)];
-    return string;
+    if (value) {
+        return [NSString stringWithUTF8String:plist_get_string_ptr(value, NULL)];
+    } else {
+        return @"";
+    }
 }
 
 - (NSArray<JBApp *> *)parseLookupResult:(plist_t)plist {
@@ -434,7 +437,7 @@ static NSString *plist_dict_get_nsstring(plist_t dict, const char *key) {
     }
     
     client_opts = instproxy_client_options_new();
-    instproxy_client_options_add(client_opts, "ApplicationType", "User", NULL);
+    instproxy_client_options_add(client_opts, "ApplicationType", "Any", NULL);
     instproxy_client_options_set_return_attributes(client_opts, "CFBundleName", "CFBundleIdentifier", "CFBundleExecutable", "Path", "Container", "iTunesArtwork", NULL);
     if ((err = instproxy_lookup(instproxy_client, NULL, client_opts, &apps)) != INSTPROXY_E_SUCCESS) {
         [self createError:error withString:NSLocalizedString(@"Failed to lookup installed apps.", @"JBHostDevice") code:err];
